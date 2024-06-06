@@ -3,6 +3,8 @@ package aiven.io.kafka_executor.consumer.controller;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
 import aiven.io.kafka_executor.consumer.view.LoadConsumer;
 import aiven.io.kafka_executor.data.DataClass;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,16 +14,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/consumer")
 @Slf4j
 public class ConsumerController {
+    private final HashMap<String, Counter> consumerCount;
+    private final HashMap<String,Counter> consumerAmount;
 
     private final LoadConsumer loadConsumer;
 
 
-    public ConsumerController(LoadConsumer loadConsumer) {
+    public ConsumerController(LoadConsumer loadConsumer, MeterRegistry registry) {
         this.loadConsumer = loadConsumer;
+        HashMap<String, Counter> count = new HashMap<>();
+        HashMap<String, Counter> amount = new HashMap<>();
+
+        for(DataClass dataClass:DataClass.values()){
+            count.put(dataClass.name(),Counter.builder(dataClass.name().toLowerCase() + ".consumer.count").
+                    /* tag("Version", "v1").*/description("Kafka consumer calls").register(registry));
+            amount.put(dataClass.name(),Counter.builder(dataClass.name() .toLowerCase()+ ".consumer.amount").
+                    /* tag("Version", "v1").*/description("Kafka consumer generated rows").register(registry));
+        }
+        this.consumerCount = count;
+        this.consumerAmount = amount;
     }
 
 
@@ -59,9 +76,10 @@ public class ConsumerController {
             status.setCount(0);
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(loadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1),
-                HttpStatus.OK);
+        ConsumerStatus consumerStatus = loadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1);
+        consumerCount.get(dataClass1.name()).increment();
+        consumerAmount.get(dataClass1.name()).increment(consumerStatus.getCount());
+        return new ResponseEntity<>(consumerStatus, HttpStatus.OK);
     }
 
 }

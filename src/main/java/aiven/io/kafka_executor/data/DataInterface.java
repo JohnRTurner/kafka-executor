@@ -1,16 +1,15 @@
 package aiven.io.kafka_executor.data;
 
 import com.google.protobuf.Descriptors;
-import com.google.protobuf.DynamicMessage;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
 
 public interface DataInterface {
-    /* Note: Must manually add any new implementation of this class to DataClass.java */
+    /* Each record must have an id field */
     long getId();
+    /* schema format created only once for Protobuf per class*/
     Descriptors.Descriptor retProtoSchema();
+    /* schema format created only once for Avro per class*/
     Schema retAvroSchema();
-    DataInterface generateData(long genId, int relativeItem);
-    DataInterface generateData(GenericData.Record record);
-    DataInterface generateData(DynamicMessage dynamicMessage);
+    /*this generates the fake data*/
+    DataInterface generateData(long genId, int correlatedId);
 }

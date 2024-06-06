@@ -16,10 +16,7 @@ import io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.ListTopicsResult;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -58,7 +55,7 @@ public class LoadProducer {
         }
     }
 
-    public CreateTopicsResult createTopics(String[] topics, int partitions, short replication){
+    public CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication){
         try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
             Collection<NewTopic> newTopics = new ArrayList<>();
             for(String topic : topics){
@@ -70,6 +67,16 @@ public class LoadProducer {
             return null;
         }
     }
+
+    public DeleteTopicsResult deleteTopics(Collection<String> topics){
+        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            return adminClient.deleteTopics(topics);
+        }catch (Exception e) {
+            log.error("Error creating topics", e);
+            return null;
+        }
+    }
+
 
     private KafkaProducer<String, DataInterface> getProducerJSON(String topic, int server, boolean registry){
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
@@ -178,12 +185,17 @@ public class LoadProducer {
         }
     }
 
-    public ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize, long startId, int relativeItem) {
+    public ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize, long startId, int correlatedStartIdInc, int correlatedEndIdInc) {
         ProducerStatus status = new ProducerStatus();
         KafkaProducer<String, GenericRecord> producerAvro = null;
         KafkaProducer<String, DataInterface> producerJSON = null;
         KafkaProducer<String, DynamicMessage> producerProtobuf = null;
-        DataInterface dataInterface;
+        DataInterface dataInterface = dataClass.getDataInterface();
+
+        int correlatedRange = correlatedEndIdInc - correlatedStartIdInc + 1;
+        if (correlatedRange < 1) {
+            correlatedStartIdInc = -1;
+        }
 
         if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.AVRO) {
             producerAvro = this.getProducerAvro(topic, server);
@@ -193,17 +205,6 @@ public class LoadProducer {
             producerJSON = this.getProducerJSON(topic, server, true);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.PROTOBUF) {
             producerProtobuf = this.getProducerProtobuf(topic, server);
-        }
-
-        try {
-            dataInterface = dataClass.getDataInterfaceClass().getConstructor().newInstance();
-        } catch (Exception e) {
-            log.error("Error creating interface for {}", dataClass.getDataInterfaceClass().getName());
-            status.setError(true);
-            status.setErrorMessage("Error getting interface class ".concat(dataClass.getDataInterfaceClass().getName()));
-            status.setStatus("Fail");
-            status.setCount(0);
-            return status;
         }
 
         if (producerAvro == null && producerJSON == null && producerProtobuf == null) {
@@ -216,45 +217,39 @@ public class LoadProducer {
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.AVRO) {
             for (int i = 0; i < batchSize; i++) {
                 DataInterface dataInterface1 = dataInterface.generateData((startId < 0) ? -1 : startId + i,
-                        (relativeItem < 0) ? -1 : relativeItem + i);
+                        (correlatedStartIdInc < 0) ? -1 : correlatedStartIdInc + (i % correlatedRange));
                 producerAvro.send(new ProducerRecord<>(topic, AvroUtils.serializeToAvro(dataInterface1,dataInterface1.retAvroSchema())),
                         (recordMetadata, e) -> {
                             if (e != null) {
                                 log.error(e.getMessage());
                             }
-                            log.trace(recordMetadata.toString());
+                            log.trace("Metadata {}", recordMetadata.toString());
                         });
             }
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON ||
                 dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON_NO_SCHEMA) {
-            //ObjectMapper mapper = new ObjectMapper();
             for (int i = 0; i < batchSize; i++) {
                 DataInterface dataInterface1 = dataInterface.generateData((startId < 0) ? -1 : startId + i,
-                        (relativeItem < 0) ? -1 : relativeItem + i);
-                producerJSON.send(new ProducerRecord<>(topic, dataInterface1
-                                //mapper.convertValue(dataInterface1, dataClass.getDataInterfaceClass())
-                                ),
+                        (correlatedStartIdInc < 0) ? -1 : correlatedStartIdInc + (i % correlatedRange));
+                producerJSON.send(new ProducerRecord<>(topic, dataInterface1),
                         (recordMetadata, e) -> {
                             if (e != null) {
                                 log.error(e.getMessage());
                             }
-                            log.trace(recordMetadata.toString());
+                            log.trace("Metadata {}", recordMetadata.toString());
                         });
             }
         } else /*if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.PROTOBUF)*/ {
             for (int i = 0; i < batchSize; i++) {
                 DataInterface dataInterface1 = dataInterface.generateData((startId < 0) ? -1 : startId + i,
-                        (relativeItem < 0) ? -1 : relativeItem + i);
+                        (correlatedStartIdInc < 0) ? -1 : correlatedStartIdInc + (i % correlatedRange));
                 DynamicMessage dynamicMessage = ProtobufUtils.serializeToProtobuf(dataInterface1,dataInterface1.retProtoSchema() );
-                int finalI = i;
                 producerProtobuf.send(new ProducerRecord<>(topic, dynamicMessage),
                         (recordMetadata, e) -> {
                             if (e != null) {
                                 log.error(e.getMessage());
                             }
-                            if(finalI == 0) {
-                                log.trace("Metadata {}", recordMetadata.toString());
-                            }
+                            log.trace("Metadata {}", recordMetadata.toString());
                         });
             }
         }

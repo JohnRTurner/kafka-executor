@@ -7,8 +7,8 @@ kafka_executor.name=Kafka Executor
 kafka_executor.truststore_password=xxxx
 kafka_executor.keystore_password=xxxx
 kafka_executor.key_password=xxxx
-kafka_executor.truststore_location=/Users/john.turner/IdeaProjects/kafka_executor/certs/client.truststore.jks
-kafka_executor.keystore_location=/Users/john.turner/IdeaProjects/kafka_executor/certs/client.keystore.p12
+kafka_executor.truststore_location=certs/client.truststore.jks
+kafka_executor.keystore_location=certs/client.keystore.p12
 
 kafka_executor.schema_registry_host=xxxx
 kafka_executor.schema_registry_port=15381

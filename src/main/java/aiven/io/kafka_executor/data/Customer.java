@@ -1,19 +1,14 @@
 package aiven.io.kafka_executor.data;
 
+import aiven.io.kafka_executor.data.avro.AvroUtils;
 import com.google.protobuf.Descriptors;
-import com.google.protobuf.DynamicMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.reflect.ReflectData;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Field;
-import java.util.Map;
 
 import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorFromPojo;
 
@@ -24,7 +19,8 @@ import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorF
 @Data
 public class Customer implements DataInterface {
     private static final Faker faker = new Faker();
-    private static final Schema schema = ReflectData.get().getSchema(Customer.class);
+    private static final Schema schema = AvroUtils.generateSchema(Customer.class);
+
     public static final Descriptors.Descriptor protoSchema;
     static {
         Descriptors.Descriptor protoSchemaTmp = null;
@@ -63,83 +59,23 @@ public class Customer implements DataInterface {
     }
 
     @Override
-    public DataInterface generateData(long genId, int relativeItem) {
-        if(genId == -1 && relativeItem == -1){
-            boolean gender = faker.bool().bool();
-            return new Customer( faker.random().nextLong(),
-                    (gender)?faker.name().malefirstName() : faker.name().femaleFirstName(),
-                    faker.name().lastName(),
-                    (gender)?"Male":"Female",
-                    faker.random().nextInt(18,80),
-                    faker.internet().emailAddress(),
-                    faker.phoneNumber().phoneNumber(),
-                    faker.address().streetAddress(),
-                    faker.address().city(),
-                    faker.address().state(),
-                    faker.address().zipCode()
-            );
+    public DataInterface generateData(long genId, int correlatedId) {
+        boolean gender = faker.bool().bool();
+        if(correlatedId >= 0 ){
+            // since relativeItem isn't implemented for this class, add to debug log and ignore
+            log.debug("Generating data for genId: {}, correlatedId: {} but correlatedId is not implemented.", genId, correlatedId);
         }
-        else if(genId != -1) {
-            boolean gender = faker.bool().bool();
-            return new Customer( genId,
-                    (gender)?faker.name().malefirstName() : faker.name().femaleFirstName(),
-                    faker.name().lastName(),
-                    (gender)?"Male":"Female",
-                    faker.random().nextInt(18,80),
-                    faker.internet().emailAddress(),
-                    faker.phoneNumber().phoneNumber(),
-                    faker.address().streetAddress(),
-                    faker.address().city(),
-                    faker.address().state(),
-                    faker.address().zipCode()
-            );
-        }
-        else {
-            boolean gender = faker.bool().bool();
-            log.warn("Invalid genId: {} with relativeItem: {}", genId, relativeItem);
-            return new Customer( faker.random().nextLong(),
-                    (gender)?faker.name().malefirstName() : faker.name().femaleFirstName(),
-                    faker.name().lastName(),
-                    (gender)?"Male":"Female",
-                    faker.random().nextInt(18,80),
-                    faker.internet().emailAddress(),
-                    faker.phoneNumber().phoneNumber(),
-                    faker.address().streetAddress(),
-                    faker.address().city(),
-                    faker.address().state(),
-                    faker.address().zipCode()
-            );
-        }
+        return new Customer( (genId >= 0)?genId:faker.random().nextLong(),
+                (gender)?faker.name().malefirstName() : faker.name().femaleFirstName(),
+                faker.name().lastName(),
+                (gender)?"Male":"Female",
+                faker.random().nextInt(18,80),
+                faker.internet().emailAddress(),
+                faker.phoneNumber().phoneNumber(),
+                faker.address().streetAddress(),
+                faker.address().city(),
+                faker.address().state(),
+                faker.address().zipCode()
+        );
     }
-
-    @Override
-    public DataInterface generateData(GenericData.Record record) {
-        Customer customer = new Customer();
-        for (Schema.Field field : schema.getFields()) {
-            ReflectData.get().setField(customer, field.name(), field.pos(), record.get(field.name()));
-        }
-        return customer;
-    }
-
-    @Override
-    public DataInterface generateData(DynamicMessage dynamicMessage) {
-        Customer customer = new Customer();
-        Map<Descriptors.FieldDescriptor, Object> fields = dynamicMessage.getAllFields();
-        for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : fields.entrySet()) {
-            Descriptors.FieldDescriptor fieldDescriptor = entry.getKey();
-            Object value = entry.getValue();
-            String fieldName = fieldDescriptor.getName();
-            Field pojoField = null;
-            try {
-                pojoField = Customer.class.getDeclaredField(fieldName);
-                pojoField.setAccessible(true);
-                pojoField.set(customer, value);
-            } catch (Exception e) {
-                //May want to let this silently fail...  Can change to log.debug.
-                log.info("Failed to set field {}", fieldName, e);
-            }
-        }
-        return customer;
-    }
-
 }

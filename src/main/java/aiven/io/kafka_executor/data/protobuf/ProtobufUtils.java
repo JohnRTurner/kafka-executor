@@ -1,6 +1,8 @@
 package aiven.io.kafka_executor.data.protobuf;
 
 
+import aiven.io.kafka_executor.data.DataClass;
+import aiven.io.kafka_executor.data.DataInterface;
 import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
@@ -10,15 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 @Slf4j
 public class ProtobufUtils {
     private ProtobufUtils() {}
 
-    private static final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public static Descriptors.Descriptor getDescriptorFromPojo(Class<?> clazz) throws Descriptors.DescriptorValidationException {
         DescriptorProtos.DescriptorProto.Builder descriptorProtoBuilder = DescriptorProtos.DescriptorProto.newBuilder();
@@ -49,7 +49,7 @@ public class ProtobufUtils {
             } else if (fieldType == double.class || fieldType == Double.class) {
                 fieldDescriptorBuilder.setType(DescriptorProtos.FieldDescriptorProto.Type.TYPE_DOUBLE);
             } else if (fieldType == Date.class) {
-                fieldDescriptorBuilder.setType(DescriptorProtos.FieldDescriptorProto.Type.TYPE_STRING);
+                fieldDescriptorBuilder.setType(DescriptorProtos.FieldDescriptorProto.Type.TYPE_UINT64);
                 //fieldDescriptorBuilder.setTypeName(Timestamp.getDescriptor().getFullName());
             } else {
                 throw new UnsupportedOperationException("Unsupported field type: " + fieldType);
@@ -85,7 +85,7 @@ public class ProtobufUtils {
             Descriptors.FieldDescriptor fieldDescriptor = descriptor.findFieldByName(fieldName);
             if (fieldDescriptor != null && fieldValue != null) {
                 if (fieldValue instanceof Date) {
-                    messageBuilder.setField(fieldDescriptor, df.format((Date) fieldValue));
+                    messageBuilder.setField(fieldDescriptor, ((Date) fieldValue).getTime());
                 } else {
                     messageBuilder.setField(fieldDescriptor, fieldValue);
                 }
@@ -94,4 +94,31 @@ public class ProtobufUtils {
 
         return messageBuilder.build();
     }
+    public static DataInterface generateData(DynamicMessage dynamicMessage, DataClass dataClass) {
+        DataInterface dataInterface = dataClass.getDataInterface();
+        Map<Descriptors.FieldDescriptor, Object> fields = dynamicMessage.getAllFields();
+        for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : fields.entrySet()) {
+            Descriptors.FieldDescriptor fieldDescriptor = entry.getKey();
+            Object value = entry.getValue();
+            String fieldName = fieldDescriptor.getName();
+            Field pojoField = null;
+            try {
+                pojoField = dataInterface.getClass().getDeclaredField(fieldName);
+                pojoField.setAccessible(true);
+
+                String typeName = dataInterface.getClass().getDeclaredField(fieldName).getType().getTypeName();
+                log.debug("Field {} of type {}", fieldName, typeName);
+                if (typeName.equalsIgnoreCase("java.util.Date")){
+                    pojoField.set(dataInterface, new Date((Long) value));
+                }else{
+                    pojoField.set(dataInterface, value);
+                }
+            } catch (Exception e) {
+                //May want to let this silently fail...  Can change to log.debug.
+                log.info("Failed to set field {}", fieldName, e);
+            }
+        }
+        return dataInterface;
+    }
+
 }

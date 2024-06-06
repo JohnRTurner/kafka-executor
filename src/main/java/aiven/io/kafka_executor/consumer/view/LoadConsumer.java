@@ -4,6 +4,8 @@ import aiven.io.kafka_executor.config.model.ConnectionConfig;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.data.DataInterface;
+import aiven.io.kafka_executor.data.avro.AvroUtils;
+import aiven.io.kafka_executor.data.protobuf.ProtobufUtils;
 import com.google.protobuf.DynamicMessage;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer;
@@ -169,26 +171,11 @@ public class LoadConsumer {
         }
     }
 
-
-
     public ConsumerStatus generateLoad(String topic, int server, int batchSize, int maxTries, DataClass dataClass) {
         ConsumerStatus status = new ConsumerStatus();
         KafkaConsumer<String, ? extends DataInterface> consumerJSON = null;
         KafkaConsumer<String, ? extends GenericRecord> consumerAvro = null;
         KafkaConsumer<String, ? extends DynamicMessage> consumerProtobuf = null;
-        DataInterface df = null;
-        if(dataClass.getKafkaFormat()== DataClass.KafkaFormat.PROTOBUF ||
-        dataClass.getKafkaFormat()== DataClass.KafkaFormat.AVRO) {
-            try {
-                df = dataClass.getDataInterfaceClass().getConstructor().newInstance();
-            } catch (Exception e) {
-                log.error("Error instantiating data interface", e);
-                status.setError(true);
-                status.setErrorMessage("Error getting consumer for topic ".concat(topic));
-                status.setStatus("Fail");
-                return status;
-            }
-        }
 
         switch (dataClass.getKafkaFormat()) {
             case JSON, JSON_NO_SCHEMA:
@@ -230,12 +217,16 @@ public class LoadConsumer {
                     while (count.get() < batchSize && loop < maxTries) {
                         loop++;
                         ConsumerRecords<String, ? extends GenericRecord> messages = consumerAvro.poll(Duration.ofMillis(100));
-                        DataInterface finalDf = df;
                         messages.forEach(message -> {
                             if(count.get() < 1){
-                                DataInterface dataInterface = finalDf.generateData((GenericData.Record) message.value());
-                                log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
-                                        dataInterface.getId(), dataInterface);
+                                DataInterface dataInterface = AvroUtils.generateData(
+                                        (GenericData.Record) message.value(),dataClass);
+                                if(dataInterface != null){
+                                    log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
+                                            dataInterface.getId(), dataInterface);
+                                } else {
+                                    log.error("Record was not read!");
+                                }
                             }
                             log.debug("Class: {} Message: {}",message.value().getClass().getName(), (message.value()).toString());
                             count.addAndGet(1);
@@ -247,10 +238,9 @@ public class LoadConsumer {
                     while (count.get() < batchSize && loop < maxTries) {
                         loop++;
                         ConsumerRecords<String, ? extends DynamicMessage> messages = consumerProtobuf.poll(Duration.ofMillis(100));
-                        DataInterface finalDf = df;
                         messages.forEach(message -> {
                             if(count.get() < 1){
-                                DataInterface dataInterface = finalDf.generateData((DynamicMessage) message.value());
+                                DataInterface dataInterface = ProtobufUtils.generateData(message.value(),dataClass);
                                 log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
                                         dataInterface.getId(), dataInterface);
                             }
