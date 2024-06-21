@@ -10,7 +10,7 @@ cp application.properties.example application.properties
 
 cd /kafka_executor/certs
 
-cat <<EOF > ca.pemfco
+cat <<EOF > ca.pem
 ${CA_CERT}
 EOF
 cat <<EOF > service.cert
@@ -19,10 +19,6 @@ EOF
 cat <<EOF > service.key
 ${ACCESS_KEY}
 EOF
-
-openssl pkcs12 -export -inkey service.key -in service.cert -out client.keystore.p12 -name service_key -password pass:${CERT_PASS}
-keytool -import -file ca.pem -alias CA -keystore client.truststore.jks -keypass pass:${CERT_PASS} -storepass pass:${CERT_PASS} -noprompt
-
 
 cd /kafka_executor/docker-compose/prometheus
 sed -i "s|THANOS_REMOTE_WRITE_URL|${THANOS_REMOTE_WRITE_URL}|g" prometheus.yml

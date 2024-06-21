@@ -1,7 +1,3 @@
-locals {
-  IDX = index([for idx, comp in aiven_kafka.kafka1.components : idx if comp.component == "schema_registry"], 0)
-}
-
 resource "aws_instance" "data-generator" {
   ami = var.dg_ami_id
   count = var.dg_number_of_instances
@@ -27,8 +23,6 @@ resource "aws_instance" "data-generator" {
       KAFKA_EXECUTOR_HOST=aiven_kafka.kafka1.components[0].host
       KAFKA_EXECUTOR_PORT=aiven_kafka.kafka1.components[0].port
 
-      #KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[local.IDX].host
-      #KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[local.IDX].port
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[6].host
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[6].port
 
