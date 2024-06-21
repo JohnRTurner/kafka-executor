@@ -2,7 +2,10 @@ version: '3.7'
 
 services:
   executor:
-    build: executor
+    build:
+      context: executor
+      args:
+        CERT_PASS: ${CERT_PASS}
     image: executor:1.0
     container_name: executor
     user: 1000:1000
@@ -19,10 +22,10 @@ services:
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD: ${KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD}
       JAVA_OPTS: >-
         -Xms1g -Xmx1g
-        -Djasypt.encryptor.password=${JASYPT_PASS}
-        -Dspring.datasource.url=jdbc:mariadb://rccdb:3306/${MARIADB_DATABASE}
-        -Dspring.datasource.username=${MARIADB_USER}
-        -Dspring.datasource.password=${MARIADB_PASSWORD}
+      #  -Djasypt.encryptor.password=${JASYPT_PASS}
+      #  -Dspring.datasource.url=jdbc:mariadb://rccdb:3306/${MARIADB_DATABASE}
+      #  -Dspring.datasource.username=${MARIADB_USER}
+      #  -Dspring.datasource.password=${MARIADB_PASSWORD}
       TZ: America/New_York
 
   node-exporter:
@@ -51,7 +54,7 @@ services:
     user: 1000:1000
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
+      - ./prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'

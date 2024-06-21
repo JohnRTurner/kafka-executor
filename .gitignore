@@ -78,5 +78,5 @@ terraform.rc
 /.idea/
 !/Terraform/out/README.md
 
-/docker-compse/pometheus-data/
-!/docker-compse/pometheus-data/README.md
+/docker-compose/prometheus-data/
+!/docker-compose/prometheus-data/README.md

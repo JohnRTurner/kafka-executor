@@ -21,7 +21,8 @@ scrape_configs:
   - job_name: executor
     scrape_interval:     5s
     static_configs:
-      - targets: [ 'executor:8080/api/actuator/prometheus' ]
+      - targets: [ 'executor:8080' ]
+    metrics_path: "/api/actuator/prometheus"
   - job_name: node
     static_configs:
       - targets: ['node-exporter:9100']

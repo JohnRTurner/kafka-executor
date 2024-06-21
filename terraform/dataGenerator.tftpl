@@ -5,9 +5,12 @@ sudo usermod -a -G docker ubuntu
 
 cd /
 git clone https://github.com/JohnRTurner/kafka_executor.git
+cd /kafka_executor/src/main/resources
+cp application.properties.example application.properties
+
 cd /kafka_executor/certs
 
-cat <<EOF > ca.pem
+cat <<EOF > ca.pemfco
 ${CA_CERT}
 EOF
 cat <<EOF > service.cert
@@ -21,8 +24,14 @@ openssl pkcs12 -export -inkey service.key -in service.cert -out client.keystore.
 keytool -import -file ca.pem -alias CA -keystore client.truststore.jks -keypass pass:${CERT_PASS} -storepass pass:${CERT_PASS} -noprompt
 
 
-cd /KafkaFlinkDemo/docker-compose/prometheus
-sed -i "s/THANOS_REMOTE_WRITE_URL/${THANOS_REMOTE_WRITE_URL}/g" prometheus.yml
+cd /kafka_executor/docker-compose/prometheus
+sed -i "s|THANOS_REMOTE_WRITE_URL|${THANOS_REMOTE_WRITE_URL}|g" prometheus.yml
+
+
+cd /kafka_executor/docker-compose/executor
+cp /kafka_executor/pom.xml pom.xml
+cp -pr /kafka_executor/src .
+cp -pr /kafka_executor/certs .
 
 cd /kafka_executor/docker-compose
 cat << EOF > .env

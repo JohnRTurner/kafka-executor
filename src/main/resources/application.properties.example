@@ -18,4 +18,4 @@ kafka_executor.schema_registry_password=XXXX
 spring.kafka.consumer.properties.spring.json.trusted.packages=aiven.io.kafka_executor.data
 
 management.endpoints.web.exposure.include=health, metrics, prometheus
-management.metrics.tags.application= ${spring.application.nam
+management.metrics.tags.application=${spring.application.name}

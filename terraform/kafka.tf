@@ -70,3 +70,7 @@ output "kafka1_ca_cert"{
   value = data.aiven_project.proj1.ca_cert
   sensitive = true
 }
+
+output "kafka1_components"{
+  value=aiven_kafka.kafka1.components
+}

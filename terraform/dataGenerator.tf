@@ -1,3 +1,7 @@
+locals {
+  IDX = index([for idx, comp in aiven_kafka.kafka1.components : idx if comp.component == "schema_registry"], 0)
+}
+
 resource "aws_instance" "data-generator" {
   ami = var.dg_ami_id
   count = var.dg_number_of_instances
@@ -22,8 +26,12 @@ resource "aws_instance" "data-generator" {
 
       KAFKA_EXECUTOR_HOST=aiven_kafka.kafka1.components[0].host
       KAFKA_EXECUTOR_PORT=aiven_kafka.kafka1.components[0].port
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[2].host
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[2].port
+
+      #KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[local.IDX].host
+      #KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[local.IDX].port
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[6].host
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[6].port
+
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER=aiven_kafka.kafka1.service_username
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD=aiven_kafka.kafka1.service_password
 
@@ -38,7 +46,7 @@ resource "aws_instance" "data-generator" {
     update = "15m"
     create = "15m"
   }
-  depends_on = [aiven_kafka.kafka1, data.aiven_project.proj1]
+  depends_on = [aiven_kafka.kafka1, data.aiven_project.proj1, aiven_thanos.thanos1]
 }
 
 output "dataGeneratorName"{
