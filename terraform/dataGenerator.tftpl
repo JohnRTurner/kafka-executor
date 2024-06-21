@@ -1,0 +1,40 @@
+#!/bin/bash
+sudo apt update
+sudo apt install docker.io docker-compose nmon kafkacat -y
+sudo usermod -a -G docker ubuntu
+
+cd /
+git clone https://github.com/JohnRTurner/kafka_executor.git
+cd /kafka_executor/certs
+
+cat <<EOF > ca.pem
+${CA_CERT}
+EOF
+cat <<EOF > service.cert
+${ACCESS_CERT}
+EOF
+cat <<EOF > service.key
+${ACCESS_KEY}
+EOF
+
+openssl pkcs12 -export -inkey service.key -in service.cert -out client.keystore.p12 -name service_key -password pass:${CERT_PASS}
+keytool -import -file ca.pem -alias CA -keystore client.truststore.jks -keypass pass:${CERT_PASS} -storepass pass:${CERT_PASS} -noprompt
+
+
+cd /KafkaFlinkDemo/docker-compose/prometheus
+sed -i "s/THANOS_REMOTE_WRITE_URL/${THANOS_REMOTE_WRITE_URL}/g" prometheus.yml
+
+cd /kafka_executor/docker-compose
+cat << EOF > .env
+CERT_PASS=${CERT_PASS}
+KAFKA_EXECUTOR_HOST=${KAFKA_EXECUTOR_HOST}
+KAFKA_EXECUTOR_PORT=${KAFKA_EXECUTOR_PORT}
+KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=${KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST}
+KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=${KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT}
+KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER=${KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER}
+KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD=${KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD}
+EOF
+
+sudo chown -R 1000:1000 /kafka_executor
+
+sudo -u ubuntu docker-compose up -d

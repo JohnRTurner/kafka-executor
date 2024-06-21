@@ -2,17 +2,20 @@ spring.application.name=kafka_executor
 server.servlet.context-path=/api
 
 kafka_executor.version=0.1
-kafka_executor.name=Kafka Executor
+kafka_executor.name=${spring.application.name}
 
-kafka_executor.truststore_password=xxxx
-kafka_executor.keystore_password=xxxx
-kafka_executor.key_password=xxxx
-kafka_executor.truststore_location=certs/client.truststore.jks
-kafka_executor.keystore_location=certs/client.keystore.p12
+cert_pass=test1234
+kafka_executor.host=XXXX
+kafka_executor.port=XXXX
+kafka_executor.truststore_location=/certs/client.truststore.jks
+kafka_executor.keystore_location=/certs/client.keystore.p12
 
-kafka_executor.schema_registry_host=xxxx
-kafka_executor.schema_registry_port=15381
-kafka_executor.schema_registry_user=avnadmin
-kafka_executor.schema_registry_password=xxxx
+kafka_executor.schema_registry_host=XXXX
+kafka_executor.schema_registry_port=XXXX
+kafka_executor.schema_registry_user=XXXX
+kafka_executor.schema_registry_password=XXXX
 
 spring.kafka.consumer.properties.spring.json.trusted.packages=aiven.io.kafka_executor.data
+
+management.endpoints.web.exposure.include=health, metrics, prometheus
+management.metrics.tags.application= ${spring.application.nam

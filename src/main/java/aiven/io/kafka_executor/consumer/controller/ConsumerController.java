@@ -1,5 +1,6 @@
 package aiven.io.kafka_executor.consumer.controller;
 
+import aiven.io.kafka_executor.config.model.ConnectionConfig;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
 import aiven.io.kafka_executor.consumer.view.LoadConsumer;
 import aiven.io.kafka_executor.data.DataClass;
@@ -22,12 +23,10 @@ import java.util.HashMap;
 public class ConsumerController {
     private final HashMap<String, Counter> consumerCount;
     private final HashMap<String,Counter> consumerAmount;
+    private final ConnectionConfig connectionConfig;
 
-    private final LoadConsumer loadConsumer;
 
-
-    public ConsumerController(LoadConsumer loadConsumer, MeterRegistry registry) {
-        this.loadConsumer = loadConsumer;
+    public ConsumerController(ConnectionConfig connectionConfig, MeterRegistry registry) {
         HashMap<String, Counter> count = new HashMap<>();
         HashMap<String, Counter> amount = new HashMap<>();
 
@@ -39,13 +38,14 @@ public class ConsumerController {
         }
         this.consumerCount = count;
         this.consumerAmount = amount;
+        this.connectionConfig = connectionConfig;
     }
 
 
     @RequestMapping(value="/test/clean", method= RequestMethod.GET)
     public ResponseEntity<String> getClean(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        loadConsumer.clean();
+        LoadConsumer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
@@ -65,7 +65,7 @@ public class ConsumerController {
                                                     @RequestParam(value="dataClass",defaultValue = "CUSTOMER_JSON") String dataClass,
                                                     HttpServletRequest request){
         log.debug("Path: {}", request.getRequestURI());
-        DataClass dataClass1 = null;
+        DataClass dataClass1;
         try {
             dataClass1 = DataClass.valueOf(dataClass);
         } catch (IllegalArgumentException e) {
@@ -76,7 +76,7 @@ public class ConsumerController {
             status.setCount(0);
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
-        ConsumerStatus consumerStatus = loadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1);
+        ConsumerStatus consumerStatus = LoadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1, connectionConfig);
         consumerCount.get(dataClass1.name()).increment();
         consumerAmount.get(dataClass1.name()).increment(consumerStatus.getCount());
         return new ResponseEntity<>(consumerStatus, HttpStatus.OK);

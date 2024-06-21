@@ -1,5 +1,6 @@
 package aiven.io.kafka_executor.producer.controller;
 
+import aiven.io.kafka_executor.config.model.ConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.producer.model.ProducerStatus;
 import aiven.io.kafka_executor.producer.view.LoadProducer;
@@ -25,10 +26,11 @@ public class ProducerController {
     private final HashMap<String,Counter> producerCount;
     private final HashMap<String,Counter> producerAmount;
 
-    private final LoadProducer loadProducer;
 
-    public ProducerController(LoadProducer loadProducer, MeterRegistry registry) {
-        this.loadProducer = loadProducer;
+    private final ConnectionConfig connectionConfig;
+
+    public ProducerController(ConnectionConfig connectionConfig, MeterRegistry registry) {
+        this.connectionConfig = connectionConfig;
         HashMap<String, Counter> count = new HashMap<>();
         HashMap<String, Counter> amount = new HashMap<>();
         for(DataClass dataClass:DataClass.values()){
@@ -45,7 +47,7 @@ public class ProducerController {
     @RequestMapping(value="/clean", method= RequestMethod.GET)
     public ResponseEntity<String> getClean(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        loadProducer.clean();
+        LoadProducer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
@@ -60,7 +62,7 @@ public class ProducerController {
         log.debug("Path: {}", request.getRequestURI());
         Set<String> topics;
         try {
-             topics = loadProducer.getTopics().names().get();
+             topics = LoadProducer.getTopics(connectionConfig).names().get();
             return new ResponseEntity<>(topics, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Failed to load topics", e);
@@ -85,7 +87,7 @@ public class ProducerController {
         if(topicList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(loadProducer.createTopics(topicList, partitions,replication), HttpStatus.OK);
+        return new ResponseEntity<>(LoadProducer.createTopics(topicList, partitions,replication, connectionConfig), HttpStatus.OK);
     }
 
     @RequestMapping(value="/deleteTopics", method= RequestMethod.DELETE)
@@ -103,7 +105,7 @@ public class ProducerController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(loadProducer.deleteTopics(topicList), HttpStatus.OK);
+        return new ResponseEntity<>(LoadProducer.deleteTopics(topicList, connectionConfig), HttpStatus.OK);
     }
 
 
@@ -128,8 +130,8 @@ public class ProducerController {
             status.setCount(0);
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
-        ProducerStatus producerStatus = loadProducer.generateLoad(topicName, server, dataClass1, batchSize,
-                startId, correlatedStartIdInc, correlatedEndIdInc);
+        ProducerStatus producerStatus = LoadProducer.generateLoad(topicName, server, dataClass1, batchSize,
+                startId, correlatedStartIdInc, correlatedEndIdInc, connectionConfig);
         producerCount.get(dataClass1.name()).increment();
         producerAmount.get(dataClass1.name()).increment(producerStatus.getCount());
         return new ResponseEntity<>(producerStatus, HttpStatus.OK);

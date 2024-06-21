@@ -41,12 +41,8 @@ public class LoadProducer {
 
     //private static final Faker faker = new Faker();
 
-    private final ConnectionConfig connectionConfig;
-    public LoadProducer(ConnectionConfig connectionConfig) {
-        this.connectionConfig = connectionConfig;
-    }
 
-    public ListTopicsResult getTopics(){
+    public static ListTopicsResult getTopics(ConnectionConfig connectionConfig){
         try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
             return adminClient.listTopics();
         }catch (Exception e) {
@@ -55,7 +51,7 @@ public class LoadProducer {
         }
     }
 
-    public CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication){
+    public static CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication, ConnectionConfig connectionConfig){
         try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
             Collection<NewTopic> newTopics = new ArrayList<>();
             for(String topic : topics){
@@ -68,7 +64,7 @@ public class LoadProducer {
         }
     }
 
-    public DeleteTopicsResult deleteTopics(Collection<String> topics){
+    public static DeleteTopicsResult deleteTopics(Collection<String> topics, ConnectionConfig connectionConfig){
         try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
             return adminClient.deleteTopics(topics);
         }catch (Exception e) {
@@ -78,7 +74,7 @@ public class LoadProducer {
     }
 
 
-    private KafkaProducer<String, DataInterface> getProducerJSON(String topic, int server, boolean registry){
+    private static KafkaProducer<String, DataInterface> getProducerJSON(String topic, int server, boolean registry, ConnectionConfig connectionConfig){
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaProducer<String, DataInterface> producer = jsonProducers.get(key);
         if(producer == null){
@@ -108,7 +104,7 @@ public class LoadProducer {
         return producer;
     }
 
-    private KafkaProducer<String, DynamicMessage> getProducerProtobuf(String topic, int server){
+    private static KafkaProducer<String, DynamicMessage> getProducerProtobuf(String topic, int server, ConnectionConfig connectionConfig){
         String key = topic.concat(Integer.toString(server).concat("True"));
         KafkaProducer<String, DynamicMessage> producer = protobufProducers.get(key);
         if(producer == null){
@@ -135,7 +131,7 @@ public class LoadProducer {
     }
 
 
-    private KafkaProducer<String, GenericRecord> getProducerAvro(String topic, int server){
+    private static KafkaProducer<String, GenericRecord> getProducerAvro(String topic, int server, ConnectionConfig connectionConfig){
         String key = topic.concat(Integer.toString(server).concat("False"));
         KafkaProducer<String, GenericRecord> producer = avroProducers.get(key);
         if(producer == null){
@@ -161,7 +157,7 @@ public class LoadProducer {
         return producer;
     }
 
-    public void clean(){
+    public static void clean(){
         for(String key : jsonProducers.keySet()){
             KafkaProducer<String, DataInterface> remove = jsonProducers.remove(key);
             if(remove != null){
@@ -185,7 +181,7 @@ public class LoadProducer {
         }
     }
 
-    public ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize, long startId, int correlatedStartIdInc, int correlatedEndIdInc) {
+    public static ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize, long startId, int correlatedStartIdInc, int correlatedEndIdInc, ConnectionConfig connectionConfig) {
         ProducerStatus status = new ProducerStatus();
         KafkaProducer<String, GenericRecord> producerAvro = null;
         KafkaProducer<String, DataInterface> producerJSON = null;
@@ -198,13 +194,13 @@ public class LoadProducer {
         }
 
         if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.AVRO) {
-            producerAvro = this.getProducerAvro(topic, server);
+            producerAvro = getProducerAvro(topic, server, connectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON_NO_SCHEMA) {
-            producerJSON = this.getProducerJSON(topic, server,false);
+            producerJSON = getProducerJSON(topic, server,false, connectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON) {
-            producerJSON = this.getProducerJSON(topic, server, true);
+            producerJSON = getProducerJSON(topic, server, true, connectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.PROTOBUF) {
-            producerProtobuf = this.getProducerProtobuf(topic, server);
+            producerProtobuf = getProducerProtobuf(topic, server, connectionConfig);
         }
 
         if (producerAvro == null && producerJSON == null && producerProtobuf == null) {

@@ -3,24 +3,22 @@ package aiven.io.kafka_executor.config.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+
 
 import java.util.Properties;
 
-@Component
+@Configuration
 @NoArgsConstructor
 @Data
 public class ConnectionConfig {
-    private String host = "kafka-test-bus4-jturner-demo.c.aivencloud.com";
-    private int port = 15378;
+    @Value("${kafka_executor.host}")
+    private String host;
+    @Value("${kafka_executor.port}")
+    private String port;
 
-    //private String topic_name = "testTopic";
-    @Value("${kafka_executor.truststore_password}")
-    private String truststore_password;
-    @Value("${kafka_executor.keystore_password}")
-    private String keystore_password;
-    @Value("${kafka_executor.key_password}")
-    private String key_password;
+    @Value("${cert_pass}")
+    private String cert_password;
     @Value("${kafka_executor.truststore_location}")
     private String truststore_location;
     @Value("${kafka_executor.keystore_location}")
@@ -40,11 +38,11 @@ public class ConnectionConfig {
         properties.setProperty("bootstrap.servers", host + ":" + port);
         properties.setProperty("security.protocol", "SSL");
         properties.setProperty("ssl.truststore.location", truststore_location);
-        properties.setProperty("ssl.truststore.password", truststore_password);
+        properties.setProperty("ssl.truststore.password", cert_password);
         properties.setProperty("ssl.keystore.type", "PKCS12");
         properties.setProperty("ssl.keystore.location", keystore_location);
-        properties.setProperty("ssl.keystore.password", key_password);
-        properties.setProperty("ssl.key.password", key_password);
+        properties.setProperty("ssl.keystore.password", cert_password);
+        properties.setProperty("ssl.key.password", cert_password);
         return properties;
     }
 

@@ -12,37 +12,29 @@ import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerConfig;
 import io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
+
 @Slf4j
 public class LoadConsumer {
     private static final HashMap<String, KafkaConsumer<String, DataInterface> > jsonConsumers = new HashMap<>();
     private static final HashMap<String, KafkaConsumer<String, GenericRecord>> avroConsumers = new HashMap<>();
     private static final HashMap<String, KafkaConsumer<String, DynamicMessage> > protobufConsumers = new HashMap<>();
 
-    private final ConnectionConfig connectionConfig;
-
-    public LoadConsumer(ConnectionConfig connectionConfig) {
-        this.connectionConfig = connectionConfig;
-    }
-
-    private KafkaConsumer<String, DataInterface> getConsumerJSON(String topic, int server, DataClass dataClass){
+    private static KafkaConsumer<String, DataInterface> getConsumerJSON(String topic, int server, DataClass dataClass, ConnectionConfig connectionConfig){
         //JSON has schema JSON_NO_SCHEMA does not
         boolean registry = (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON);
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
@@ -63,12 +55,16 @@ public class LoadConsumer {
                         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
                         properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
                         properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
+                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
+                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
                         properties.setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*");
                         // this is for no schema
                         properties.setProperty(JsonDeserializer.VALUE_DEFAULT_TYPE, dataClass.getDataInterfaceClass().getName());
                         // this is for schema
                         properties.setProperty(KafkaJsonSchemaDeserializerConfig.JSON_VALUE_TYPE, dataClass.getDataInterfaceClass().getName());
                         properties.setProperty(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, "false");
+
                         try {
                             consumer = new KafkaConsumer<>(properties);
                             jsonConsumers.put(key, consumer);
@@ -85,7 +81,7 @@ public class LoadConsumer {
         return consumer;
     }
 
-    private KafkaConsumer<String, GenericRecord> getConsumerAvro(String topic, int server, DataClass dataClass){
+    private static KafkaConsumer<String, GenericRecord> getConsumerAvro(String topic, int server, ConnectionConfig connectionConfig){
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, GenericRecord> consumer = avroConsumers.get(key);
         if(consumer == null){
@@ -100,6 +96,10 @@ public class LoadConsumer {
                         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
                         properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
                         properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
+                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
+                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
+
                         //properties.setProperty(KafkaAvroDeserializerConfig.SC)
                         try {
                             consumer = new KafkaConsumer<>(properties);
@@ -117,7 +117,7 @@ public class LoadConsumer {
         return consumer;
     }
 
-    private KafkaConsumer<String, DynamicMessage> getConsumerProtobuf(String topic, int server, DataClass dataClass){
+    private static KafkaConsumer<String, DynamicMessage> getConsumerProtobuf(String topic, int server, ConnectionConfig connectionConfig){
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, DynamicMessage> consumer = protobufConsumers.get(key);
         if(consumer == null){
@@ -132,6 +132,9 @@ public class LoadConsumer {
                         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
                         properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
                         properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
+                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
+                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
                         //properties.setProperty(KafkaAvroDeserializerConfig.SC)
                         try {
                             consumer = new KafkaConsumer<>(properties);
@@ -150,7 +153,7 @@ public class LoadConsumer {
     }
 
 
-    public void clean(){
+    public static void clean(){
         for(String key : jsonConsumers.keySet()){
             KafkaConsumer<String, DataInterface> remove = jsonConsumers.remove(key);
             if(remove != null){
@@ -171,7 +174,7 @@ public class LoadConsumer {
         }
     }
 
-    public ConsumerStatus generateLoad(String topic, int server, int batchSize, int maxTries, DataClass dataClass) {
+    public static ConsumerStatus generateLoad(String topic, int server, int batchSize, int maxTries, DataClass dataClass, ConnectionConfig connectionConfig) {
         ConsumerStatus status = new ConsumerStatus();
         KafkaConsumer<String, ? extends DataInterface> consumerJSON = null;
         KafkaConsumer<String, ? extends GenericRecord> consumerAvro = null;
@@ -179,13 +182,13 @@ public class LoadConsumer {
 
         switch (dataClass.getKafkaFormat()) {
             case JSON, JSON_NO_SCHEMA:
-                consumerJSON = getConsumerJSON(topic,server,dataClass);
+                consumerJSON = getConsumerJSON(topic,server,dataClass,connectionConfig);
                 break;
             case AVRO:
-                consumerAvro = getConsumerAvro(topic,server,dataClass);
+                consumerAvro = getConsumerAvro(topic,server,connectionConfig);
                 break;
             case PROTOBUF:
-                consumerProtobuf = getConsumerProtobuf(topic,server,dataClass);
+                consumerProtobuf = getConsumerProtobuf(topic,server,connectionConfig);
         }
 
         if(consumerJSON == null && consumerAvro == null && consumerProtobuf == null){
@@ -194,59 +197,64 @@ public class LoadConsumer {
             status.setErrorMessage("Error getting consumer for topic ".concat(topic));
             status.setStatus("Fail");
         } else {
-            AtomicInteger count = new AtomicInteger(0);
+            int count = 0;
             int loop = 0;
             switch (dataClass.getKafkaFormat()) {
                 case JSON, JSON_NO_SCHEMA:
                     consumerJSON.subscribe(List.of(topic));
-                    while (count.get() < batchSize && loop < maxTries) {
+                    while (count < batchSize && loop < maxTries) {
                         loop++;
                         ConsumerRecords<String, ? extends DataInterface> messages = consumerJSON.poll(Duration.ofMillis(100));
-                        messages.forEach(message -> {
-                            if(count.get() < 1){
-                                log.info("Class: {} Id: {} Message: {}", message.value().getClass().getName(),
-                                        (message.value()).getId(), message.value().toString());
+                        count += messages.count();
+                        boolean isFirst = true;
+                        for (ConsumerRecord<String, ? extends DataInterface> record : messages) {
+                            if (isFirst) {
+                                log.info("Class: {} Id: {} Message: {}", record.value().getClass().getName(),
+                                        (record.value()).getId(), record.value().toString());
+                                isFirst = false;
                             }
-                            log.debug("Class: {} Message: {}",message.value().getClass().getName(), (message.value()).toString());
-                            count.addAndGet(1);
-                        });
+                            log.debug("Class: {} Message: {}", record.value().getClass().getName(), (record.value()).toString());
+                        }
                     }
                     break;
                 case AVRO:
                     consumerAvro.subscribe(List.of(topic));
-                    while (count.get() < batchSize && loop < maxTries) {
+                    while (count < batchSize && loop < maxTries) {
                         loop++;
                         ConsumerRecords<String, ? extends GenericRecord> messages = consumerAvro.poll(Duration.ofMillis(100));
-                        messages.forEach(message -> {
-                            if(count.get() < 1){
-                                DataInterface dataInterface = AvroUtils.generateData(
-                                        (GenericData.Record) message.value(),dataClass);
-                                if(dataInterface != null){
+                        count += messages.count();
+                        boolean isFirst = true;
+                        for (ConsumerRecord<String, ? extends GenericRecord> record : messages) {
+                            if (isFirst) {
+                                isFirst = false;
+                                DataInterface dataInterface = AvroUtils.generateData(record.value(), dataClass);
+                                if (dataInterface != null) {
                                     log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
                                             dataInterface.getId(), dataInterface);
-                                } else {
-                                    log.error("Record was not read!");
                                 }
                             }
-                            log.debug("Class: {} Message: {}",message.value().getClass().getName(), (message.value()).toString());
-                            count.addAndGet(1);
-                        });
+                            log.debug("Class: {} Message: {}", record.value().getClass().getName(), record.value().toString());
+                        }
                     }
                     break;
                 case PROTOBUF:
                     consumerProtobuf.subscribe(List.of(topic));
-                    while (count.get() < batchSize && loop < maxTries) {
+                    while (count < batchSize && loop < maxTries) {
                         loop++;
                         ConsumerRecords<String, ? extends DynamicMessage> messages = consumerProtobuf.poll(Duration.ofMillis(100));
-                        messages.forEach(message -> {
-                            if(count.get() < 1){
-                                DataInterface dataInterface = ProtobufUtils.generateData(message.value(),dataClass);
-                                log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
-                                        dataInterface.getId(), dataInterface);
+                        count += messages.count();
+                        boolean isFirst = true;
+                        for (ConsumerRecord<String, ? extends DynamicMessage> record : messages) {
+                            if (isFirst) {
+                                isFirst = false;
+                                DataInterface dataInterface = ProtobufUtils.generateData(record.value(), dataClass);
+                                if (dataInterface != null) {
+                                    log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
+                                            dataInterface.getId(), dataInterface);
+                                }
                             }
-                            log.debug("Class: {} Message: {}",message.value().getClass().getName(), (message.value()).toString());
-                            count.addAndGet(1);
-                        });
+                            log.debug("Class: {} Message: {}", record.value().getClass().getName(), (record.value()).toString());
+                        }
                     }
                     break;
             }
@@ -254,7 +262,7 @@ public class LoadConsumer {
             status.setError(false);
             status.setErrorMessage("");
             status.setStatus("Success");
-            status.setCount(count.get());
+            status.setCount(count);
         }
         return status;
     }
