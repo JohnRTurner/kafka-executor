@@ -62,7 +62,7 @@ public class ProducerController {
     @RequestMapping(value="/createTopics", method= RequestMethod.PUT)
     public ResponseEntity<CreateTopicsResult> createTopics(
             @RequestParam(value="topics[]",defaultValue = "Default List")  String[] topics,
-            @RequestParam(value="partitions",defaultValue = "4") int partitions,
+            @RequestParam(value="partitions",defaultValue = "6") int partitions,
             @RequestParam(value="replication",defaultValue = "2") short replication,
             HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());

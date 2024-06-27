@@ -209,7 +209,7 @@ public class LoadConsumer {
                         boolean isFirst = true;
                         for (ConsumerRecord<String, ? extends DataInterface> record : messages) {
                             if (isFirst) {
-                                log.info("Class: {} Id: {} Message: {}", record.value().getClass().getName(),
+                                log.debug("Class: {} Id: {} Message: {}", record.value().getClass().getName(),
                                         (record.value()).getId(), record.value().toString());
                                 isFirst = false;
                             }
@@ -229,7 +229,7 @@ public class LoadConsumer {
                                 isFirst = false;
                                 DataInterface dataInterface = AvroUtils.generateData(record.value(), dataClass);
                                 if (dataInterface != null) {
-                                    log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
+                                    log.debug("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
                                             dataInterface.getId(), dataInterface);
                                 }
                             }
@@ -249,7 +249,7 @@ public class LoadConsumer {
                                 isFirst = false;
                                 DataInterface dataInterface = ProtobufUtils.generateData(record.value(), dataClass);
                                 if (dataInterface != null) {
-                                    log.info("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
+                                    log.debug("Class: {} Id: {} Message: {}", dataInterface.getClass().getName(),
                                             dataInterface.getId(), dataInterface);
                                 }
                             }
