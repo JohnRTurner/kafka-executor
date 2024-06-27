@@ -2,10 +2,9 @@ package aiven.io.kafka_executor.producer.controller;
 
 import aiven.io.kafka_executor.config.model.ConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
+import aiven.io.kafka_executor.log.model.Statistics;
 import aiven.io.kafka_executor.producer.model.ProducerStatus;
 import aiven.io.kafka_executor.producer.view.LoadProducer;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,24 +22,13 @@ import static aiven.io.kafka_executor.data.DataClass.values;
 @RequestMapping("/producer")
 @Slf4j
 public class ProducerController {
-    private final HashMap<String,Counter> producerCount;
-    private final HashMap<String,Counter> producerAmount;
-
 
     private final ConnectionConfig connectionConfig;
+    private final Statistics statistics;
 
-    public ProducerController(ConnectionConfig connectionConfig, MeterRegistry registry) {
+    public ProducerController(ConnectionConfig connectionConfig, Statistics statistics) {
         this.connectionConfig = connectionConfig;
-        HashMap<String, Counter> count = new HashMap<>();
-        HashMap<String, Counter> amount = new HashMap<>();
-        for(DataClass dataClass:DataClass.values()){
-            count.put(dataClass.name(),Counter.builder(dataClass.name().toLowerCase() + ".producer.count").
-                   /* tag("Version", "v1").*/description("Kafka producer calls").register(registry));
-            amount.put(dataClass.name(),Counter.builder(dataClass.name() .toLowerCase()+ ".producer.amount").
-                    /* tag("Version", "v1").*/description("Kafka producer generated rows").register(registry));
-        }
-        this.producerCount = count;
-        this.producerAmount = amount;
+        this.statistics = statistics;
     }
 
 
@@ -132,8 +120,7 @@ public class ProducerController {
         }
         ProducerStatus producerStatus = LoadProducer.generateLoad(topicName, server, dataClass1, batchSize,
                 startId, correlatedStartIdInc, correlatedEndIdInc, connectionConfig);
-        producerCount.get(dataClass1.name()).increment();
-        producerAmount.get(dataClass1.name()).increment(producerStatus.getCount());
+        statistics.producerSet(dataClass1.name(), producerStatus.getCount());
         return new ResponseEntity<>(producerStatus, HttpStatus.OK);
     }
 

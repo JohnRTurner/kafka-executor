@@ -4,8 +4,7 @@ import aiven.io.kafka_executor.config.model.ConnectionConfig;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
 import aiven.io.kafka_executor.consumer.view.LoadConsumer;
 import aiven.io.kafka_executor.data.DataClass;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
+import aiven.io.kafka_executor.log.model.Statistics;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,24 +20,12 @@ import java.util.HashMap;
 @RequestMapping("/consumer")
 @Slf4j
 public class ConsumerController {
-    private final HashMap<String, Counter> consumerCount;
-    private final HashMap<String,Counter> consumerAmount;
     private final ConnectionConfig connectionConfig;
+    private final Statistics statistics;
 
-
-    public ConsumerController(ConnectionConfig connectionConfig, MeterRegistry registry) {
-        HashMap<String, Counter> count = new HashMap<>();
-        HashMap<String, Counter> amount = new HashMap<>();
-
-        for(DataClass dataClass:DataClass.values()){
-            count.put(dataClass.name(),Counter.builder(dataClass.name().toLowerCase() + ".consumer.count").
-                    /* tag("Version", "v1").*/description("Kafka consumer calls").register(registry));
-            amount.put(dataClass.name(),Counter.builder(dataClass.name() .toLowerCase()+ ".consumer.amount").
-                    /* tag("Version", "v1").*/description("Kafka consumer generated rows").register(registry));
-        }
-        this.consumerCount = count;
-        this.consumerAmount = amount;
+    public ConsumerController(ConnectionConfig connectionConfig, Statistics statistics) {
         this.connectionConfig = connectionConfig;
+        this.statistics = statistics;
     }
 
 
@@ -77,8 +64,7 @@ public class ConsumerController {
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
         ConsumerStatus consumerStatus = LoadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1, connectionConfig);
-        consumerCount.get(dataClass1.name()).increment();
-        consumerAmount.get(dataClass1.name()).increment(consumerStatus.getCount());
+        statistics.consumerSet(dataClass1.name(), consumerStatus.getCount());
         return new ResponseEntity<>(consumerStatus, HttpStatus.OK);
     }
 
