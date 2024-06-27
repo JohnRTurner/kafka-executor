@@ -51,7 +51,7 @@ public class BatchController {
     }
 
 
-    @RequestMapping(value="/generateConsumerTask", method= RequestMethod.POST, params = {"topicName","server"})
+    @RequestMapping(value="/generateConsumerTask", method= RequestMethod.POST)
     public ResponseEntity<Boolean> createConsumerTask(@RequestParam(value="topicName",defaultValue = "CUSTOMER_JSON") String topicName,
                                                     @RequestParam(value="numThreads",defaultValue = "1") int numThreads,
                                                     @RequestParam(value="batchSize",defaultValue = "100000") int batchSize,
@@ -69,7 +69,7 @@ public class BatchController {
         return new ResponseEntity<>(batchExecutionService.createConsumerTask(topicName.concat("_").concat(dataClass), topicName, dataClass1, batchSize, maxTries, sleepMillis, numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/generateProducerTask", method= RequestMethod.POST, params = {"topicName","server"})
+    @RequestMapping(value="/generateProducerTask", method= RequestMethod.POST)
     public ResponseEntity<Boolean> createProducerTask(@RequestParam(value="topicName",defaultValue = "CUSTOMER_JSON") String topicName,
                                                       @RequestParam(value="numThreads",defaultValue = "1") int numThreads,
                                                       @RequestParam(value="batchSize",defaultValue = "100000") int batchSize,
@@ -91,14 +91,14 @@ public class BatchController {
                 numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/dropProducerTask", method= RequestMethod.DELETE, params = {"topicName","server"})
+    @RequestMapping(value="/dropProducerTask", method= RequestMethod.DELETE)
     public ResponseEntity<Boolean> dropProducerTask(@RequestParam(value="taskName",defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                       HttpServletRequest request){
         log.debug("Path: {}", request.getRequestURI());
         return new ResponseEntity<>(batchExecutionService.dropProducerTask(taskName), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/dropConsumerTask", method= RequestMethod.DELETE, params = {"topicName","server"})
+    @RequestMapping(value="/dropConsumerTask", method= RequestMethod.DELETE)
     public ResponseEntity<Boolean> dropConsumerTask(@RequestParam(value="taskName",defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                     HttpServletRequest request){
         log.debug("Path: {}", request.getRequestURI());
@@ -107,7 +107,7 @@ public class BatchController {
 
 
 
-    @RequestMapping(value="/changeConsumerTaskCount", method= RequestMethod.PATCH, params = {"topicName","server"})
+    @RequestMapping(value="/changeConsumerTaskCount", method= RequestMethod.PATCH)
     public ResponseEntity<Boolean> dropProducerTask(@RequestParam(value="taskName",defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                     @RequestParam(value="numThreads",defaultValue = "4") int numThreads,
                                                     HttpServletRequest request){
@@ -115,7 +115,7 @@ public class BatchController {
         return new ResponseEntity<>(batchExecutionService.changeConsumerTaskCount(taskName,numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/changeProducerTaskCount", method= RequestMethod.PATCH, params = {"topicName","server"})
+    @RequestMapping(value="/changeProducerTaskCount", method= RequestMethod.PATCH)
     public ResponseEntity<Boolean> changeProducerTaskCount(@RequestParam(value="taskName",defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                            @RequestParam(value="numThreads",defaultValue = "4") int numThreads,
                                                     HttpServletRequest request){
