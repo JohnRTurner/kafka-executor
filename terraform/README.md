@@ -11,9 +11,10 @@ The commands must be issued inside the Terraform directory
 * `terraform init` - Used to initialize the Terraform client
 * `terraform plan` - Used to check what Terraform plans to do if applied
 * `terraform apply -auto-approve` - Used to execute the Terraform plan
+* `terraform apply -replace="aws_instance.data-generator[0]" -auto-approve` - used to rebuild one component
 * `terraform output` - Show output parameters from the previous apply
 * `terraform plan -destroy` - Used to check what Terraform plans to do if a destroy command is issued
-* `terraform destroy` - Used to remove the resources from the Terraform plan
+* `terraform destroy -auto-approve` - Used to remove the resources from the Terraform plan
 
 ### Terminal commands
 * `avn service cli pg1` - Used to connect on command line to the Postgres database

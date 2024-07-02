@@ -29,6 +29,9 @@ cp /kafka_executor/pom.xml pom.xml
 cp -pr /kafka_executor/src .
 cp -pr /kafka_executor/certs .
 
+cd /kafka_executor/docker-compose/nginx
+cp -pr /kafka_executor/websrc .
+
 cd /kafka_executor/docker-compose
 cat << EOF > .env
 CERT_PASS=${CERT_PASS}
@@ -45,5 +48,7 @@ WEB_PASSWORD=${WEB_PASSWORD}
 EOF
 
 sudo chown -R 1000:1000 /kafka_executor
+
+sudo -u ubuntu docker-compose build
 
 sudo -u ubuntu docker-compose up -d
