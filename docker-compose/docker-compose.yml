@@ -9,11 +9,11 @@ services:
         WEB_PASSWORD: ${WEB_PASSWORD}
         VITE_GRAFANA_URL: ${GRAFANA_URL}
         VITE_GRAFANA_USER_PASSWORD: ${GRAFANA_USER_PASS}
+    container_name: nginx
     ports:
-      - "80:80"
+      - "8000:8000"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./app/static:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
   executor:
     build:
       context: executor

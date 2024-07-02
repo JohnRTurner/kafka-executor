@@ -44,7 +44,7 @@ function App() {
         {
             label: 'Application Links',
             subMenuItems: [
-                { label: 'Swagger', url: 'http://' + window.location.hostname + '8080/api/swagger-ui/index.html#/'},
+                { label: 'Swagger', url: 'http://' + window.location.hostname + ':' + window.location.port + '/api/swagger-ui/index.html#/'},
                 { label: 'Prometheus', url: 'http://' + window.location.hostname + ':9090/graph'},
 
             ],
