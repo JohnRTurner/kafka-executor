@@ -44,6 +44,9 @@ public class LoadProducer {
 
     public static ListTopicsResult getTopics(ConnectionConfig connectionConfig){
         try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            DescribeClusterResult cluster = adminClient.describeCluster();
+            log.warn("Cluster Id: {}", cluster.clusterId().get());
+            log.warn("Brokers: {}", cluster.nodes().get());
             return adminClient.listTopics();
         }catch (Exception e) {
             log.error("Error getting topic list", e);
