@@ -4,12 +4,15 @@ cloud_name = "cloud_name"
 maintenance_dow = "monday"
 maintenance_time = "10:00:00"
 
-AWS_ACCESS_KEY_ID="your_key"
-AWS_SECRET_ACCESS_KEY="your_secret"
-AWS_SESSION_TOKEN="your_token"
-
 aws_region = "us-east-2"
 dg_ami_id = "ami-0e83be366243f524a"
 dg_sg_id = "default"
 dg_key_pair_name = "your_key"
 dg_instance_name = "your-demo"
+
+web_user = "admin"
+web_password = "Admin123"
+
+AWS_ACCESS_KEY_ID="your_key"
+AWS_SECRET_ACCESS_KEY="your_secret"
+AWS_SESSION_TOKEN="your_token"

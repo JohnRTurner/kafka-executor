@@ -14,7 +14,7 @@ resource "aiven_grafana" "grafana1" {
   }
 }
 
-resource "aiven_service_integration" "pg1_dashboard_grafana1" {
+resource "aiven_service_integration" "thanos1_dashboard_grafana1" {
   project                  = var.project_name
   integration_type         = "dashboard"
   source_service_name      = aiven_grafana.grafana1.service_name

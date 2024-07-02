@@ -30,6 +30,12 @@ resource "aws_instance" "data-generator" {
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD=aiven_kafka.kafka1.service_password
 
       THANOS_REMOTE_WRITE_URL=aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
+
+      GRAFANA_URL=aiven_grafana.grafana1.service_uri
+      GRAFANA_USER_PASS=format("%s:%s", aiven_grafana.grafana1.service_username, aiven_grafana.grafana1.service_password)
+
+      WEB_USER=var.web_user
+      WEB_PASSWORD=var.web_password
     }
   )
   tags = {

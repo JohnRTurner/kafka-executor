@@ -84,3 +84,13 @@ variable "dg_key_pair_name" {
   description = "Name of PEM file to be used"
   type = string
 }
+
+variable "web_user" {
+  description = "Executor Web User"
+  type        = string
+}
+
+variable "web_password" {
+  description = "Executor Web Password"
+  type        = string
+}

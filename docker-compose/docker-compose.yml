@@ -1,6 +1,19 @@
 version: '3.7'
 
 services:
+  nginx:
+    build:
+      context: nginx
+      args:
+        WEB_USER: ${WEB_USER}
+        WEB_PASSWORD: ${WEB_PASSWORD}
+        VITE_GRAFANA_URL: ${GRAFANA_URL}
+        VITE_GRAFANA_USER_PASSWORD: ${GRAFANA_USER_PASS}
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./app/static:/usr/share/nginx/html
   executor:
     build:
       context: executor

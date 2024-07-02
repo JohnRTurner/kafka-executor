@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.6.0",
+    "generators": {
+      "kafka_executor": {
+        "generatorName": "typescript-axios",
+        "output": "./src/api",
+        "inputSpec": "http://127.0.0.1:8080/api/v3/api-docs"
+      }
+    }
+  }
+}
