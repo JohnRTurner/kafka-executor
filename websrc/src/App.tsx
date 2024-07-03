@@ -35,9 +35,9 @@ function App() {
 
     const menuItems: MenuItem[] = [
         {
-            label: 'Home',
+            label: 'Batch',
             subMenuItems: [
-                { label: 'BatchList', action: () => handleDisplayChange('BatchList') },
+                { label: 'Batch List', action: () => handleDisplayChange('BatchList') },
                 { label: 'Sump', action: () => handleDisplayChange('Sump') },
             ],
         },

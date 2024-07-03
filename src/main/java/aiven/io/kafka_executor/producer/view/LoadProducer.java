@@ -43,7 +43,9 @@ public class LoadProducer {
 
 
     public static ListTopicsResult getTopics(ConnectionConfig connectionConfig){
-        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+        Properties properties = connectionConfig.connectionProperties();
+        properties.put("client.dns.lookup", "use_all_dns_ips");
+        try (AdminClient adminClient = AdminClient.create(properties)) {
             DescribeClusterResult cluster = adminClient.describeCluster();
             log.warn("Cluster Id: {}", cluster.clusterId().get());
             log.warn("Brokers: {}", cluster.nodes().get());
