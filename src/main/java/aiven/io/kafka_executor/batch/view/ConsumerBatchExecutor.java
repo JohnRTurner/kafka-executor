@@ -19,7 +19,9 @@ public class ConsumerBatchExecutor {
     private final Statistics statistics;
     private final Map<Thread, ConsumerBatchTask> threadTaskMap = new HashMap<>();
 
-    public ConsumerBatchExecutor(String topic, DataClass dataClass, int batchSize, int maxTries, ConnectionConfig connectionConfig, long sleepMillis, Statistics statistics, int numThreads) {
+    public ConsumerBatchExecutor(String topic, DataClass dataClass, int batchSize, int maxTries,
+                                 ConnectionConfig connectionConfig, long sleepMillis, Statistics statistics,
+                                 int numThreads) {
         this.topic = topic;
         this.dataClass = dataClass;
         this.batchSize = batchSize;
@@ -61,7 +63,7 @@ public class ConsumerBatchExecutor {
             threadTaskMap.put(thread, consumerBatchTask);
             thread.start();
         }
-        if(threadTaskMap.size() > numThreads) {
+        if (threadTaskMap.size() > numThreads) {
             for (Map.Entry<Thread, ConsumerBatchTask> entry : threadTaskMap.entrySet()) {
                 ConsumerBatchTask task = entry.getValue();
                 if (task.getServer() >= numThreads) {

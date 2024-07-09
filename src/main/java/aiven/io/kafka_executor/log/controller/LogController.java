@@ -16,23 +16,24 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class LogController {
     private final Statistics statistic;
+
     public LogController(Statistics statistic) {
         this.statistic = statistic;
     }
 
-    @RequestMapping(value="/list", method= RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<ClassStatistic[]> getList(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
-        return new ResponseEntity<>( statistic.getClassStatistics(), HttpStatus.OK);
+        return new ResponseEntity<>(statistic.getClassStatistics(), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/listClass", method= RequestMethod.GET)
-    public ResponseEntity<ClassStatistic> getList(@RequestParam(value="className",defaultValue = "CUSTOMER_JSON") String className,
-                                                    HttpServletRequest request) {
+    @RequestMapping(value = "/listClass", method = RequestMethod.GET)
+    public ResponseEntity<ClassStatistic> getList(@RequestParam(value = "className", defaultValue = "CUSTOMER_JSON") String className,
+                                                  HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
-        return new ResponseEntity<>( statistic.getClassStatistic(className), HttpStatus.OK);
+        return new ResponseEntity<>(statistic.getClassStatistic(className), HttpStatus.OK);
     }
 
 

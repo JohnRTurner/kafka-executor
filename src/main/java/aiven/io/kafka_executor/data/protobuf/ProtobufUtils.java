@@ -8,16 +8,15 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import lombok.extern.slf4j.Slf4j;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
 import java.util.Date;
 import java.util.Map;
 
 @Slf4j
 public class ProtobufUtils {
-    private ProtobufUtils() {}
+    private ProtobufUtils() {
+    }
 
 
     public static Descriptors.Descriptor getDescriptorFromPojo(Class<?> clazz) throws Descriptors.DescriptorValidationException {
@@ -94,6 +93,7 @@ public class ProtobufUtils {
 
         return messageBuilder.build();
     }
+
     public static DataInterface generateData(DynamicMessage dynamicMessage, DataClass dataClass) {
         DataInterface dataInterface = dataClass.getDataInterface();
         Map<Descriptors.FieldDescriptor, Object> fields = dynamicMessage.getAllFields();
@@ -108,9 +108,9 @@ public class ProtobufUtils {
 
                 String typeName = dataInterface.getClass().getDeclaredField(fieldName).getType().getTypeName();
                 log.debug("Field {} of type {}", fieldName, typeName);
-                if (typeName.equalsIgnoreCase("java.util.Date")){
+                if (typeName.equalsIgnoreCase("java.util.Date")) {
                     pojoField.set(dataInterface, new Date((Long) value));
-                }else{
+                } else {
                     pojoField.set(dataInterface, value);
                 }
             } catch (Exception e) {

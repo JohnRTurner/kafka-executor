@@ -2,6 +2,16 @@ import  { useState } from 'react';
 import './App.css';
 import BatchList from "./batchList/BatchList.tsx";
 import Grafana from "./password/Grafana.tsx";
+import {BatchControllerApi, ConsumerControllerApi, ProducerControllerApi} from "./api";
+import apiConfig from "./apiConfig.tsx";
+import ResultDialog from "./dialog/ResultDialog.tsx";
+import ConfirmationDialog from "./dialog/ConfirmationDialog.tsx";
+import TopicDialog from "./dialog/TopicDialog.tsx";
+import ConnectionDialog from "./dialog/ConnectionDialog.tsx";
+
+const batchController = new BatchControllerApi(apiConfig);
+const consumerController = new ConsumerControllerApi(apiConfig);
+const producerController = new ProducerControllerApi(apiConfig);
 
 type MenuItem = {
     label: string;
@@ -11,17 +21,6 @@ type MenuItem = {
     externalUrl?: string;
 };
 
-/*
-interface ProcessEnv {
-    REACT_APP_GRAFANA_URL?: string;
-}
-
-declare let process: {
-    env: ProcessEnv;
-};
-
- */
-
 function App() {
 
     const [selectedDisplay, setSelectedDisplay] = useState<'BatchList' | 'Grafana'| 'Sump' | 'External'>('BatchList');
@@ -29,23 +28,35 @@ function App() {
     const [activeMenu, setActiveMenu] = useState<MenuItem | null>(null);
     const [externalUrl, setExternalUrl] = useState<string>('');
 
+    const [showTopic, setShowTopic] = useState(false); // State for showing confirmation dialog
+    const [showConnection, setShowConnection] = useState(false); // State for showing confirmation dialog
+    const [showConfirmation, setShowConfirmation] = useState(false); // State for showing confirmation dialog
+    const [showResult, setShowResultDialog] = useState(false); // State for showing result dialog
+    const [apiResult, setApiResult] = useState<string|null>(null); // State for API call result
+
+    const [handleConfirmation, setConfirmation] = useState<() => void>(); // State for API call result
+    const [confirmationMessage, setConfirmationMessage] = useState<string|null>(null); // State for API call result
+
+
     //const grafanaUrl = process.env.REACT_APP_GRAFANA_URL;
     const grafanaUrl = import.meta.env.VITE_GRAFANA_URL;
 
 
     const menuItems: MenuItem[] = [
+        { label: 'Batch List', action: () => handleDisplayChange('BatchList') },
+        /*
         {
             label: 'Batch',
             subMenuItems: [
                 { label: 'Batch List', action: () => handleDisplayChange('BatchList') },
                 { label: 'Sump', action: () => handleDisplayChange('Sump') },
             ],
-        },
+        },*/
         {
             label: 'Application Links',
             subMenuItems: [
                 { label: 'Swagger', url: 'http://' + window.location.hostname + ':' + window.location.port + '/api/swagger-ui/index.html#/'},
-                { label: 'Prometheus', url: 'http://' + window.location.hostname + ':9090/graph'},
+                { label: 'Prometheus', url: 'http://' + window.location.hostname + ':' + window.location.port + '/prometheus/graph'},
 
             ],
         },
@@ -60,8 +71,28 @@ function App() {
         {
             label: 'Settings',
             subMenuItems: [
-                { label: 'Option 1', action: () => console.log('Option 1 selected') },
-                { label: 'Option 2', action: () => console.log('Option 2 selected') },
+                { label: 'Update Connections', action: () => {
+                        setShowConnection(true)
+                    }},
+                { label: 'Delete All Batches', action: () => {
+                        setConfirmationMessage('Delete All Batches.')
+                        setConfirmation(handleCleanBatches)
+                        setShowConfirmation(true)
+                    }},
+                { label: 'Clean Producer Connections', action: () => {
+                        setConfirmationMessage('Delete All Producer Connections.')
+                        setConfirmation(handleCleanProducer)
+                        setShowConfirmation(true)
+                    }},
+                { label: 'Clean Consumer Connections', action: () => {
+                        setConfirmationMessage('Delete All Consumer Connections.')
+                        setConfirmation(handleCleanConsumer)
+                        setShowConfirmation(true)
+                    }},
+                { label: 'Create/Reset Topics', action: () => {
+                        setConfirmationMessage('Drop if they exist, then create all the test topics.')
+                        setShowTopic(true)
+                }},
             ],
         },
     ];
@@ -97,10 +128,112 @@ function App() {
         setActiveMenu(null); // Reset activeMenu after selecting display option
     };
 
+    const handleCloseMessage = (msg:string) =>{
+        setShowConnection(false)
+        setApiResult(msg)
+        setShowResultDialog(true)
+    }
+
+    const handleCleanBatches = () => {
+        setShowConfirmation(false); // Close confirmation dialog
+        batchController.getClean2()
+            .then(response => {
+                const reply = response.data;
+                setApiResult(reply); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+            })
+            .catch(error => {
+                setApiResult('Error: ' + error); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+                // Handle error case
+            });
+    };
+
+    const handleCleanProducer = () => {
+        setShowConfirmation(false); // Close confirmation dialog
+        producerController.getClean()
+            .then(response => {
+                const reply = response.data;
+                setApiResult(reply); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+            })
+            .catch(error => {
+                setApiResult('Error: ' + error); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+                // Handle error case
+            });
+    };
+
+    const handleCleanConsumer = () => {
+        setShowConfirmation(false); // Close confirmation dialog
+        consumerController.getClean1()
+            .then(response => {
+                const reply = response.data;
+                setApiResult(reply); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+            })
+            .catch(error => {
+                setApiResult('Error: ' + error); // Set API result to state
+                setShowResultDialog(true); // Show result dialog
+                // Handle error case
+            });
+    };
+
+
+    const handleResetTopics = (numberOfPartitions:number, replication: number) => {
+        setShowTopic(false); // Close topic dialog
+        console.log("got here 1");
+        const resetTopics = async () => {
+            await producerController.deleteTopics()
+                .then((response1) =>{
+                    console.log("Deleted Topics Successfully");
+                    console.log(response1);
+                })
+                .catch(error => {
+                    console.log("Failed to Delete Topics");
+                    console.log('Error: ' + error)
+                });
+            await producerController.createTopics(undefined, numberOfPartitions, replication)
+                .then(response2 => {
+                    console.log(response2);
+                    setApiResult('Created Successfully'); // Set API result to state
+                    setShowResultDialog(true); // Show result dialog
+                })
+                .catch(error => {
+                    console.log("got here 3b");
+                    setApiResult('Error: ' + error); // Set API result to state
+                    setShowResultDialog(true); // Show result dialog
+                    // Handle error case
+                });
+
+
+        }
+        console.log("got here 2");
+        resetTopics()
+        console.log("got here 4");
+    };
+
+    const closeConfirmation = () => {
+        setShowConfirmation(false); // Close confirmation dialog
+    };
+
+    const closeTopicDialog = () => {
+        setShowTopic(false); // Close confirmation dialog
+    };
+
+    const closeResultDialog = () => {
+        setShowResultDialog(false); // Close result dialog
+        setApiResult(null); // Clear API result
+    };
+
+    const closeConnectionDialog =() => {
+        setShowConnection(false)
+    };
+
     return (
         <div className="app-container">
             <div className="banner">
-                <h1>My Application</h1>
+                <h1>Kafka Executor Demo</h1>
                 <button className="menu-button" onClick={toggleMenu}>
                     Menu
                 </button>
@@ -137,8 +270,37 @@ function App() {
                     <iframe src={externalUrl} title="External Content" className="external-content" />
                 )}
             </div>
+
+            <ConfirmationDialog
+                isOpen={showConfirmation}
+                message={confirmationMessage}
+                onClose={closeConfirmation}
+                onConfirm={handleConfirmation}
+            />
+
+            <TopicDialog
+                isOpen={showTopic}
+                message={confirmationMessage}
+                onClose={closeTopicDialog}
+                onConfirm={handleResetTopics}
+            />
+
+            <ResultDialog
+                isOpen={showResult}
+                message={apiResult || ''}
+                onClose={closeResultDialog}
+            />
+
+            <ConnectionDialog
+                isOpen={showConnection}
+                onClose={closeConnectionDialog}
+                onConfirm={handleCloseMessage}
+                />
+
+
         </div>
     );
 }
 
 export default App;
+

@@ -18,15 +18,15 @@ import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorF
 @Slf4j
 @Data
 public class Customer implements DataInterface {
+    public static final Descriptors.Descriptor protoSchema;
     private static final Faker faker = new Faker();
     private static final Schema schema = AvroUtils.generateSchema(Customer.class);
 
-    public static final Descriptors.Descriptor protoSchema;
     static {
         Descriptors.Descriptor protoSchemaTmp = null;
         try {
             protoSchemaTmp = getDescriptorFromPojo(Customer.class);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Failed to load proto schema", ex);
         } finally {
             protoSchema = protoSchemaTmp;
@@ -61,15 +61,15 @@ public class Customer implements DataInterface {
     @Override
     public DataInterface generateData(long genId, int correlatedId) {
         boolean gender = faker.bool().bool();
-        if(correlatedId >= 0 ){
+        if (correlatedId >= 0) {
             // since relativeItem isn't implemented for this class, add to debug log and ignore
             log.debug("Generating data for genId: {}, correlatedId: {} but correlatedId is not implemented.", genId, correlatedId);
         }
-        return new Customer( (genId >= 0)?genId:faker.random().nextLong(),
-                (gender)?faker.name().malefirstName() : faker.name().femaleFirstName(),
+        return new Customer((genId >= 0) ? genId : faker.random().nextLong(),
+                (gender) ? faker.name().malefirstName() : faker.name().femaleFirstName(),
                 faker.name().lastName(),
-                (gender)?"Male":"Female",
-                faker.random().nextInt(18,80),
+                (gender) ? "Male" : "Female",
+                faker.random().nextInt(18, 80),
                 faker.internet().emailAddress(),
                 faker.phoneNumber().phoneNumber(),
                 faker.address().streetAddress(),

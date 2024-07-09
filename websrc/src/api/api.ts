@@ -119,64 +119,93 @@ export interface ClassStatistic {
 /**
  * 
  * @export
- * @interface ConnectionConfig
+ * @interface ConnectionConfigDTO
  */
-export interface ConnectionConfig {
+export interface ConnectionConfigDTO {
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'host'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'port'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'cert_password'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'truststore_location'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'keystore_location'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'schemaRegistryHost'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'schemaRegistryPort'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'schemaRegistryUser'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ConnectionConfig
+     * @memberof ConnectionConfigDTO
      */
     'schemaRegistryPassword'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'lingerMs'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'batchSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectionConfigDTO
+     */
+    'compressionType'?: ConnectionConfigDTOCompressionTypeEnum;
 }
+
+export const ConnectionConfigDTOCompressionTypeEnum = {
+    None: 'none',
+    Gzip: 'gzip',
+    Snappy: 'snappy',
+    Lz4: 'lz4',
+    Zstd: 'zstd'
+} as const;
+
+export type ConnectionConfigDTOCompressionTypeEnum = typeof ConnectionConfigDTOCompressionTypeEnum[keyof typeof ConnectionConfigDTOCompressionTypeEnum];
+
 /**
  * 
  * @export
@@ -1042,6 +1071,35 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getCompressionTypes: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/server/compressionTypes`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getStatus: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/server/connection`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1068,13 +1126,13 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
-         * @param {ConnectionConfig} connectionConfig 
+         * @param {ConnectionConfigDTO} connectionConfigDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setStatus: async (connectionConfig: ConnectionConfig, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'connectionConfig' is not null or undefined
-            assertParamExists('setStatus', 'connectionConfig', connectionConfig)
+        updateConnectionConfig: async (connectionConfigDTO: ConnectionConfigDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectionConfigDTO' is not null or undefined
+            assertParamExists('updateConnectionConfig', 'connectionConfigDTO', connectionConfigDTO)
             const localVarPath = `/server/connection`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1094,7 +1152,7 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(connectionConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(connectionConfigDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1116,7 +1174,18 @@ export const ConfigControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectionConfig>> {
+        async getCompressionTypes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCompressionTypes(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.getCompressionTypes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectionConfigDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getStatus(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.getStatus']?.[localVarOperationServerIndex]?.url;
@@ -1124,14 +1193,14 @@ export const ConfigControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {ConnectionConfig} connectionConfig 
+         * @param {ConnectionConfigDTO} connectionConfigDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async setStatus(connectionConfig: ConnectionConfig, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectionConfig>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.setStatus(connectionConfig, options);
+        async updateConnectionConfig(connectionConfigDTO: ConnectionConfigDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateConnectionConfig(connectionConfigDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.setStatus']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.updateConnectionConfig']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -1149,17 +1218,25 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStatus(options?: any): AxiosPromise<ConnectionConfig> {
+        getCompressionTypes(options?: any): AxiosPromise<Array<string>> {
+            return localVarFp.getCompressionTypes(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStatus(options?: any): AxiosPromise<ConnectionConfigDTO> {
             return localVarFp.getStatus(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {ConnectionConfig} connectionConfig 
+         * @param {ConnectionConfigDTO} connectionConfigDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setStatus(connectionConfig: ConnectionConfig, options?: any): AxiosPromise<ConnectionConfig> {
-            return localVarFp.setStatus(connectionConfig, options).then((request) => request(axios, basePath));
+        updateConnectionConfig(connectionConfigDTO: ConnectionConfigDTO, options?: any): AxiosPromise<void> {
+            return localVarFp.updateConnectionConfig(connectionConfigDTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1177,19 +1254,29 @@ export class ConfigControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ConfigControllerApi
      */
+    public getCompressionTypes(options?: RawAxiosRequestConfig) {
+        return ConfigControllerApiFp(this.configuration).getCompressionTypes(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigControllerApi
+     */
     public getStatus(options?: RawAxiosRequestConfig) {
         return ConfigControllerApiFp(this.configuration).getStatus(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {ConnectionConfig} connectionConfig 
+     * @param {ConnectionConfigDTO} connectionConfigDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConfigControllerApi
      */
-    public setStatus(connectionConfig: ConnectionConfig, options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).setStatus(connectionConfig, options).then((request) => request(this.axios, this.basePath));
+    public updateConnectionConfig(connectionConfigDTO: ConnectionConfigDTO, options?: RawAxiosRequestConfig) {
+        return ConfigControllerApiFp(this.configuration).updateConnectionConfig(connectionConfigDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

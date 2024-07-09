@@ -3,7 +3,6 @@ package aiven.io.kafka_executor.data.avro;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.data.DataInterface;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.avro.LogicalType;
 import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
@@ -18,7 +17,8 @@ import java.util.Date;
 
 @Slf4j
 public class AvroUtils {
-    private AvroUtils() {}
+    private AvroUtils() {
+    }
 
     public static Schema generateSchema(Class<?> clazz) {
         SchemaBuilder.RecordBuilder<Schema> recordBuilder = SchemaBuilder.record(clazz.getSimpleName());
@@ -42,6 +42,7 @@ public class AvroUtils {
 
         return fieldsAssembler.endRecord();
     }
+
     public static GenericRecord serializeToAvro(DataInterface data, Schema schema) {
         GenericRecord record = new GenericData.Record(schema);
         for (Schema.Field field : schema.getFields()) {
@@ -76,7 +77,7 @@ public class AvroUtils {
                 if ("timestamp-millis".equals(field.schema().getLogicalType().getName())) {
                     value = new Date((Long) value);
                 }
-            } else if(value instanceof Utf8) {
+            } else if (value instanceof Utf8) {
                 value = ((Utf8) value).toString();
             }
 

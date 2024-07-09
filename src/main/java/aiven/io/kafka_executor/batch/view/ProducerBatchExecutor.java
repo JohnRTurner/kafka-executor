@@ -36,7 +36,7 @@ public class ProducerBatchExecutor {
         this.statistics = statistics;
         for (int i = 0; i < numThreads; i++) {
             ProducerBatchTask producerBatchTask = new ProducerBatchTask(topic, i, dataClass, batchSize, this.startId,
-                    correlatedStartIdInc,correlatedEndIdInc, connectionConfig, sleepMillis, statistics);
+                    correlatedStartIdInc, correlatedEndIdInc, connectionConfig, sleepMillis, statistics);
             Thread thread = new Thread(producerBatchTask);
             threadTaskMap.put(thread, producerBatchTask);
             thread.start();
@@ -63,12 +63,12 @@ public class ProducerBatchExecutor {
     public void changeTaskCount(int numThreads) {
         while (threadTaskMap.size() < numThreads) {
             ProducerBatchTask producerBatchTask = new ProducerBatchTask(topic, threadTaskMap.size(), dataClass, batchSize, startId,
-                    correlatedStartIdInc,correlatedEndIdInc, connectionConfig, sleepMillis, statistics);
+                    correlatedStartIdInc, correlatedEndIdInc, connectionConfig, sleepMillis, statistics);
             Thread thread = new Thread(producerBatchTask);
             threadTaskMap.put(thread, producerBatchTask);
             thread.start();
         }
-        if(threadTaskMap.size() > numThreads) {
+        if (threadTaskMap.size() > numThreads) {
             for (Map.Entry<Thread, ProducerBatchTask> entry : threadTaskMap.entrySet()) {
                 ProducerBatchTask task = entry.getValue();
                 if (task.getServer() >= numThreads) {

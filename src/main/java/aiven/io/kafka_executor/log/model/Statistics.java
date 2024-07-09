@@ -21,14 +21,14 @@ public class Statistics {
         HashMap<String, Counter> p_count = new HashMap<>();
         HashMap<String, Counter> p_amount = new HashMap<>();
 
-        for(DataClass dataClass:DataClass.values()){
-            c_count.put(dataClass.name(),Counter.builder(dataClass.name().toLowerCase() + ".consumer.count").
+        for (DataClass dataClass : DataClass.values()) {
+            c_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.count").
                     description("Kafka consumer calls").register(registry));
-            c_amount.put(dataClass.name(),Counter.builder(dataClass.name() .toLowerCase()+ ".consumer.amount").
+            c_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.amount").
                     description("Kafka consumer generated rows").register(registry));
-            p_count.put(dataClass.name(),Counter.builder(dataClass.name().toLowerCase() + ".producer.count").
+            p_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.count").
                     description("Kafka producer calls").register(registry));
-            p_amount.put(dataClass.name(),Counter.builder(dataClass.name() .toLowerCase()+ ".producer.amount").
+            p_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.amount").
                     description("Kafka producer generated rows").register(registry));
         }
         this.consumerCount = c_count;
@@ -37,26 +37,26 @@ public class Statistics {
         this.producerAmount = p_amount;
     }
 
-    public void consumerSet(String className, int rows){
+    public void consumerSet(String className, int rows) {
         consumerCount.get(className).increment();
         consumerAmount.get(className).increment(rows);
     }
 
-    public void producerSet(String className, int rows){
+    public void producerSet(String className, int rows) {
         producerCount.get(className).increment();
         producerAmount.get(className).increment(rows);
     }
 
-    public ClassStatistic getClassStatistic(String className){
+    public ClassStatistic getClassStatistic(String className) {
 
         return new ClassStatistic(className,
                 consumerCount.get(className).count(), consumerAmount.get(className).count(),
                 producerCount.get(className).count(), producerAmount.get(className).count());
     }
 
-    public ClassStatistic[] getClassStatistics(){
+    public ClassStatistic[] getClassStatistics() {
         ClassStatistic[] cs = new ClassStatistic[DataClass.values().length];
-        for(DataClass dataClass:DataClass.values()){
+        for (DataClass dataClass : DataClass.values()) {
             cs[dataClass.ordinal()] = getClassStatistic(dataClass.name());
         }
         return cs;

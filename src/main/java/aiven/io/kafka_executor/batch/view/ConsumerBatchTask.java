@@ -13,7 +13,6 @@ import static java.lang.Thread.sleep;
 
 @Slf4j
 public class ConsumerBatchTask implements Runnable {
-    private volatile boolean running = true;
     private final String topic;
     @Getter
     private final int server;
@@ -23,6 +22,7 @@ public class ConsumerBatchTask implements Runnable {
     private final ConnectionConfig connectionConfig;
     private final long sleepMillis;
     private final Statistics statistics;
+    private volatile boolean running = true;
 
     public ConsumerBatchTask(String topic, int server, DataClass dataClass, int batchSize, int maxTries,
                              ConnectionConfig connectionConfig, long sleepMillis, Statistics statistics) {
@@ -41,8 +41,8 @@ public class ConsumerBatchTask implements Runnable {
         while (running) {
             try {
                 ConsumerStatus consumerStatus = LoadConsumer.generateLoad(topic, server, batchSize, maxTries, dataClass,
-                         connectionConfig);
-                if(consumerStatus.isError()) {
+                        connectionConfig);
+                if (consumerStatus.isError()) {
                     log.trace("Error in batch task: {}", consumerStatus);
                 } else {
                     statistics.consumerSet(dataClass.name(), consumerStatus.getCount());

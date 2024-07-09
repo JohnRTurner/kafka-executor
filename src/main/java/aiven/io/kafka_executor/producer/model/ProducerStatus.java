@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class ProducerStatus {
     private static final DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     @JsonProperty("CurrentDateTime")
-    private String dtTime =dtfDateTime.format(LocalDateTime.now());;
+    private String dtTime = dtfDateTime.format(LocalDateTime.now());
     @JsonProperty("Error")
     private boolean error;
     @JsonProperty("ErrorMessage")

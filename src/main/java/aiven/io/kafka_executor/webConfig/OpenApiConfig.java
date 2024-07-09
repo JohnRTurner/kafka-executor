@@ -14,7 +14,7 @@ public class OpenApiConfig {
     private String version;
 
     @Value("${kafka_executor.name}")
-    private  String name;
+    private String name;
 
 
     @Bean

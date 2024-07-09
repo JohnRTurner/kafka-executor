@@ -7,14 +7,19 @@ import aiven.io.kafka_executor.producer.model.ProducerStatus;
 import aiven.io.kafka_executor.producer.view.LoadProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.DeleteTopicsResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 
 import static aiven.io.kafka_executor.data.DataClass.values;
 
@@ -32,25 +37,25 @@ public class ProducerController {
     }
 
 
-    @RequestMapping(value="/clean", method= RequestMethod.GET)
+    @RequestMapping(value = "/clean", method = RequestMethod.GET)
     public ResponseEntity<String> getClean(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         LoadProducer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
-    @RequestMapping(value="/listDataClasses", method= RequestMethod.GET)
+    @RequestMapping(value = "/listDataClasses", method = RequestMethod.GET)
     public ResponseEntity<DataClass[]> getListDataClasses(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         return new ResponseEntity<>(values(), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/listTopics", method= RequestMethod.GET)
+    @RequestMapping(value = "/listTopics", method = RequestMethod.GET)
     public ResponseEntity<Set<String>> getListTopics(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         Set<String> topics;
         try {
-             topics = LoadProducer.getTopics(connectionConfig).names().get();
+            topics = LoadProducer.getTopics(connectionConfig).names().get();
             return new ResponseEntity<>(topics, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Failed to load topics", e);
@@ -59,37 +64,37 @@ public class ProducerController {
 
     }
 
-    @RequestMapping(value="/createTopics", method= RequestMethod.PUT)
+    @RequestMapping(value = "/createTopics", method = RequestMethod.PUT)
     public ResponseEntity<CreateTopicsResult> createTopics(
-            @RequestParam(value="topics[]",defaultValue = "Default List")  String[] topics,
-            @RequestParam(value="partitions",defaultValue = "6") int partitions,
-            @RequestParam(value="replication",defaultValue = "2") short replication,
+            @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
+            @RequestParam(value = "partitions", defaultValue = "6") int partitions,
+            @RequestParam(value = "replication", defaultValue = "2") short replication,
             HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         Collection<String> topicList = new ArrayList<>();
-        if(topics.length == 1 && topics[0].equals("Default List")) {
+        if (topics.length == 1 && topics[0].equals("Default List")) {
             topicList.addAll(Arrays.stream(values()).map(Enum::name).toList());
         } else {
             topicList.addAll(Arrays.asList(topics));
         }
-        if(topicList.isEmpty()) {
+        if (topicList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(LoadProducer.createTopics(topicList, partitions,replication, connectionConfig), HttpStatus.OK);
+        return new ResponseEntity<>(LoadProducer.createTopics(topicList, partitions, replication, connectionConfig), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/deleteTopics", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/deleteTopics", method = RequestMethod.DELETE)
     public ResponseEntity<DeleteTopicsResult> deleteTopics(
-            @RequestParam(value="topics[]",defaultValue = "Default List")  String[] topics,
+            @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
             HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         Collection<String> topicList = new ArrayList<>();
-        if(topics.length == 1 && topics[0].equals("Default List")) {
+        if (topics.length == 1 && topics[0].equals("Default List")) {
             topicList.addAll(Arrays.stream(values()).map(Enum::name).toList());
         } else {
             topicList.addAll(Arrays.asList(topics));
         }
-        if(topicList.isEmpty()) {
+        if (topicList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
@@ -97,14 +102,14 @@ public class ProducerController {
     }
 
 
-    @RequestMapping(value="/generateLoad", method= RequestMethod.PUT, params = {"topicName","server"})
-    public ResponseEntity<ProducerStatus> putGenerateLoad(@RequestParam(value="topicName",defaultValue = "CUSTOMER_JSON") String topicName,
-                                                          @RequestParam(value="server",defaultValue = "1") int server,
-                                                          @RequestParam(value="batchSize",defaultValue = "100000") int batchSize,
-                                                          @RequestParam(value="startId",defaultValue = "-1") long startId,
-                                                          @RequestParam(value= "correlatedStartIdInc",defaultValue = "-1") int correlatedStartIdInc,
-                                                          @RequestParam(value= "correlatedEndIdInc",defaultValue = "-1") int correlatedEndIdInc,
-                                                          @RequestParam(value="dataClass",defaultValue = "CUSTOMER_JSON") String dataClass,
+    @RequestMapping(value = "/generateLoad", method = RequestMethod.PUT, params = {"topicName", "server"})
+    public ResponseEntity<ProducerStatus> putGenerateLoad(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+                                                          @RequestParam(value = "server", defaultValue = "1") int server,
+                                                          @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
+                                                          @RequestParam(value = "startId", defaultValue = "-1") long startId,
+                                                          @RequestParam(value = "correlatedStartIdInc", defaultValue = "-1") int correlatedStartIdInc,
+                                                          @RequestParam(value = "correlatedEndIdInc", defaultValue = "-1") int correlatedEndIdInc,
+                                                          @RequestParam(value = "dataClass", defaultValue = "CUSTOMER_JSON") String dataClass,
                                                           HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         DataClass dataClass1 = null;

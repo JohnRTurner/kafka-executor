@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-
 @RestController
 @RequestMapping("/consumer")
 @Slf4j
@@ -29,14 +27,14 @@ public class ConsumerController {
     }
 
 
-    @RequestMapping(value="/test/clean", method= RequestMethod.GET)
+    @RequestMapping(value = "/test/clean", method = RequestMethod.GET)
     public ResponseEntity<String> getClean(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         LoadConsumer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
-    @RequestMapping(value="/list", method= RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<DataClass[]> getList(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
@@ -44,13 +42,13 @@ public class ConsumerController {
     }
 
 
-    @RequestMapping(value="/generateLoad", method= RequestMethod.GET, params = {"topicName","server"})
-    public ResponseEntity<ConsumerStatus> getStatus(@RequestParam(value="topicName",defaultValue = "CUSTOMER_JSON") String topicName,
-                                                    @RequestParam(value="server",defaultValue = "1") int server,
-                                                    @RequestParam(value="batchSize",defaultValue = "100000") int batchSize,
-                                                    @RequestParam(value="maxTries",defaultValue = "100") int maxTries,
-                                                    @RequestParam(value="dataClass",defaultValue = "CUSTOMER_JSON") String dataClass,
-                                                    HttpServletRequest request){
+    @RequestMapping(value = "/generateLoad", method = RequestMethod.GET, params = {"topicName", "server"})
+    public ResponseEntity<ConsumerStatus> getStatus(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+                                                    @RequestParam(value = "server", defaultValue = "1") int server,
+                                                    @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
+                                                    @RequestParam(value = "maxTries", defaultValue = "100") int maxTries,
+                                                    @RequestParam(value = "dataClass", defaultValue = "CUSTOMER_JSON") String dataClass,
+                                                    HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         DataClass dataClass1;
         try {

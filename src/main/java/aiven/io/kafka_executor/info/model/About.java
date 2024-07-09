@@ -1,7 +1,8 @@
 package aiven.io.kafka_executor.info.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class About {
 
     @Value("${kafka_executor.name}")
     @JsonProperty("Name")
-    private  String name;
+    private String name;
 
     @Value("${kafka_executor.version}")
     @JsonProperty("Version")
@@ -26,7 +27,7 @@ public class About {
     @JsonProperty("CurrentDateTime")
     private String dtTime;
 
-    public void updateTime(){
+    public void updateTime() {
         dtTime = dtf.format(LocalDateTime.now());
     }
 

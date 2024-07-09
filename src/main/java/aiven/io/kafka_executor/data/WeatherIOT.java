@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.apache.avro.Schema;
-import org.apache.avro.reflect.ReflectData;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,32 +21,25 @@ import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorF
 @AllArgsConstructor
 @Slf4j
 @Data
-public class WeatherIOT implements DataInterface{
+public class WeatherIOT implements DataInterface {
+    //    private static final Schema schema = ReflectData.get().getSchema(WeatherIOT.class);
+    public static final Descriptors.Descriptor protoSchema;
     private static final int MAX_CORRELATED_IDS = 20000; //Protects us from blowing out memory
     private static final Faker faker = new Faker();
     private static final Schema schema = AvroUtils.generateSchema(WeatherIOT.class);
-//    private static final Schema schema = ReflectData.get().getSchema(WeatherIOT.class);
-    public static final Descriptors.Descriptor protoSchema;
+    private static final List<String> directions = List.of("N", "NE", "E", "SE", "S", "SW", "W", "NW");
+    private static final List<Account> ACCOUNTS = new ArrayList<>();
+
     static {
         Descriptors.Descriptor protoSchemaTmp = null;
         try {
             protoSchemaTmp = getDescriptorFromPojo(WeatherIOT.class);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Failed to load proto schema", ex);
         } finally {
             protoSchema = protoSchemaTmp;
             log.debug("Loaded proto schema: {}", protoSchema.toProto().toString());
         }
-    }
-
-    private static final List<String> directions = List.of("N", "NE", "E", "SE", "S", "SW", "W", "NW");
-    private static final List<Account> ACCOUNTS = new ArrayList<>();
-
-    @AllArgsConstructor
-    private static final class Account {
-        int account;
-        String city;
-        String state;
     }
 
     private long id;
@@ -61,7 +53,6 @@ public class WeatherIOT implements DataInterface{
     private double windSpeed;
     private String windDirection;
 
-
     @Override
     public Descriptors.Descriptor retProtoSchema() {
         return protoSchema;
@@ -74,16 +65,16 @@ public class WeatherIOT implements DataInterface{
 
     public DataInterface generateData(long genId, int correlatedId) {
         Account account1;
-        if(correlatedId >= 0) {
+        if (correlatedId >= 0) {
             while (ACCOUNTS.size() <= correlatedId % MAX_CORRELATED_IDS) {
                 ACCOUNTS.add(new Account(faker.number().positive(), faker.address().city(), faker.address().state()));
             }
             account1 = ACCOUNTS.get(correlatedId % MAX_CORRELATED_IDS);
-        }else {
+        } else {
             account1 = new Account(faker.number().positive(), faker.address().city(), faker.address().state());
         }
         return (new WeatherIOT(
-                (genId >= 0)? genId:faker.random().nextLong(),
+                (genId >= 0) ? genId : faker.random().nextLong(),
                 account1.account,
                 account1.city,
                 account1.state,
@@ -93,5 +84,12 @@ public class WeatherIOT implements DataInterface{
                 29.6 + (faker.number().randomDouble(1, 1, 6) / 10),
                 faker.number().randomDouble(1, 0, 20),
                 directions.get(faker.random().nextInt(directions.size()))));
+    }
+
+    @AllArgsConstructor
+    private static final class Account {
+        int account;
+        String city;
+        String state;
     }
 }

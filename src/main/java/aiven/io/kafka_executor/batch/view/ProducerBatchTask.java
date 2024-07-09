@@ -15,7 +15,6 @@ import static java.lang.Thread.sleep;
 
 @Slf4j
 public class ProducerBatchTask implements Runnable {
-    private volatile boolean running = true;
     private final String topic;
     @Getter
     private final int server;
@@ -27,6 +26,7 @@ public class ProducerBatchTask implements Runnable {
     private final ConnectionConfig connectionConfig;
     private final long sleepMillis;
     private final Statistics statistics;
+    private volatile boolean running = true;
 
     public ProducerBatchTask(String topic, int server, DataClass dataClass, int batchSize, AtomicLong startId,
                              int correlatedStartIdInc, int correlatedEndIdInc, ConnectionConfig connectionConfig,
@@ -48,9 +48,9 @@ public class ProducerBatchTask implements Runnable {
         while (running) {
             try {
                 ProducerStatus producerStatus = LoadProducer.generateLoad(topic, server, dataClass, batchSize,
-                        (startId.get() >= 0)?startId.addAndGet(batchSize):-1,
+                        (startId.get() >= 0) ? startId.addAndGet(batchSize) : -1,
                         correlatedStartIdInc, correlatedEndIdInc, connectionConfig);
-                if(producerStatus.isError()) {
+                if (producerStatus.isError()) {
                     log.trace("Error in batch task: {}", producerStatus);
                 } else {
                     statistics.producerSet(dataClass.name(), producerStatus.getCount());

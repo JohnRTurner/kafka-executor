@@ -13,10 +13,10 @@ import java.util.Map;
 
 @Service
 public class BatchExecutionService {
-    private static final Map<String, ConsumerBatchExecutor> consumerBatchExecutorHashMap = new HashMap<>();
-    private static final Map<String, ProducerBatchExecutor> producerBatchExecutorHashMap = new HashMap<>();
     public static final String CONSUMER = "Consumer";
     public static final String PRODUCER = "Producer";
+    private static final Map<String, ConsumerBatchExecutor> consumerBatchExecutorHashMap = new HashMap<>();
+    private static final Map<String, ProducerBatchExecutor> producerBatchExecutorHashMap = new HashMap<>();
     private final ConnectionConfig connectionConfig;
     private final Statistics statistics;
 
@@ -27,10 +27,10 @@ public class BatchExecutionService {
     }
 
     public boolean createConsumerTask(String batchName, String topic, DataClass dataClass, int batchSize, int maxTries,
-                                      long sleepMillis, int numThreads){
+                                      long sleepMillis, int numThreads) {
         ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
         if (consumerBatchExecutor == null) {
-            consumerBatchExecutorHashMap.put( batchName,
+            consumerBatchExecutorHashMap.put(batchName,
                     new ConsumerBatchExecutor(topic, dataClass, batchSize, maxTries, connectionConfig, sleepMillis,
                             statistics, numThreads));
             return true;
@@ -39,10 +39,10 @@ public class BatchExecutionService {
     }
 
     public boolean createProducerTask(String batchName, String topic, DataClass dataClass, int batchSize, long startId,
-                                      int correlatedStartIdInc, int correlatedEndIdInc, long sleepMillis, int numThreads){
+                                      int correlatedStartIdInc, int correlatedEndIdInc, long sleepMillis, int numThreads) {
         ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
         if (producerBatchExecutor == null) {
-            producerBatchExecutorHashMap.put( batchName,
+            producerBatchExecutorHashMap.put(batchName,
                     new ProducerBatchExecutor(topic, dataClass, batchSize, startId, correlatedStartIdInc,
                             correlatedEndIdInc, connectionConfig, sleepMillis, statistics, numThreads));
             return true;
@@ -51,7 +51,7 @@ public class BatchExecutionService {
     }
 
 
-    public boolean dropConsumerTask(String batchName){
+    public boolean dropConsumerTask(String batchName) {
         ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
         if (consumerBatchExecutor != null) {
             consumerBatchExecutor.stopTasks();
@@ -61,7 +61,7 @@ public class BatchExecutionService {
         return false;
     }
 
-    public boolean dropProducerTask(String batchName){
+    public boolean dropProducerTask(String batchName) {
         ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
         if (producerBatchExecutor != null) {
             producerBatchExecutor.stopTasks();
@@ -72,7 +72,7 @@ public class BatchExecutionService {
     }
 
 
-    public boolean changeConsumerTaskCount(String batchName, int numThreads){
+    public boolean changeConsumerTaskCount(String batchName, int numThreads) {
         ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
         if (consumerBatchExecutor != null) {
             consumerBatchExecutor.changeTaskCount(numThreads);
@@ -81,7 +81,7 @@ public class BatchExecutionService {
         return false;
     }
 
-    public boolean changeProducerTaskCount(String batchName, int numThreads){
+    public boolean changeProducerTaskCount(String batchName, int numThreads) {
         ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
         if (producerBatchExecutor != null) {
             producerBatchExecutor.changeTaskCount(numThreads);
@@ -90,11 +90,11 @@ public class BatchExecutionService {
         return false;
     }
 
-    public List<String> getConsumerBatchNames(){
+    public List<String> getConsumerBatchNames() {
         return consumerBatchExecutorHashMap.keySet().stream().toList();
     }
 
-    public List<String> getProducerBatchNames(){
+    public List<String> getProducerBatchNames() {
         return producerBatchExecutorHashMap.keySet().stream().toList();
     }
 
@@ -121,7 +121,7 @@ public class BatchExecutionService {
         for (Map.Entry<String, ProducerBatchExecutor> entry : producerBatchExecutorHashMap.entrySet()) {
             ProducerBatchExecutor task = entry.getValue();
             batchStatuses.add(new BatchStatus(entry.getKey(), PRODUCER, task.getTaskCount()));
-       }
+        }
         return batchStatuses;
     }
 

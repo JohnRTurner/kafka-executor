@@ -14,7 +14,7 @@ public class BatchStatus {
     private static final DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     @Getter
     @JsonProperty("CurrentDateTime")
-    private final String dtTime =dtfDateTime.format(LocalDateTime.now());
+    private final String dtTime = dtfDateTime.format(LocalDateTime.now());
     @JsonProperty("BatchName")
     private String batchName;
     @JsonProperty("BatchType")
