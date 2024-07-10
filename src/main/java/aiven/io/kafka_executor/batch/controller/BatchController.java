@@ -107,7 +107,7 @@ public class BatchController {
 
 
     @RequestMapping(value = "/changeConsumerTaskCount", method = RequestMethod.PATCH)
-    public ResponseEntity<Boolean> dropProducerTask(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
+    public ResponseEntity<Boolean> changeConsumerTaskCount(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                     @RequestParam(value = "numThreads", defaultValue = "4") int numThreads,
                                                     HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());

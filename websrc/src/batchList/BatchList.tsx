@@ -1,19 +1,37 @@
-// BatchList.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import Modal from 'react-modal';
-import { BatchControllerApi, BatchStatus } from '../api';
+import { BatchControllerApi, BatchStatus, ProducerControllerApi } from '../api';
 import BatchItem from './BatchItem';
-import apiConfig from '../apiConfig'; // Adjust the path based on your project structure
+import UpdateBatchModal from './UpdateBatchModal';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import CreateProducerBatchModal from './CreateProducerBatchModal';
+import CreateConsumerBatchModal from './CreateConsumerBatchModal';
+import apiConfig from '../apiConfig';
+import './BatchList.css';
 
 const batchController = new BatchControllerApi(apiConfig);
+const producerController = new ProducerControllerApi(apiConfig);
 
 Modal.setAppElement('#root'); // Required for accessibility
 
 const BatchList: React.FC = () => {
     const [batchStatus, setBatchStatus] = useState<BatchStatus[] | null>(null);
     const [selectedBatch, setSelectedBatch] = useState<BatchStatus | null>(null);
+    const [isCreateConsumerModalOpen, setIsCreateConsumerModalOpen] = useState(false);
+    const [isCreateProducerModalOpen, setIsCreateProducerModalOpen] = useState(false);
+    const [isUpdateBatchModalOpen, setIsUpdateBatchModalOpen] = useState(false);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
     const messageRef = useRef<HTMLParagraphElement>(null);
     const errorRef = useRef<HTMLParagraphElement>(null);
+    const [topicTypes, setTopicTypes] = useState<string[]>([]);
+    const [topicName, setTopicName] = useState("");
+    const [numThreads, setNumThreads] = useState(6);
+    const [batchSize, setBatchSize] = useState(100000);
+    const [maxTries, setMaxTries] = useState(10);
+    const [sleepMillis, setSleepMillis] = useState(100);
+    const [startId, setStartID] = useState(-1);
+    const [correlatedStartIdInc, setCorrelatedStartIdInc] = useState(-1);
+    const [correlatedEndIdInc, setCorrelatedEndIdInc] = useState(-1);
 
     const fetchBatchStatus = () => {
         batchController.getBatchStatuses()
@@ -28,8 +46,19 @@ const BatchList: React.FC = () => {
             });
     };
 
+    const fetchTopicTypes = async () => {
+        try {
+            const response = await producerController.getListDataClasses();
+            setTopicTypes(response.data);
+            setTopicName(response.data[0]);
+        } catch (error) {
+            console.error('Error fetching compression types:', error);
+            setTopicTypes([]);
+        }
+    };
 
     useEffect(() => {
+        fetchTopicTypes();
         fetchBatchStatus(); // Initial fetch
 
         const interval = setInterval(() => {
@@ -39,29 +68,120 @@ const BatchList: React.FC = () => {
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []); // Empty dependency array ensures this effect runs only once
 
-    const handleEdit = (batchStatus: BatchStatus) => {
+    const handleUpdateScreen = (batchStatus: BatchStatus) => {
         setSelectedBatch(batchStatus);
+        setIsUpdateBatchModalOpen(true);
+    };
+
+    const handleDeleteScreen = (batchStatus: BatchStatus) => {
+        console.error('Got to handleDeleteScreen');
+        setSelectedBatch(batchStatus);
+        setIsConfirmDeleteModalOpen(true);
     };
 
     const handleClose = () => {
         setSelectedBatch(null);
+        setIsCreateConsumerModalOpen(false);
+        setIsCreateProducerModalOpen(false);
+        setIsUpdateBatchModalOpen(false);
+        setIsConfirmDeleteModalOpen(false);
     };
 
-    const handleUpdate = () => {
-        // Add your update logic here
-        console.log('Updating:', selectedBatch);
+    const handleUpdate = (numThreads: number) => {
+        if (selectedBatch?.BatchType === 'Producer') {
+            batchController.changeProducerTaskCount(selectedBatch.BatchName, numThreads)
+                .then(response => {
+                    if (messageRef.current) messageRef.current.textContent = 'Update Producer Batch Task Count Result: ' + response.data;
+                    if (errorRef.current) errorRef.current.textContent = '';
+                    fetchBatchStatus(); // Refresh the list after creation
+                })
+                .catch(error => {
+                    if (errorRef.current) errorRef.current.textContent = 'Error Updating Producer Batch Task Count: ' + error.message;
+                    if (messageRef.current) messageRef.current.textContent = '';
+                });
+        } else if (selectedBatch?.BatchType === 'Consumer') {
+            batchController.changeConsumerTaskCount(selectedBatch.BatchName, numThreads)
+                .then(response => {
+                    if (messageRef.current) messageRef.current.textContent = 'Update Consumer Batch Task Count Result: ' + response.data;
+                    if (errorRef.current) errorRef.current.textContent = '';
+                    fetchBatchStatus(); // Refresh the list after creation
+                })
+                .catch(error => {
+                    if (errorRef.current) errorRef.current.textContent = 'Error Updating Consumer Batch Task Count: ' + error.message;
+                    if (messageRef.current) messageRef.current.textContent = '';
+                });
+        }
         handleClose();
     };
 
     const handleDelete = () => {
-        // Add your delete logic here
-        console.log('Deleting:', selectedBatch);
+        if (selectedBatch?.BatchType === 'Producer') {
+            batchController.dropProducerTask(selectedBatch.BatchName)
+                .then(response => {
+                    if (messageRef.current) messageRef.current.textContent = 'Drop Producer Batch Result: ' + response.data;
+                    if (errorRef.current) errorRef.current.textContent = '';
+                    fetchBatchStatus(); // Refresh the list after creation
+                })
+                .catch(error => {
+                    if (errorRef.current) errorRef.current.textContent = 'Error Dropping Producer Batch: ' + error.message;
+                    if (messageRef.current) messageRef.current.textContent = '';
+                });
+        } else if (selectedBatch?.BatchType === 'Consumer') {
+            batchController.dropConsumerTask(selectedBatch.BatchName)
+                .then(response => {
+                    if (messageRef.current) messageRef.current.textContent = 'Drop Consumer Batch Result: ' + response.data;
+                    if (errorRef.current) errorRef.current.textContent = '';
+                    fetchBatchStatus(); // Refresh the list after creation
+                })
+                .catch(error => {
+                    if (errorRef.current) errorRef.current.textContent = 'Error Dropping Consumer Batch: ' + error.message;
+                    if (messageRef.current) messageRef.current.textContent = '';
+                });
+        }
         handleClose();
     };
 
-    if (!batchController) {
-        return <div>BatchController not found!</div>;
-    }
+    const handleCreateConsumerBatch = () => {
+        setTopicName(topicTypes[0]);
+        setIsCreateConsumerModalOpen(true);
+    };
+
+    const handleCreateProducerBatch = () => {
+        setTopicName(topicTypes[0]);
+        setIsCreateProducerModalOpen(true);
+    };
+
+    const handleCreateConsumer = () => {
+        console.log('Creating new batch');
+        batchController.createConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, topicName)
+            .then(response => {
+                if (messageRef.current) messageRef.current.textContent = 'Create Consumer Batch Result: ' + response.data;
+                if (errorRef.current) errorRef.current.textContent = '';
+                fetchBatchStatus(); // Refresh the list after creation
+            })
+            .catch(error => {
+                if (errorRef.current) errorRef.current.textContent = 'Error Creating Consumer Batch: ' + error.message;
+                if (messageRef.current) messageRef.current.textContent = '';
+            });
+
+        handleClose();
+    };
+
+    const handleCreateProducer = () => {
+        console.log('Creating new batch');
+        batchController.createProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, topicName)
+            .then(response => {
+                if (messageRef.current) messageRef.current.textContent = 'Create Producer Batch Result: ' + response.data;
+                if (errorRef.current) errorRef.current.textContent = '';
+                fetchBatchStatus(); // Refresh the list after creation
+            })
+            .catch(error => {
+                if (errorRef.current) errorRef.current.textContent = 'Error Creating Producer Batch: ' + error.message;
+                if (messageRef.current) messageRef.current.textContent = '';
+            });
+
+        handleClose();
+    };
 
     return (
         <div>
@@ -71,31 +191,72 @@ const BatchList: React.FC = () => {
             {batchStatus && batchStatus.length > 0 && (
                 <ul>
                     {batchStatus.map((item, index) => (
-                        <BatchItem key={index} batchStatus={item} onEdit={handleEdit} />
+                        <BatchItem key={index} batchStatus={item} onEdit={handleUpdateScreen} onDelete={handleDeleteScreen}/>
                     ))}
                 </ul>
             )}
             <p ref={errorRef} style={{ color: 'red' }}></p>
             <p ref={messageRef} style={{ color: 'green' }}></p>
-            {selectedBatch && (
-                <Modal
-                    isOpen={!!selectedBatch}
+            <button className="batch-button" onClick={handleCreateProducerBatch}>New Producer Batch</button>
+            <button className="batch-button" onClick={handleCreateConsumerBatch}>New Consumer Batch</button>
+            {isUpdateBatchModalOpen && selectedBatch && (
+                <UpdateBatchModal
+                    isOpen={isUpdateBatchModalOpen}
                     onRequestClose={handleClose}
-                    contentLabel="Update/Delete Batch"
-                    className="modal"
-                    overlayClassName="overlay"
-                >
-                    <h2>Update/Delete {selectedBatch.BatchName}</h2>
-                    <p>Type: {selectedBatch.BatchType}</p>
-                    <p>Current Date and Time: {selectedBatch.CurrentDateTime}</p>
-                    <p>Running Jobs: {selectedBatch.RunningJobs}</p>
-                    <button onClick={handleUpdate}>Update</button>
-                    <button onClick={handleDelete}>Delete</button>
-                    <button onClick={handleClose}>Close</button>
-                </Modal>
+                    selectedBatch={selectedBatch}
+                    onUpdate={handleUpdate}
+                />
+            )}
+            {isConfirmDeleteModalOpen && selectedBatch && (
+                <ConfirmDeleteModal
+                    isOpen={isConfirmDeleteModalOpen}
+                    onRequestClose={handleClose}
+                    onDelete={handleDelete}
+                />
+            )}
+            {isCreateConsumerModalOpen && (
+                <CreateConsumerBatchModal
+                    isOpen={isCreateConsumerModalOpen}
+                    onRequestClose={handleClose}
+                    onCreate={handleCreateConsumer}
+                    topicTypes={topicTypes}
+                    topicName={topicName}
+                    setTopicName={setTopicName}
+                    numThreads={numThreads}
+                    setNumThreads={setNumThreads}
+                    batchSize={batchSize}
+                    setBatchSize={setBatchSize}
+                    maxTries={maxTries}
+                    setMaxTries={setMaxTries}
+                    sleepMillis={sleepMillis}
+                    setSleepMillis={setSleepMillis}
+                />
+            )}
+            {isCreateProducerModalOpen && (
+                <CreateProducerBatchModal
+                    isOpen={isCreateProducerModalOpen}
+                    onRequestClose={handleClose}
+                    onCreate={handleCreateProducer}
+                    topicTypes={topicTypes}
+                    topicName={topicName}
+                    setTopicName={setTopicName}
+                    numThreads={numThreads}
+                    setNumThreads={setNumThreads}
+                    batchSize={batchSize}
+                    setBatchSize={setBatchSize}
+                    startId={startId}
+                    setStartID={setStartID}
+                    correlatedStartIdInc={correlatedStartIdInc}
+                    setCorrelatedStartIdInc={setCorrelatedStartIdInc}
+                    correlatedEndIdInc={correlatedEndIdInc}
+                    setCorrelatedEndIdInc={setCorrelatedEndIdInc}
+                    sleepMillis={sleepMillis}
+                    setSleepMillis={setSleepMillis}
+                />
             )}
         </div>
     );
 };
 
 export default BatchList;
+

@@ -8,6 +8,9 @@
 
 ### Terraform commands
 The commands must be issued inside the Terraform directory
+
+While Thanos is in Beta... `export PROVIDER_AIVEN_ENABLE_BETA=true`
+
 * `terraform init` - Used to initialize the Terraform client
 * `terraform plan` - Used to check what Terraform plans to do if applied
 * `terraform apply -auto-approve` - Used to execute the Terraform plan
@@ -17,6 +20,7 @@ The commands must be issued inside the Terraform directory
 * `terraform destroy -auto-approve` - Used to remove the resources from the Terraform plan
 
 ### Terminal commands
+* `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][0]')`
 * `avn service cli pg1` - Used to connect on command line to the Postgres database
 * `terraform output pg1_connect` - Used to get connection information for postgres
 * `export PGPASSWORD=xxx;psql --host=xxx --port=xxx --user=appuser --dbname=pg1db1` - Used to connect on command line to the Postgres database  

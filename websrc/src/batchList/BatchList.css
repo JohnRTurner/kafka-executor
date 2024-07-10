@@ -5,20 +5,88 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.75); /* Overlay background */
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    background: white;
+    position: relative;
+    background-color: #1a1a1a; /* Background color */
+    color: #ffffff; /* Text color */
+    border: 1px solid #646cff; /* Border color */
     padding: 20px;
-    border-radius: 10px;
     max-width: 500px;
     width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    z-index: 1001;
 }
+
+.modal label {
+    margin-bottom: 10px; /* Optional: Adjust spacing between label and input */
+    display: flex;
+    align-items: center;
+}
+
+
+.modal label > * {
+    margin-left: 10px; /* Optional: Adjust spacing between label and input */
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.batch-button,
+.modal button,
+button {
+    background-color: #646cff; /* Button background color */
+    color: #ffffff; /* Button text color */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+.batch-button:hover,
+.modal button:hover,
+button:hover {
+    background-color: #5353e8; /* Button hover background color */
+}
+
+.batch-status-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.batch-button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.batch-details-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.label-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    margin-bottom: 10px; /* Adjust vertical spacing between containers */
+}
+
+.label {
+    color: #646cff;
+    margin-right: 10px; /* Adjust margin between label and data */
+}
+

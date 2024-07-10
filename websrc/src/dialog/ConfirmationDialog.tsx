@@ -10,6 +10,7 @@ type ConfirmationDialogProps = {
 };
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ isOpen, message, onClose, onConfirm }) => {
+
     return (
         <Modal
             isOpen={isOpen}

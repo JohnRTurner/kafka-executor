@@ -6,6 +6,7 @@ import aiven.io.kafka_executor.log.model.Statistics;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -69,7 +70,9 @@ public class ProducerBatchExecutor {
             thread.start();
         }
         if (threadTaskMap.size() > numThreads) {
-            for (Map.Entry<Thread, ProducerBatchTask> entry : threadTaskMap.entrySet()) {
+            Iterator<Map.Entry<Thread, ProducerBatchTask>> iterator = threadTaskMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Thread, ProducerBatchTask> entry = iterator.next();
                 ProducerBatchTask task = entry.getValue();
                 if (task.getServer() >= numThreads) {
                     task.stop();
@@ -78,7 +81,7 @@ public class ProducerBatchExecutor {
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                    threadTaskMap.remove(entry.getKey());
+                    iterator.remove(); // Remove the current entry from the iterator
                 }
             }
         }

@@ -294,6 +294,45 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        changeConsumerTaskCount: async (taskName?: string, numThreads?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/batch/changeConsumerTaskCount`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (taskName !== undefined) {
+                localVarQueryParameter['taskName'] = taskName;
+            }
+
+            if (numThreads !== undefined) {
+                localVarQueryParameter['numThreads'] = numThreads;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [taskName] 
+         * @param {number} [numThreads] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         changeProducerTaskCount: async (taskName?: string, numThreads?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/batch/changeProducerTaskCount`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -491,49 +530,10 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
         /**
          * 
          * @param {string} [taskName] 
-         * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        dropProducerTask: async (taskName?: string, numThreads?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/batch/changeConsumerTaskCount`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (taskName !== undefined) {
-                localVarQueryParameter['taskName'] = taskName;
-            }
-
-            if (numThreads !== undefined) {
-                localVarQueryParameter['numThreads'] = numThreads;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} [taskName] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dropProducerTask1: async (taskName?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        dropProducerTask: async (taskName?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/batch/dropProducerTask`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -694,6 +694,19 @@ export const BatchControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async changeConsumerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changeConsumerTaskCount(taskName, numThreads, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.changeConsumerTaskCount']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} [taskName] 
+         * @param {number} [numThreads] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async changeProducerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.changeProducerTaskCount(taskName, numThreads, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -751,26 +764,13 @@ export const BatchControllerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [taskName] 
-         * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async dropProducerTask(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dropProducerTask(taskName, numThreads, options);
+        async dropProducerTask(taskName?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dropProducerTask(taskName, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.dropProducerTask']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} [taskName] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dropProducerTask1(taskName?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dropProducerTask1(taskName, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.dropProducerTask1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -834,6 +834,16 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        changeConsumerTaskCount(taskName?: string, numThreads?: number, options?: any): AxiosPromise<boolean> {
+            return localVarFp.changeConsumerTaskCount(taskName, numThreads, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [taskName] 
+         * @param {number} [numThreads] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         changeProducerTaskCount(taskName?: string, numThreads?: number, options?: any): AxiosPromise<boolean> {
             return localVarFp.changeProducerTaskCount(taskName, numThreads, options).then((request) => request(axios, basePath));
         },
@@ -879,21 +889,11 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
         /**
          * 
          * @param {string} [taskName] 
-         * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        dropProducerTask(taskName?: string, numThreads?: number, options?: any): AxiosPromise<boolean> {
-            return localVarFp.dropProducerTask(taskName, numThreads, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} [taskName] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dropProducerTask1(taskName?: string, options?: any): AxiosPromise<boolean> {
-            return localVarFp.dropProducerTask1(taskName, options).then((request) => request(axios, basePath));
+        dropProducerTask(taskName?: string, options?: any): AxiosPromise<boolean> {
+            return localVarFp.dropProducerTask(taskName, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -937,6 +937,18 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
  * @extends {BaseAPI}
  */
 export class BatchControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} [taskName] 
+     * @param {number} [numThreads] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchControllerApi
+     */
+    public changeConsumerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig) {
+        return BatchControllerApiFp(this.configuration).changeConsumerTaskCount(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {string} [taskName] 
@@ -997,24 +1009,12 @@ export class BatchControllerApi extends BaseAPI {
     /**
      * 
      * @param {string} [taskName] 
-     * @param {number} [numThreads] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BatchControllerApi
      */
-    public dropProducerTask(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).dropProducerTask(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} [taskName] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BatchControllerApi
-     */
-    public dropProducerTask1(taskName?: string, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).dropProducerTask1(taskName, options).then((request) => request(this.axios, this.basePath));
+    public dropProducerTask(taskName?: string, options?: RawAxiosRequestConfig) {
+        return BatchControllerApiFp(this.configuration).dropProducerTask(taskName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

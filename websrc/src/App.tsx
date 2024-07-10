@@ -34,7 +34,7 @@ function App() {
     const [showResult, setShowResultDialog] = useState(false); // State for showing result dialog
     const [apiResult, setApiResult] = useState<string|null>(null); // State for API call result
 
-    const [handleConfirmation, setConfirmation] = useState<() => void>(); // State for API call result
+    const [handleConfirmation, setHandleConfirmation] = useState<() => void>(() => {}); // State for API call result
     const [confirmationMessage, setConfirmationMessage] = useState<string|null>(null); // State for API call result
 
 
@@ -74,21 +74,24 @@ function App() {
                 { label: 'Update Connections', action: () => {
                         setShowConnection(true)
                     }},
-                { label: 'Delete All Batches', action: () => {
-                        setConfirmationMessage('Delete All Batches.')
-                        setConfirmation(handleCleanBatches)
+
+
+                { label: 'Stop All Tasks', action: () => {
+                        setConfirmationMessage('Stop All Tasks.')
+                        setHandleConfirmation(()=>handleCleanTasks)
                         setShowConfirmation(true)
                     }},
                 { label: 'Clean Producer Connections', action: () => {
                         setConfirmationMessage('Delete All Producer Connections.')
-                        setConfirmation(handleCleanProducer)
+                        setHandleConfirmation(()=>handleCleanProducer)
                         setShowConfirmation(true)
                     }},
                 { label: 'Clean Consumer Connections', action: () => {
                         setConfirmationMessage('Delete All Consumer Connections.')
-                        setConfirmation(handleCleanConsumer)
+                        setHandleConfirmation(()=>handleCleanConsumer)
                         setShowConfirmation(true)
                     }},
+
                 { label: 'Create/Reset Topics', action: () => {
                         setConfirmationMessage('Drop if they exist, then create all the test topics.')
                         setShowTopic(true)
@@ -123,7 +126,7 @@ function App() {
         }
     };
 
-    const handleDisplayChange = (display: 'BatchList' | 'Sump' | 'Grafana') => {
+    const handleDisplayChange = (display: 'BatchList' | 'Grafana') => {
         setSelectedDisplay(display);
         setActiveMenu(null); // Reset activeMenu after selecting display option
     };
@@ -134,7 +137,7 @@ function App() {
         setShowResultDialog(true)
     }
 
-    const handleCleanBatches = () => {
+    const handleCleanTasks = () => {
         setShowConfirmation(false); // Close confirmation dialog
         batchController.getClean2()
             .then(response => {
@@ -182,7 +185,6 @@ function App() {
 
     const handleResetTopics = (numberOfPartitions:number, replication: number) => {
         setShowTopic(false); // Close topic dialog
-        console.log("got here 1");
         const resetTopics = async () => {
             await producerController.deleteTopics()
                 .then((response1) =>{
@@ -200,7 +202,6 @@ function App() {
                     setShowResultDialog(true); // Show result dialog
                 })
                 .catch(error => {
-                    console.log("got here 3b");
                     setApiResult('Error: ' + error); // Set API result to state
                     setShowResultDialog(true); // Show result dialog
                     // Handle error case
@@ -208,9 +209,7 @@ function App() {
 
 
         }
-        console.log("got here 2");
         resetTopics()
-        console.log("got here 4");
     };
 
     const closeConfirmation = () => {
@@ -264,7 +263,6 @@ function App() {
             </div>
             <div className="main-content">
                 {selectedDisplay === 'BatchList' && <BatchList />}
-                {selectedDisplay === 'Sump' && <BatchList />}
                 {selectedDisplay === 'Grafana' && <Grafana />}
                 {selectedDisplay === 'External' && (
                     <iframe src={externalUrl} title="External Content" className="external-content" />
