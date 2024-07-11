@@ -248,7 +248,7 @@ public class LoadConsumer {
                     }
                     break;
             }
-            log.info("Got {} messages", count);
+            log.debug("Got {} messages", count);
             status.setError(false);
             status.setErrorMessage("");
             status.setStatus("Success");

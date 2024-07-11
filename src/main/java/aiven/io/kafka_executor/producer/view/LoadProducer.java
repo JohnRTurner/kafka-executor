@@ -272,7 +272,7 @@ public class LoadProducer {
                         });
             }
         }
-        log.info("Completed sending {} message for topic {} of type {}!", batchSize, topic, dataInterface.getClass().getSimpleName());
+        log.debug("Completed sending {} message for topic {} of type {}!", batchSize, topic, dataInterface.getClass().getSimpleName());
         status.setError(false);
         status.setErrorMessage("");
         status.setStatus("Success");
