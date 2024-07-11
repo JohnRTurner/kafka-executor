@@ -40,12 +40,12 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaConsumer<String, DataInterface> consumer = jsonConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
                         Properties properties = (registry) ?
-                                connectionConfig.connectionWithSchemaRegistryProperties() :
-                                connectionConfig.connectionProperties();
+                                connectionConfig.connectionWithSchemaRegistryProperties(false) :
+                                connectionConfig.connectionProperties(false);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, (registry) ?
                                 KafkaJsonSchemaDeserializer.class.getName() :
@@ -86,10 +86,10 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, GenericRecord> consumer = avroConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties();
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(false);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
@@ -122,10 +122,10 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, DynamicMessage> consumer = protobufConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties();
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(false);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaProtobufDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);

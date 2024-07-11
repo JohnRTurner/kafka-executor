@@ -38,7 +38,7 @@ public class ConnectionConfig {
     private int batchSize = 16384;
     private CompressionType compressionType = CompressionType.NONE;
 
-    public Properties connectionProperties() {
+    public Properties connectionProperties(boolean producer) {
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", host + ":" + port);
         properties.setProperty("security.protocol", "SSL");
@@ -48,15 +48,17 @@ public class ConnectionConfig {
         properties.setProperty("ssl.keystore.location", keystore_location);
         properties.setProperty("ssl.keystore.password", cert_password);
         properties.setProperty("ssl.key.password", cert_password);
-        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, Integer.toString(lingerMs));
-        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG,Integer.toString(batchSize));
-        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG,compressionType.name() );
+        if(producer) {
+            properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, Integer.toString(lingerMs));
+            properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(batchSize));
+            properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, compressionType.name().toLowerCase());
+        }
 
         return properties;
     }
 
-    public Properties connectionWithSchemaRegistryProperties() {
-        Properties properties = connectionProperties();
+    public Properties connectionWithSchemaRegistryProperties(boolean producer) {
+        Properties properties = connectionProperties(producer);
         properties.setProperty("schema.registry.url", "https://" + schemaRegistryHost + ":" + schemaRegistryPort);
         properties.setProperty("basic.auth.credentials.source", "USER_INFO");
         properties.setProperty("basic.auth.user.info", schemaRegistryUser + ":" + schemaRegistryPassword);

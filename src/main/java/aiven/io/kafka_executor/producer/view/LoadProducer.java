@@ -39,7 +39,7 @@ public class LoadProducer {
 
 
     public static ListTopicsResult getTopics(ConnectionConfig connectionConfig) {
-        Properties properties = connectionConfig.connectionProperties();
+        Properties properties = connectionConfig.connectionProperties(false);
         properties.put("client.dns.lookup", "use_all_dns_ips");
         try (AdminClient adminClient = AdminClient.create(properties)) {
             DescribeClusterResult cluster = adminClient.describeCluster();
@@ -54,7 +54,7 @@ public class LoadProducer {
 
     public static CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication,
                                                   ConnectionConfig connectionConfig) {
-        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
             Collection<NewTopic> newTopics = new ArrayList<>();
             for (String topic : topics) {
                 newTopics.add(new NewTopic(topic, partitions, replication));
@@ -67,7 +67,7 @@ public class LoadProducer {
     }
 
     public static DeleteTopicsResult deleteTopics(Collection<String> topics, ConnectionConfig connectionConfig) {
-        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
             return adminClient.deleteTopics(topics);
         } catch (Exception e) {
             log.error("Error creating topics", e);
@@ -81,12 +81,12 @@ public class LoadProducer {
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaProducer<String, DataInterface> producer = jsonProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
                         Properties properties = (registry) ?
-                                connectionConfig.connectionWithSchemaRegistryProperties() :
-                                connectionConfig.connectionProperties();
+                                connectionConfig.connectionWithSchemaRegistryProperties(true) :
+                                connectionConfig.connectionProperties(true);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, (registry) ?
@@ -113,10 +113,10 @@ public class LoadProducer {
         String key = topic.concat(Integer.toString(server).concat("True"));
         KafkaProducer<String, DynamicMessage> producer = protobufProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties();
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(true);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
@@ -143,10 +143,10 @@ public class LoadProducer {
         String key = topic.concat(Integer.toString(server).concat("False"));
         KafkaProducer<String, GenericRecord> producer = avroProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties())) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties();
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(true);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
