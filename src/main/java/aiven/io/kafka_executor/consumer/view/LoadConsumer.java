@@ -20,12 +20,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -155,23 +152,37 @@ public class LoadConsumer {
 
 
     public static void clean() {
-        for (String key : jsonConsumers.keySet()) {
-            KafkaConsumer<String, DataInterface> remove = jsonConsumers.remove(key);
-            if (remove != null) {
-                remove.close();
+        Iterator<Map.Entry<String, KafkaConsumer<String, DataInterface>>> jsonIterator = jsonConsumers.entrySet().iterator();
+        while (jsonIterator.hasNext()) {
+            KafkaConsumer<String, DataInterface> consumer = jsonIterator.next().getValue();
+            try{
+                consumer.close();
+            } catch (Exception e) {
+                log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);
             }
+            jsonIterator.remove();
         }
-        for (String key : avroConsumers.keySet()) {
-            KafkaConsumer<String, GenericRecord> remove = avroConsumers.remove(key);
-            if (remove != null) {
-                remove.close();
+
+        Iterator<Map.Entry<String, KafkaConsumer<String, GenericRecord>>> avroIterator = avroConsumers.entrySet().iterator();
+        while (avroIterator.hasNext()) {
+            KafkaConsumer<String, GenericRecord> consumer = avroIterator.next().getValue();
+            try{
+                consumer.close();
+            } catch (Exception e) {
+                log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);
             }
+            avroIterator.remove();
         }
-        for (String key : protobufConsumers.keySet()) {
-            KafkaConsumer<String, DynamicMessage> remove = protobufConsumers.remove(key);
-            if (remove != null) {
-                remove.close();
+
+        Iterator<Map.Entry<String, KafkaConsumer<String, DynamicMessage>>> protoIterator = protobufConsumers.entrySet().iterator();
+        while (protoIterator.hasNext()) {
+            KafkaConsumer<String, DynamicMessage> consumer = protoIterator.next().getValue();
+            try{
+                consumer.close();
+            } catch (Exception e) {
+                log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);
             }
+            protoIterator.remove();
         }
     }
 

@@ -18,12 +18,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -168,27 +164,42 @@ public class LoadProducer {
     }
 
     public static void clean() {
-        for (String key : jsonProducers.keySet()) {
-            KafkaProducer<String, DataInterface> remove = jsonProducers.remove(key);
-            if (remove != null) {
-                remove.flush();
-                remove.close();
+        Iterator<Map.Entry<String, KafkaProducer<String, DataInterface>>> jsonIterator = jsonProducers.entrySet().iterator();
+        while (jsonIterator.hasNext()) {
+            KafkaProducer<String, DataInterface> producer = jsonIterator.next().getValue();
+            try{
+                producer.flush();
+                producer.close();
+            } catch (Exception e) {
+                log.error("Error flushing producer for topic {}", jsonIterator.next().getKey(), e);
             }
+            jsonIterator.remove();
         }
-        for (String key : avroProducers.keySet()) {
-            KafkaProducer<String, GenericRecord> remove = avroProducers.remove(key);
-            if (remove != null) {
-                remove.flush();
-                remove.close();
+
+        Iterator<Map.Entry<String, KafkaProducer<String, GenericRecord>>> avroIterator = avroProducers.entrySet().iterator();
+        while (avroIterator.hasNext()) {
+            KafkaProducer<String, GenericRecord> producer = avroIterator.next().getValue();
+            try{
+                producer.flush();
+                producer.close();
+            } catch (Exception e) {
+                log.error("Error flushing producer for topic {}", jsonIterator.next().getKey(), e);
             }
+            avroIterator.remove();
         }
-        for (String key : protobufProducers.keySet()) {
-            KafkaProducer<String, DynamicMessage> remove = protobufProducers.remove(key);
-            if (remove != null) {
-                remove.flush();
-                remove.close();
+
+        Iterator<Map.Entry<String, KafkaProducer<String, DynamicMessage>>> protoIterator = protobufProducers.entrySet().iterator();
+        while (protoIterator.hasNext()) {
+            KafkaProducer<String, DynamicMessage> producer = protoIterator.next().getValue();
+            try{
+                producer.flush();
+                producer.close();
+            } catch (Exception e) {
+                log.error("Error flushing producer for topic {}", jsonIterator.next().getKey(), e);
             }
+            protoIterator.remove();
         }
+
     }
 
     public static ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize,
