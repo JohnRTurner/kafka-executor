@@ -181,19 +181,73 @@ export interface ConnectionConfigDTO {
      * @type {number}
      * @memberof ConnectionConfigDTO
      */
-    'lingerMs'?: number;
+    'producerLingerMs'?: number;
     /**
      * 
      * @type {number}
      * @memberof ConnectionConfigDTO
      */
-    'batchSize'?: number;
+    'producerBatchSize'?: number;
     /**
      * 
      * @type {string}
      * @memberof ConnectionConfigDTO
      */
     'compressionType'?: ConnectionConfigDTOCompressionTypeEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'bufferMemory'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectionConfigDTO
+     */
+    'idempotenceEnabled'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectionConfigDTO
+     */
+    'acks'?: ConnectionConfigDTOAcksEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'maxPollRecords'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'fetchMinByes'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'fetchMaxWaitMS'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'sessionTimeoutMs'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'heartbeatTimeoutMs'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectionConfigDTO
+     */
+    'autoCommitIntervalMs'?: number;
 }
 
 export const ConnectionConfigDTOCompressionTypeEnum = {
@@ -205,6 +259,13 @@ export const ConnectionConfigDTOCompressionTypeEnum = {
 } as const;
 
 export type ConnectionConfigDTOCompressionTypeEnum = typeof ConnectionConfigDTOCompressionTypeEnum[keyof typeof ConnectionConfigDTOCompressionTypeEnum];
+export const ConnectionConfigDTOAcksEnum = {
+    All: 'all',
+    _1: '1',
+    _0: '0'
+} as const;
+
+export type ConnectionConfigDTOAcksEnum = typeof ConnectionConfigDTOAcksEnum[keyof typeof ConnectionConfigDTOAcksEnum];
 
 /**
  * 
@@ -1071,6 +1132,35 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getAckTypes: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/server/ackTypes`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCompressionTypes: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/server/compressionTypes`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1174,6 +1264,17 @@ export const ConfigControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getAckTypes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAckTypes(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.getAckTypes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getCompressionTypes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCompressionTypes(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1218,6 +1319,14 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getAckTypes(options?: any): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.getAckTypes(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCompressionTypes(options?: any): AxiosPromise<Array<string>> {
             return localVarFp.getCompressionTypes(options).then((request) => request(axios, basePath));
         },
@@ -1248,6 +1357,16 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
  * @extends {BaseAPI}
  */
 export class ConfigControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigControllerApi
+     */
+    public getAckTypes(options?: RawAxiosRequestConfig) {
+        return ConfigControllerApiFp(this.configuration).getAckTypes(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.

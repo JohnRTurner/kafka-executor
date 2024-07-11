@@ -37,25 +37,17 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaConsumer<String, DataInterface> consumer = jsonConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
                         Properties properties = (registry) ?
-                                connectionConfig.connectionWithSchemaRegistryProperties(false) :
-                                connectionConfig.connectionProperties(false);
+                                connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER) :
+                                connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, (registry) ?
                                 KafkaJsonSchemaDeserializer.class.getName() :
                                 JsonDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
-                        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-                        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
-                        properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "5000");
-                        properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
-                        properties.setProperty(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "2000");
-                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
-                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
-                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
                         properties.setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*");
                         // this is for no schema
                         properties.setProperty(JsonDeserializer.VALUE_DEFAULT_TYPE, dataClass.getDataInterfaceClass().getName());
@@ -83,20 +75,13 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, GenericRecord> consumer = avroConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(false);
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
-                        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-                        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
-                        properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-                        properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
-                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
-                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
-                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
 
                         //properties.setProperty(KafkaAvroDeserializerConfig.SC)
                         try {
@@ -119,20 +104,13 @@ public class LoadConsumer {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, DynamicMessage> consumer = protobufConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(false))) {
+            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(false);
+                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaProtobufDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
-                        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-                        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
-                        properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-                        properties.setProperty(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
-                        properties.setProperty(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, "1"); // Minimum amount of data (in bytes) the server should return for a fetch request
-                        properties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, "500"); // Maximum wait time (in ms) the server should block before sending data
-                        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // Maximum number of records returned in a single call to poll()
                         //properties.setProperty(KafkaAvroDeserializerConfig.SC)
                         try {
                             consumer = new KafkaConsumer<>(properties);

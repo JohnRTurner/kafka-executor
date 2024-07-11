@@ -16,7 +16,16 @@ public class ConnectionConfigDTO {
     private String schemaRegistryPort;
     private String schemaRegistryUser;
     private String schemaRegistryPassword;
-    private int lingerMs;
-    private int batchSize;
+    private int producerLingerMs;
+    private int producerBatchSize;
     private CompressionType compressionType;
+    private long bufferMemory;
+    private boolean idempotenceEnabled;
+    private ConnectionConfig.ACKS acks;
+    private int maxPollRecords;
+    private int fetchMinByes;
+    private int fetchMaxWaitMS;
+    private int sessionTimeoutMs;
+    private int heartbeatTimeoutMs;
+    private int autoCommitIntervalMs;
 }
