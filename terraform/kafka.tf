@@ -2,7 +2,7 @@
 resource "aiven_kafka" "kafka1" {
   project                 = var.project_name
   cloud_name              = var.cloud_name
-  plan                    = "business-4"
+  plan                    = var.kafka_plan
   service_name            = "kafka1"
    maintenance_window_dow  = var.maintenance_dow
   maintenance_window_time = var.maintenance_time
@@ -10,7 +10,7 @@ resource "aiven_kafka" "kafka1" {
     kafka_connect = true
     kafka_rest    = true
     schema_registry = true
-    kafka_version = "3.7"
+    kafka_version = var.kafka_version
     kafka {
       group_max_session_timeout_ms = 70000
       log_retention_bytes          = 20000000000

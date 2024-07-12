@@ -94,3 +94,15 @@ variable "web_password" {
   description = "Executor Web Password"
   type        = string
 }
+
+variable "kafka_plan" {
+  description = "Aiven Kafka Plan Name"
+  type = string
+  default = "business-4"
+}
+
+variable "kafka_version" {
+  description = "Version of Kafka"
+  type = string
+  default = "3.7"
+}

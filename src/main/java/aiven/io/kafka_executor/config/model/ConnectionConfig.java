@@ -50,7 +50,7 @@ public class ConnectionConfig {
     private int fetchMinByes = 1024;
     private int fetchMaxWaitMS = 1000;
     private int sessionTimeoutMs = 30000;
-    private int heartbeatTimeoutMs = 30000;
+    private int heartbeatTimeoutMs = 10000;
     private int autoCommitIntervalMs = 5000;
 
 

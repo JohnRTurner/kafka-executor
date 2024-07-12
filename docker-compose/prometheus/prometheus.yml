@@ -2,6 +2,7 @@ global:
   scrape_interval: 15s
   scrape_timeout: 10s
   evaluation_interval: 15s
+
 alerting:
   alertmanagers:
     - static_configs:
@@ -23,9 +24,17 @@ scrape_configs:
     static_configs:
       - targets: [ 'executor:8080' ]
     metrics_path: "/api/actuator/prometheus"
+    relabel_configs:
+      - source_labels: [ __address__ ]
+        target_label: instance
+        replacement: "LOCALHOSTNAME"
   - job_name: node
     static_configs:
       - targets: ['node-exporter:9100']
+    relabel_configs:
+      - source_labels: [ __address__ ]
+        target_label: instance
+        replacement: "LOCALHOSTNAME"
 
 remote_write:
   - url: THANOS_REMOTE_WRITE_URL

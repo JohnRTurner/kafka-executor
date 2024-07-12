@@ -10,9 +10,23 @@ dg_sg_id = "default"
 dg_key_pair_name = "your_key"
 dg_instance_name = "your-demo"
 
+# Can choose from https://aws.amazon.com/ec2/instance-types/  heavy CPU and network is desirable
+# c6in.large   = 2 cpu 4GB memory
+# c6in.xlarge  = 4 cpu 8GB memory
+# c6in.2xlarge = 8 cpu 16GB memory
+
+dg_instance_type = "c6in.2xlarge"
+
+# How many Executors do you need?
+dg_number_of_instances = 1
+
+kafka_plan = "business-4"
+kafka_version = "3.7"
+
 web_user = "admin"
 web_password = "Admin123"
 
+# You may have to update these if they are set to expire
 AWS_ACCESS_KEY_ID="your_key"
 AWS_SECRET_ACCESS_KEY="your_secret"
 AWS_SESSION_TOKEN="your_token"

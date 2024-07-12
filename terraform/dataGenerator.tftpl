@@ -22,6 +22,7 @@ EOF
 
 cd /kafka_executor/docker-compose/prometheus
 sed -i "s|THANOS_REMOTE_WRITE_URL|${THANOS_REMOTE_WRITE_URL}|g" prometheus.yml
+sed -i "s|LOCALHOSTNAME|`ec2metadata --public-hostname`|g" prometheus.yml
 
 
 cd /kafka_executor/docker-compose/executor
