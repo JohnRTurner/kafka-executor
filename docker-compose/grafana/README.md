@@ -4,7 +4,7 @@
 
 ```shell
 export PROM_UID=$(curl -X GET -u $(terraform output -raw grafana_user_pass) --url $(terraform output -raw grafana_uri)/api/datasources|jq -r '.[0].uid')
-curl -X POST -H "Content-Type: application/json" -d "$(cat ../docker-compose/grafana/Executor_dashboard_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u $(terraform output -raw grafana_user_pass) --url $(terraform output -raw grafana_uri)/api/dashboards/import
+curl -X POST -H "Content-Type: application/json" -d "$(cat ../docker-compose/grafana/Executor_Dashboard_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u $(terraform output -raw grafana_user_pass) --url $(terraform output -raw grafana_uri)/api/dashboards/import
 curl -X POST -H "Content-Type: application/json" -d "$(cat ../docker-compose/grafana/JVM-Micro_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u $(terraform output -raw grafana_user_pass) --url $(terraform output -raw grafana_uri)/api/dashboards/import
 curl -X POST -H "Content-Type: application/json" -d "$(cat ../docker-compose/grafana/Node_Exporter_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u $(terraform output -raw grafana_user_pass) --url $(terraform output -raw grafana_uri)/api/dashboards/import
 ```

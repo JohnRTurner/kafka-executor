@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt update
-sudo apt install docker.io docker-compose nmon kafkacat -y
+sudo apt install docker.io docker-compose nmon kafkacat jq -y
 sudo usermod -a -G docker ubuntu
 
 cd /
@@ -33,10 +33,10 @@ cd /kafka_executor/docker-compose/nginx
 cp -pr /kafka_executor/websrc .
 
 cd /kafka_executor/docker-compose/grafana
-export PROM_UID=$(curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid')
-curl -X POST -H "Content-Type: application/json" -d "$(cat Executor_dashboard_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
-curl -X POST -H "Content-Type: application/json" -d "$(cat JVM-Micro_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
-curl -X POST -H "Content-Type: application/json" -d "$(cat Node_Exporter_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
+
+cat Executor_Dashboard_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
+cat JVM-Micro_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
+cat Node_Exporter_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
 
 cd /kafka_executor/docker-compose
 cat << EOF > .env
