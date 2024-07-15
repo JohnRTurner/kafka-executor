@@ -6,6 +6,13 @@ There is an easy-to-use Swagger front end that can be used to integrate
 with other programming languages such as React, Angular, Python...
 The intention is to use JMeter or even siege to run and monitor the tests
 using simple http calls.
+
+## Architecture
+![Architecture](architecture.png)
+
+## Terraform
+
+
 ## OpenAPI - Swagger v3
 ### How to access Swagger
 * The GUI interface for Swagger:

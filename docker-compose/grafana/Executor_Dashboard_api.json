@@ -1,4 +1,13 @@
 {
+  "inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "value": "XXXPROMXXX"
+    }
+  ],
+  "dashboard": {
   "__inputs": [
     {
       "name": "DS_PROMETHEUS",
@@ -179,4 +188,8 @@
   "uid": "a09d805c-f18a-463f-bdf0-2f67fd5ed4db",
   "version": 3,
   "weekStart": ""
+
+  },
+  "folderId": 0,
+  "overwrite": true
 }

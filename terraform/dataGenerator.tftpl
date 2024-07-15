@@ -24,7 +24,6 @@ cd /kafka_executor/docker-compose/prometheus
 sed -i "s|THANOS_REMOTE_WRITE_URL|${THANOS_REMOTE_WRITE_URL}|g" prometheus.yml
 sed -i "s|LOCALHOSTNAME|`ec2metadata --public-hostname`|g" prometheus.yml
 
-
 cd /kafka_executor/docker-compose/executor
 cp /kafka_executor/pom.xml pom.xml
 cp -pr /kafka_executor/src .
@@ -32,6 +31,12 @@ cp -pr /kafka_executor/certs .
 
 cd /kafka_executor/docker-compose/nginx
 cp -pr /kafka_executor/websrc .
+
+cd /kafka_executor/docker-compose/grafana
+export PROM_UID=$(curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid')
+curl -X POST -H "Content-Type: application/json" -d "$(cat Executor_dashboard_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
+curl -X POST -H "Content-Type: application/json" -d "$(cat JVM-Micro_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
+curl -X POST -H "Content-Type: application/json" -d "$(cat Node_Exporter_api.json|sed "s/XXXPROMXXX/${PROM_UID}/")" -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
 
 cd /kafka_executor/docker-compose
 cat << EOF > .env
