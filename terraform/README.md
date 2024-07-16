@@ -1,15 +1,24 @@
 # Terraform
 
-## Creates a Kafka Cluster, Thanos, Grafana, and a appServer
+## Creates a Kafka Cluster, Thanos, Grafana, and a AppServer(s)
 
 ### Setup variables
 * copy terraform.tfvars.sample to terraform.tfvars
 * update terrform.tfvars with the relevant data
+### Build
+* `terraform init`
+* `terraform apply -auto-approve`
+*  The kafka_executors will build for a few minutes after terraform finishes.
+### Connect
+* Connect to the application servers using `terraform output dataGeneratorURL`
+  * The username and password are in terraform.tfvars, and seen via `terraform output dataGeneratorUserPass`
+* Can connect to Grafana through the application or through the Aiven console.
 
-### Terraform commands
+
+## Terraform commands
 The commands must be issued inside the Terraform directory
 
-While Thanos is in Beta... `export PROVIDER_AIVEN_ENABLE_BETA=true`
+While Thanos is in Beta please execute the following for Terraform... `export PROVIDER_AIVEN_ENABLE_BETA=true`
 
 * `terraform init` - Used to initialize the Terraform client
 * `terraform plan` - Used to check what Terraform plans to do if applied
@@ -19,53 +28,21 @@ While Thanos is in Beta... `export PROVIDER_AIVEN_ENABLE_BETA=true`
 * `terraform plan -destroy` - Used to check what Terraform plans to do if a destroy command is issued
 * `terraform destroy -auto-approve` - Used to remove the resources from the Terraform plan
 
-### Terminal commands
+## Terminal commands
 * `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][0]')`
-* `avn service cli pg1` - Used to connect on command line to the Postgres database
-* `terraform output pg1_connect` - Used to get connection information for postgres
-* `export PGPASSWORD=xxx;psql --host=xxx --port=xxx --user=appuser --dbname=pg1db1` - Used to connect on command line to the Postgres database  
-* `terraform output mysql1_connect` - Used to get connection information for mysql
-* `mysql --host=xxx --port=xxx --user=appuser --password=xxx mysqldb1` - Used to connect on command line to the MySQL database
+* `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][1]')` to get 2nd instance
 
-### Files
+**Please update the commands to use the pem file defined in terraform.tfvars**
+
+## File Descriptions
 | Filename                | Description                                                                          |
 |-------------------------|--------------------------------------------------------------------------------------|
+| dataGenerator.tf        | Creates cloud application server(s)                                                  |
+| dataGenerator.tftpl     | Template file for setting up the application server(s)                               |
+| grafana.tf              | Creates the Grafana instance                                                         |
 | kafka.tf                | Creates a Kafka instance and 2 connectors used to pull data from Postgresql to MySQL |
-| mysql.tf                | Creates the MySQL instance and database, then it calls the mysql1.sql script         |
-| mysql1.sql              | SQL script placeholder that writes log to out directory                              |
-| postgres.tf             | Creates the MySQL instance and database, then it calls the mysql1.sql script         |
-| postgres1.sql           | SQL script creates a table with rows, adds aiven_extras, and creates publication     |
 | provider.tf             | Sets up the Aiven Terraform provider                                                 |
 | terraform.tfvars.sample | Template to create the terraform.tfvars file.  Please set before attempting to run   |
+| thanos.tf               | Creates the Thanos instance                                                          |
 | variables.tf            | Creates variables that get set by the terraform.tfvars file                          |
 
-### Demo Script
-1. Prior to demo run `terraform apply -auto-approve`
-2. Connect to the Postgres database
-   ``` BASH
-   eval $(terraform output -raw pg1_command)
-   ```
-3. Connect to the MySQL database
-   ``` BASH
-   eval $(terraform output -raw mysql1_command)
-   ```
-4. In Postgres window show the current state of the table
-   ``` SQL
-   select * from words;
-   ```
-5. In MySQL window show the current state of the table
-   ``` SQL
-   select * from words;
-   ```
-6. Make some changes on the Postgres database
-   ``` SQL
-   delete from words where id=2;
-   update words set word='hello' where id=1;
-   insert into words values (DEFAULT, 'how',DEFAULT), (DEFAULT, 'are',DEFAULT), (DEFAULT, 'you',DEFAULT);
-   select * from words;
-   ```
-7. Validate changes are made in MySQL
-   ``` SQL
-   select * from words;
-   ```
-   Note the deleted row is a tombstone on the MySQL side.

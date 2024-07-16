@@ -60,3 +60,12 @@ output "dataGeneratorIP"{
 output "dataGeneratorDNS"{
   value = [aws_instance.data-generator.*.public_dns]
 }
+
+output "dataGeneratorURL"{
+  value = [for s in aws_instance.data-generator.*.public_dns : format("http://%s:8000", s)]
+}
+
+output "dataGeneratorUserPass"{
+  value = format("%s:%s", var.web_user, var.web_password)
+  sensitive = true
+}

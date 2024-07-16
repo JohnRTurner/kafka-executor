@@ -10,22 +10,27 @@ using simple http calls.
 ## Architecture
 ![Architecture](architecture.png)
 
-## Terraform
+### Terraform - The easiest way to run everything is to use the terraform scripts.  The [documentation](terraform/README.md)    
+
+### Kafka - is the star of the show; it's what we are testing to see how it performs with various producers and consumers.
+
+### Thanos - stores the performance statistics so that we can measure the tests.
+
+### Grafana - displays dashboards to see the Thanos data.
+
+The dashboards are automatically pushed to Grafana.  More Information [here](docker-compose/grafana/README.md).
+
+### Each cloud instance uses docker-compose
+
+The project uses dockers for the following components
+
+#### nginx - The nginx docker provides password protection and serves the [React front-end web pages](websrc/README.md) and proxies the JAVA Web Services. 
+
+#### executor - The executor docker is the [JAVA Spring Boot application](src/main/README.md) that executes the  
+
+#### node-exporter - The node-exporter captures the machines statistics and sends to prometheus.
+
+#### prometheus - The prometheus docker pulls data from node-exporter and from the executor, forwarding the data to Thanos.
 
 
-## OpenAPI - Swagger v3
-### How to access Swagger
-* The GUI interface for Swagger:
-http://127.0.0.1:8080/api/swagger-ui/index.html#/ 
-  * Note: change the ip for above swagger addresses with your server
-* The swagger document is here http://127.0.0.1:8080/api/v3/api-docs
-  * Note: change the ip for above swagger addresses with your server
-* Auto-generating a programmatic interface based upon Swagger: https://github.com/swagger-api/swagger-codegen?tab=readme-ov-file#overview
-* An easy client to generate a quick load against the API is siege installable by
-  * Source Code: https://github.com/JoeDog/siege/
-  * MAC: `brew install siege`
-  * Linux: `sudo apt-get install siege`
-  * Windows: download https://siege-windows.googlecode.com/svn/trunk/siege-windows-3.0.5.zip then unzip...
-* A client with better metrics reporting is JMeter.  See JMeter directory for more details.
-### Swagger Documentation also known as OpenAPI
-https://swagger.io/docs/specification/about/
+

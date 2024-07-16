@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.TreeSet;
 
 import static aiven.io.kafka_executor.data.DataClass.values;
 
@@ -53,10 +55,12 @@ public class ProducerController {
     @RequestMapping(value = "/listTopics", method = RequestMethod.GET)
     public ResponseEntity<Set<String>> getListTopics(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        Set<String> topics;
         try {
-            topics = LoadProducer.getTopics(connectionConfig).names().get();
-            return new ResponseEntity<>(topics, HttpStatus.OK);
+            Set<String> filteredSortedTopics = LoadProducer.getTopics(connectionConfig).names().get().stream()
+                    .filter(topic -> !topic.startsWith("_"))  //Remove underscore topics
+                    .sorted() //alphabetical is nice.
+                    .collect(Collectors.toCollection(TreeSet::new));
+            return new ResponseEntity<>(filteredSortedTopics, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Failed to load topics", e);
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
@@ -112,7 +116,7 @@ public class ProducerController {
                                                           @RequestParam(value = "dataClass", defaultValue = "CUSTOMER_JSON") String dataClass,
                                                           HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        DataClass dataClass1 = null;
+        DataClass dataClass1;
         try {
             dataClass1 = DataClass.valueOf(dataClass);
         } catch (IllegalArgumentException e) {
