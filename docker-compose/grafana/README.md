@@ -6,7 +6,7 @@
 * **JVM (Micrometer)** - JVM stats for Executor
 * **Node Exporter Full** - Node information for Executor Node
 
-Please note that their are two files for each dashboard, the one marked _api is for the Grafana API, the other can be used with the GUI.
+Please note that there are two files for each dashboard, the one marked _api is for the Grafana API, the other can be used with the GUI.
 
 ## Upload Dashboards Manually from terraform directory
 

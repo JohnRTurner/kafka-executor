@@ -13,8 +13,8 @@ Note: Support for Avro and Protobuf are automatically generated!
 ## Can run standalone (Convenient for Testing)
 * In resources, copy the application.properties.example to application.properties
 * Update the application.properties file
-* Setup the [certs](../../certs/README.md)
-* Setup to use maven to build and execute.
+* Set up the [certs](../../certs/README.md)
+* Use maven to build and execute. ```mvn clean package -DskipTests```
 
 ## OpenAPI - Swagger v3
 ### How to access Swagger
