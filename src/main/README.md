@@ -17,6 +17,10 @@ Note: Support for Avro and Protobuf are automatically generated!
 * Use maven to build and execute. ```mvn clean package -DskipTests```
 
 ## OpenAPI - Swagger v3
+![swagger-collapsed](swagger-collapsed.png)
+
+![swagger-execute](swagger-execute.png)
+
 ### How to access Swagger
 * The GUI interface for Swagger:
   http://127.0.0.1:8080/api/swagger-ui/index.html#/
