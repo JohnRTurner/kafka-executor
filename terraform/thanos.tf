@@ -13,30 +13,30 @@ resource "aiven_thanos" "thanos1" {
 }
 
 
-
-output "thanos_query_frontend_uri"{
-  value = aiven_thanos.thanos1.thanos[0].query_frontend_uri
+output "thanos_query_frontend_uri" {
+  value     = aiven_thanos.thanos1.thanos[0].query_frontend_uri
   sensitive = true
 }
 
-output "thanos_query_uri"{
-  value = aiven_thanos.thanos1.thanos[0].query_uri
-  sensitive = true
-}
-
-
-output "thanos_receiver_remote_write_uri"{
-  value = aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
-  sensitive = true
-}
-
-output "thanos_receiver_ingesting_remote_write_uri"{
-  value = aiven_thanos.thanos1.thanos[0].receiver_ingesting_remote_write_uri
+output "thanos_query_uri" {
+  value     = aiven_thanos.thanos1.thanos[0].query_uri
   sensitive = true
 }
 
 
-output "thanos_user_pass"{ #same as host port
-  value = format("%s:%s", aiven_thanos.thanos1.service_username, aiven_thanos.thanos1.service_password)
+output "thanos_receiver_remote_write_uri" {
+  value     = aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
+  sensitive = true
+}
+
+output "thanos_receiver_ingesting_remote_write_uri" {
+  value     = aiven_thanos.thanos1.thanos[0].receiver_ingesting_remote_write_uri
+  sensitive = true
+}
+
+
+output "thanos_user_pass" {
+  #same as host port
+  value     = format("%s:%s", aiven_thanos.thanos1.service_username, aiven_thanos.thanos1.service_password)
   sensitive = true
 }

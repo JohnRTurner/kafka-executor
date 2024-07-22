@@ -1,47 +1,47 @@
 resource "aws_instance" "data-generator" {
-  ami = var.dg_ami_id
+  ami   = var.dg_ami_id
   count = var.dg_number_of_instances
   #subnet_id = var.dg_subnet_id
   instance_type = var.dg_instance_type
   ebs_optimized = true
   ebs_block_device {
-    device_name = "/dev/sda1"
+    device_name           = "/dev/sda1"
     delete_on_termination = true
-    encrypted = false
-    volume_size = var.dg_disk_gb
-    volume_type = "gp2"
+    encrypted             = false
+    volume_size           = var.dg_disk_gb
+    volume_type           = "gp2"
   }
   security_groups = [var.dg_sg_id]
-  key_name = var.dg_key_pair_name
+  key_name        = var.dg_key_pair_name
   user_data = templatefile("dataGenerator.tftpl",
     {
-      GIT_CMD=var.git_cmd
+      GIT_CMD = var.git_cmd
 
-      CA_CERT=data.aiven_project.proj1.ca_cert
-      ACCESS_CERT=aiven_kafka.kafka1.kafka[0].access_cert
-      ACCESS_KEY=aiven_kafka.kafka1.kafka[0].access_key
-      CERT_PASS="test1234" /* only used internally to encrypt/decrypt above */
+      CA_CERT     = data.aiven_project.proj1.ca_cert
+      ACCESS_CERT = aiven_kafka.kafka1.kafka[0].access_cert
+      ACCESS_KEY  = aiven_kafka.kafka1.kafka[0].access_key
+      CERT_PASS   = "test1234" /* only used internally to encrypt/decrypt above */
 
-      KAFKA_EXECUTOR_HOST=aiven_kafka.kafka1.components[0].host
-      KAFKA_EXECUTOR_PORT=aiven_kafka.kafka1.components[0].port
+      KAFKA_EXECUTOR_HOST = aiven_kafka.kafka1.components[0].host
+      KAFKA_EXECUTOR_PORT = aiven_kafka.kafka1.components[0].port
 
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST=aiven_kafka.kafka1.components[6].host
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT=aiven_kafka.kafka1.components[6].port
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST = aiven_kafka.kafka1.components[6].host
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT = aiven_kafka.kafka1.components[6].port
 
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER=aiven_kafka.kafka1.service_username
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD=aiven_kafka.kafka1.service_password
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER     = aiven_kafka.kafka1.service_username
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD = aiven_kafka.kafka1.service_password
 
-      THANOS_REMOTE_WRITE_URL=aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
+      THANOS_REMOTE_WRITE_URL = aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
 
-      GRAFANA_URL=aiven_grafana.grafana1.service_uri
-      GRAFANA_USER_PASS=format("%s:%s", aiven_grafana.grafana1.service_username, aiven_grafana.grafana1.service_password)
+      GRAFANA_URL       = aiven_grafana.grafana1.service_uri
+      GRAFANA_USER_PASS = format("%s:%s", aiven_grafana.grafana1.service_username, aiven_grafana.grafana1.service_password)
 
-      WEB_USER=var.web_user
-      WEB_PASSWORD=var.web_password
+      WEB_USER     = var.web_user
+      WEB_PASSWORD = var.web_password
     }
   )
   tags = {
-    Name = format("%s-%02d",var.dg_instance_name, count.index + 1)
+    Name = format("%s-%02d", var.dg_instance_name, count.index + 1)
   }
   timeouts {
     delete = "15m"
@@ -51,23 +51,23 @@ resource "aws_instance" "data-generator" {
   depends_on = [aiven_kafka.kafka1, data.aiven_project.proj1, aiven_thanos.thanos1]
 }
 
-output "dataGeneratorName"{
+output "dataGeneratorName" {
   value = [aws_instance.data-generator.*.tags.Name]
 }
 
-output "dataGeneratorIP"{
+output "dataGeneratorIP" {
   value = [aws_instance.data-generator.*.public_ip]
 }
 
-output "dataGeneratorDNS"{
+output "dataGeneratorDNS" {
   value = [aws_instance.data-generator.*.public_dns]
 }
 
-output "dataGeneratorURL"{
+output "dataGeneratorURL" {
   value = [for s in aws_instance.data-generator.*.public_dns : format("http://%s:8000", s)]
 }
 
-output "dataGeneratorUserPass"{
-  value = format("%s:%s", var.web_user, var.web_password)
+output "dataGeneratorUserPass" {
+  value     = format("%s:%s", var.web_user, var.web_password)
   sensitive = true
 }

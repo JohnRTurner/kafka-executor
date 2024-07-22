@@ -27,11 +27,13 @@
     - **Resource Owner**: The owner of the repository you with to give access to.
 
 8. **Select Repository Access**
-    - **Repository Access**: Choose "Only select repositories" and specify the repository for which you need clone access.
+    - **Repository Access**: Choose "Only select repositories" and specify the repository for which you need clone
+      access.
 
 9. **Set Permissions**
     - **Repository permissions**: Set the following permissions:
-        - **Contents**: Set this to "Read-only". This allows you to clone the repository without additional write access.
+        - **Contents**: Set this to "Read-only". This allows you to clone the repository without additional write
+          access.
 
 10. **Generate Token**
     - Once you have set the appropriate permissions, click on the "Generate token" button.
@@ -44,6 +46,7 @@
       ```sh
       git clone https://<your-token>@github.com/aiven/kafka-executor.git
       ```
-    - Update the git command in the terraform.tfvars file.  
+    - Update the git command in the terraform.tfvars file.
 
-By following these steps, you create a PAT with the least permissions required to clone a specific repository, ensuring fine-grained access control.
+By following these steps, you create a PAT with the least permissions required to clone a specific repository, ensuring
+fine-grained access control.

@@ -8,7 +8,7 @@ type ResultDialogProps = {
     onClose: () => void;
 };
 
-const ResultDialog: React.FC<ResultDialogProps> = ({ isOpen, message, onClose }) => {
+const ResultDialog: React.FC<ResultDialogProps> = ({isOpen, message, onClose}) => {
     return (
         <Modal
             isOpen={isOpen}

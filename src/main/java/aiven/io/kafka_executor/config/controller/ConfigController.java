@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ConfigController {
     private final ConnectionConfig connectionConfig;
 
-    public ConfigController(ConnectionConfig connectionConfig ) {
+    public ConfigController(ConnectionConfig connectionConfig) {
         this.connectionConfig = connectionConfig;
     }
 
@@ -55,7 +55,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/connection", method = RequestMethod.PUT)
-    public void updateConnectionConfig(@RequestBody ConnectionConfigDTO configDTO, HttpServletRequest request ) {
+    public void updateConnectionConfig(@RequestBody ConnectionConfigDTO configDTO, HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         connectionConfig.loadConfig(configDTO);
         LoadConsumer.clean();

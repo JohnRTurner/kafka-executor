@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from 'react-modal';
 import './Modal.css';
-import { ConfigControllerApi, ConnectionConfigDTO } from "../api";
+import {ConfigControllerApi, ConnectionConfigDTO} from "../api";
 import apiConfig from "../apiConfig.tsx";
 
 type ConnectionDialogProps = {
@@ -35,7 +35,7 @@ const findValueByKey = (keyValueArray: KeyValue[], searchKey: string): string | 
 
 const configController = new ConfigControllerApi(apiConfig);
 
-const ConnectionDialog: React.FC<ConnectionDialogProps> = ({ isOpen, onClose, onConfirm }) => {
+const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onConfirm}) => {
     const [compressionTypes, setCompressionTypes] = useState<string[]>([]);
     const [selectedCompressionType, setSelectedCompressionType] = useState<string>('');
     const [ackTypes, setAckTypes] = useState<KeyValue[]>([]);
@@ -60,7 +60,7 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({ isOpen, onClose, on
 
                 //console.error("raw ack types: " + convertToKeyValueArray(response.data));
 
-                const x:KeyValue[] = convertToKeyValueArray(response.data);
+                const x: KeyValue[] = convertToKeyValueArray(response.data);
                 setAckTypes(x);
                 //setSelectedAckType(x[0].key);
             } catch (error) {
@@ -72,30 +72,30 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({ isOpen, onClose, on
             try {
                 const response = await configController.getStatus();
                 setConnectionConfig(response.data);
-                if(response.data.compressionType != undefined) {
+                if (response.data.compressionType != undefined) {
                     setSelectedCompressionType(response.data.compressionType.toUpperCase())
                 }
-                if(response.data.acks != undefined && ackTypes != undefined){
+                if (response.data.acks != undefined && ackTypes != undefined) {
                     setSelectedAckType(response.data.acks)
                 }
             } catch (error) {
                 console.error('Error fetching connection configuration:', error);
             }
         };
-        if(compressionTypes.length === 0) {
+        if (compressionTypes.length === 0) {
             fetchCompressionTypes().finally(() => {
-                    fetchAckTypes().finally(() => {
-                            fetchStatus().finally( () =>{
-                            })
+                fetchAckTypes().finally(() => {
+                    fetchStatus().finally(() => {
                     })
+                })
             })
-        } else if(ackTypes.length === 0){
-            fetchAckTypes().finally( () => {
-                    fetchStatus().finally( () =>{
-                    })
+        } else if (ackTypes.length === 0) {
+            fetchAckTypes().finally(() => {
+                fetchStatus().finally(() => {
+                })
             });
         } else {
-            fetchStatus().finally( () =>{
+            fetchStatus().finally(() => {
             })
         }
     }, [ackTypes.length, compressionTypes.length]);
@@ -369,10 +369,12 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({ isOpen, onClose, on
                     <button className={activeTab === 'Schema' ? 'active' : ''} onClick={() => setActiveTab('Schema')}>
                         Schema Registry
                     </button>
-                    <button className={activeTab === 'Producer' ? 'active' : ''} onClick={() => setActiveTab('Producer')}>
+                    <button className={activeTab === 'Producer' ? 'active' : ''}
+                            onClick={() => setActiveTab('Producer')}>
                         Producer
                     </button>
-                    <button className={activeTab === 'Consumer' ? 'active' : ''} onClick={() => setActiveTab('Consumer')}>
+                    <button className={activeTab === 'Consumer' ? 'active' : ''}
+                            onClick={() => setActiveTab('Consumer')}>
                         Consumer
                     </button>
                 </div>

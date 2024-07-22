@@ -1,5 +1,5 @@
 import React from 'react';
-import { BatchStatus } from '../api';
+import {BatchStatus} from '../api';
 import './BatchList.css';
 
 interface BatchItemProps {
@@ -8,7 +8,7 @@ interface BatchItemProps {
     onDelete: (batchStatus: BatchStatus) => void;
 }
 
-const BatchItem: React.FC<BatchItemProps> = ({ batchStatus, onEdit, onDelete }) => {
+const BatchItem: React.FC<BatchItemProps> = ({batchStatus, onEdit, onDelete}) => {
     return (
         <li>
             <div className="batch-status-container">

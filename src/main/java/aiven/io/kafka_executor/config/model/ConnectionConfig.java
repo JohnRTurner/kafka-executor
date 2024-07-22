@@ -53,31 +53,6 @@ public class ConnectionConfig {
     private int heartbeatTimeoutMs = 10000;
     private int autoCommitIntervalMs = 5000;
 
-
-    public enum KAFKA_TYPE {
-        PRODUCER,
-        CONSUMER,
-        ADMIN
-    }
-
-    @Getter
-    public enum ACKS {
-        ALL("all"),
-        LEADER_ONLY("1"),
-        NONE("0");
-
-        private final String value;
-
-        ACKS(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
-    }
-
     public Properties connectionProperties(KAFKA_TYPE kafkaType) {
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", host + ":" + port);
@@ -88,15 +63,15 @@ public class ConnectionConfig {
         properties.setProperty("ssl.keystore.location", keystore_location);
         properties.setProperty("ssl.keystore.password", cert_password);
         properties.setProperty("ssl.key.password", cert_password);
-        if(kafkaType == KAFKA_TYPE.PRODUCER) {
+        if (kafkaType == KAFKA_TYPE.PRODUCER) {
             properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, Integer.toString(producerLingerMs));
             properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(producerBatchSize));
             properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, compressionType.name().toLowerCase());
             properties.setProperty(ProducerConfig.BUFFER_MEMORY_CONFIG, Long.toString(bufferMemory));
-            properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,(idempotenceEnabled ? "true" : "false"));
+            properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, (idempotenceEnabled ? "true" : "false"));
             properties.setProperty(ProducerConfig.ACKS_CONFIG, acks.value);
         }
-        if(kafkaType == KAFKA_TYPE.CONSUMER) {
+        if (kafkaType == KAFKA_TYPE.CONSUMER) {
             properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
             properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
 
@@ -118,8 +93,8 @@ public class ConnectionConfig {
         return properties;
     }
 
-    public void loadConfig(ConnectionConfigDTO configDTO){
-        this.host  = configDTO.getHost();
+    public void loadConfig(ConnectionConfigDTO configDTO) {
+        this.host = configDTO.getHost();
         this.port = configDTO.getPort();
         this.cert_password = configDTO.getCert_password();
         this.truststore_location = configDTO.getTruststore_location();
@@ -127,7 +102,7 @@ public class ConnectionConfig {
 
         /* Schema Registry */
         this.schemaRegistryHost = configDTO.getSchemaRegistryHost();
-        this.schemaRegistryPort  = configDTO.getSchemaRegistryPort();
+        this.schemaRegistryPort = configDTO.getSchemaRegistryPort();
         this.schemaRegistryUser = configDTO.getSchemaRegistryUser();
         this.schemaRegistryPassword = configDTO.getSchemaRegistryPassword();
 
@@ -182,6 +157,30 @@ public class ConnectionConfig {
         configDTO.setAutoCommitIntervalMs(this.autoCommitIntervalMs);
 
         return configDTO;
+    }
+
+    public enum KAFKA_TYPE {
+        PRODUCER,
+        CONSUMER,
+        ADMIN
+    }
+
+    @Getter
+    public enum ACKS {
+        ALL("all"),
+        LEADER_ONLY("1"),
+        NONE("0");
+
+        private final String value;
+
+        ACKS(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 
 

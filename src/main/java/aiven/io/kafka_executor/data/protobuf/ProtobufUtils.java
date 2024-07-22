@@ -101,7 +101,7 @@ public class ProtobufUtils {
             Descriptors.FieldDescriptor fieldDescriptor = entry.getKey();
             Object value = entry.getValue();
             String fieldName = fieldDescriptor.getName();
-            Field pojoField = null;
+            Field pojoField;
             try {
                 pojoField = dataInterface.getClass().getDeclaredField(fieldName);
                 pojoField.setAccessible(true);

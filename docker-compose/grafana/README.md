@@ -1,12 +1,14 @@
 # Grafana Setup
 
 ## Dashboards
+
 * **Aiven Kafka** - Default dashboard for Aiven Kafka - **included automatically by Aiven**
 * **Executor Dashboard** - Shows how many rows are being produced/consumed.
 * **JVM (Micrometer)** - JVM stats for Executor
 * **Node Exporter Full** - Node information for Executor Node
 
-Please note that there are two files for each dashboard, the one marked _api is for the Grafana API, the other can be used with the GUI.
+Please note that there are two files for each dashboard, the one marked _api is for the Grafana API, the other can be
+used with the GUI.
 
 ## Upload Dashboards Manually from terraform directory
 
@@ -18,7 +20,9 @@ cat ../docker-compose/grafana/Node_Exporter_api.json|sed "s/XXXPROMXXX/${PROM_UI
 ```
 
 ## How to convert regular Grafana dashboard exports into api export
+
 1. Create new file and start with:
+
 ```json
 {
   "inputs": [
@@ -31,13 +35,17 @@ cat ../docker-compose/grafana/Node_Exporter_api.json|sed "s/XXXPROMXXX/${PROM_UI
   ],
   "dashboard":
 ```
+
 2. insert the file after the above text
 3. append with following text:
+
 ```json
 ,
   "folderId": 0,
   "overwrite": true
 }
 ```
-4. Replace the ```id: whatever_number_is_here``` with ```id: null``` at the dashboard level if it isn't already set to null.
+
+4. Replace the ```id: whatever_number_is_here``` with ```id: null``` at the dashboard level if it isn't already set to
+   null.
 5. Add the additional file in terraform/dataGenerator.tftpl

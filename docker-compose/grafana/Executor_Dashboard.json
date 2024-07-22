@@ -10,7 +10,7 @@
     }
   ],
   "__elements": {},
-  "__requires" : [
+  "__requires": [
     {
       "type": "datasource",
       "id": "prometheus",

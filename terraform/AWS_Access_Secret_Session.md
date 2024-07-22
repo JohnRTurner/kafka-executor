@@ -1,4 +1,5 @@
 # AWS temporary access.
+
 Get the AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN
 
 1. Copy the below code to your local Linux or Mac.
@@ -36,4 +37,5 @@ fi
 4. Call the script, passing your authenticator token to get your temporary access information.
 5. Update the terraform.tfvars with this information
 
-**Note: The tokens will expire, but the terraform repository will continue to track your servers, so that you resume access upon updating the tokens.** 
+**Note: The tokens will expire, but the terraform repository will continue to track your servers, so that you resume
+access upon updating the tokens.** 

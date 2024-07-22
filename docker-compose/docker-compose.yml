@@ -74,4 +74,4 @@ services:
     expose:
       - 9090
     environment:
-          TZ: America/New_York
+      TZ: America/New_York

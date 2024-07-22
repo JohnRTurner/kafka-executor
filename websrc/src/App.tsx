@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import {useState} from 'react';
 import './App.css';
 import BatchList from "./batchList/BatchList.tsx";
 import Grafana from "./password/Grafana.tsx";
@@ -23,7 +23,7 @@ type MenuItem = {
 
 function App() {
 
-    const [selectedDisplay, setSelectedDisplay] = useState<'BatchList' | 'Grafana'| 'Sump' | 'External'>('BatchList');
+    const [selectedDisplay, setSelectedDisplay] = useState<'BatchList' | 'Grafana' | 'Sump' | 'External'>('BatchList');
     const [menuOpen, setMenuOpen] = useState(false);
     const [activeMenu, setActiveMenu] = useState<MenuItem | null>(null);
     const [externalUrl, setExternalUrl] = useState<string>('');
@@ -32,10 +32,11 @@ function App() {
     const [showConnection, setShowConnection] = useState(false); // State for showing confirmation dialog
     const [showConfirmation, setShowConfirmation] = useState(false); // State for showing confirmation dialog
     const [showResult, setShowResultDialog] = useState(false); // State for showing result dialog
-    const [apiResult, setApiResult] = useState<string|null>(null); // State for API call result
+    const [apiResult, setApiResult] = useState<string | null>(null); // State for API call result
 
-    const [handleConfirmation, setHandleConfirmation] = useState<() => void>(() => {}); // State for API call result
-    const [confirmationMessage, setConfirmationMessage] = useState<string|null>(null); // State for API call result
+    const [handleConfirmation, setHandleConfirmation] = useState<() => void>(() => {
+    }); // State for API call result
+    const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null); // State for API call result
 
 
     //const grafanaUrl = process.env.REACT_APP_GRAFANA_URL;
@@ -43,7 +44,7 @@ function App() {
 
 
     const menuItems: MenuItem[] = [
-        { label: 'Batch List', action: () => handleDisplayChange('BatchList') },
+        {label: 'Batch List', action: () => handleDisplayChange('BatchList')},
         /*
         {
             label: 'Batch',
@@ -55,47 +56,63 @@ function App() {
         {
             label: 'Application Links',
             subMenuItems: [
-                { label: 'Swagger', url: 'http://' + window.location.hostname + ':' + window.location.port + '/api/swagger-ui/index.html#/'},
-                { label: 'Prometheus', url: 'http://' + window.location.hostname + ':' + window.location.port + '/prometheus/graph'},
+                {
+                    label: 'Swagger',
+                    url: 'http://' + window.location.hostname + ':' + window.location.port + '/api/swagger-ui/index.html#/'
+                },
+                {
+                    label: 'Prometheus',
+                    url: 'http://' + window.location.hostname + ':' + window.location.port + '/prometheus/graph'
+                },
 
             ],
         },
         {
             label: 'External Links',
             subMenuItems: [
-                { label: 'Grafana', externalUrl: grafanaUrl },
-                { label: 'Grafana Password',action: () => handleDisplayChange('Grafana') },
-                { label: 'GitHub Project', externalUrl: 'https://github.com/JohnRTurner/kafka_executor' },
+                {label: 'Grafana', externalUrl: grafanaUrl},
+                {label: 'Grafana Password', action: () => handleDisplayChange('Grafana')},
+                {label: 'GitHub Project', externalUrl: 'https://github.com/JohnRTurner/kafka_executor'},
             ],
         },
         {
             label: 'Settings',
             subMenuItems: [
-                { label: 'Update Connections', action: () => {
+                {
+                    label: 'Update Connections', action: () => {
                         setShowConnection(true)
-                    }},
+                    }
+                },
 
 
-                { label: 'Stop All Tasks', action: () => {
+                {
+                    label: 'Stop All Tasks', action: () => {
                         setConfirmationMessage('Stop All Tasks.')
-                        setHandleConfirmation(()=>handleCleanTasks)
+                        setHandleConfirmation(() => handleCleanTasks)
                         setShowConfirmation(true)
-                    }},
-                { label: 'Clean Producer Connections', action: () => {
+                    }
+                },
+                {
+                    label: 'Clean Producer Connections', action: () => {
                         setConfirmationMessage('Delete All Producer Connections.')
-                        setHandleConfirmation(()=>handleCleanProducer)
+                        setHandleConfirmation(() => handleCleanProducer)
                         setShowConfirmation(true)
-                    }},
-                { label: 'Clean Consumer Connections', action: () => {
+                    }
+                },
+                {
+                    label: 'Clean Consumer Connections', action: () => {
                         setConfirmationMessage('Delete All Consumer Connections.')
-                        setHandleConfirmation(()=>handleCleanConsumer)
+                        setHandleConfirmation(() => handleCleanConsumer)
                         setShowConfirmation(true)
-                    }},
+                    }
+                },
 
-                { label: 'Create/Reset Topics', action: () => {
+                {
+                    label: 'Create/Reset Topics', action: () => {
                         setConfirmationMessage('Drop if they exist, then create all the test topics.')
                         setShowTopic(true)
-                }},
+                    }
+                },
             ],
         },
     ];
@@ -117,7 +134,7 @@ function App() {
             setMenuOpen(false); // Close the menu after selecting an option
             setActiveMenu(null); // Reset activeMenu to collapse sub-menu and show main menu
 
-        } else if (menuItem.externalUrl){
+        } else if (menuItem.externalUrl) {
             setSelectedDisplay('External');
             window.open(menuItem.externalUrl, '_blank'); // Open link in a new tab
             setMenuOpen(false); // Close the menu after selecting an option
@@ -131,7 +148,7 @@ function App() {
         setActiveMenu(null); // Reset activeMenu after selecting display option
     };
 
-    const handleCloseMessage = (msg:string) =>{
+    const handleCloseMessage = (msg: string) => {
         setShowConnection(false)
         setApiResult(msg)
         setShowResultDialog(true)
@@ -183,11 +200,11 @@ function App() {
     };
 
 
-    const handleResetTopics = (numberOfPartitions:number, replication: number) => {
+    const handleResetTopics = (numberOfPartitions: number, replication: number) => {
         setShowTopic(false); // Close topic dialog
         const resetTopics = async () => {
             await producerController.deleteTopics()
-                .then((response1) =>{
+                .then((response1) => {
                     console.log("Deleted Topics Successfully");
                     console.log(response1);
                 })
@@ -225,7 +242,7 @@ function App() {
         setApiResult(null); // Clear API result
     };
 
-    const closeConnectionDialog =() => {
+    const closeConnectionDialog = () => {
         setShowConnection(false)
     };
 
@@ -262,10 +279,10 @@ function App() {
                 )}
             </div>
             <div className="main-content">
-                {selectedDisplay === 'BatchList' && <BatchList />}
-                {selectedDisplay === 'Grafana' && <Grafana />}
+                {selectedDisplay === 'BatchList' && <BatchList/>}
+                {selectedDisplay === 'Grafana' && <Grafana/>}
                 {selectedDisplay === 'External' && (
-                    <iframe src={externalUrl} title="External Content" className="external-content" />
+                    <iframe src={externalUrl} title="External Content" className="external-content"/>
                 )}
             </div>
 
@@ -293,7 +310,7 @@ function App() {
                 isOpen={showConnection}
                 onClose={closeConnectionDialog}
                 onConfirm={handleCloseMessage}
-                />
+            />
 
 
         </div>

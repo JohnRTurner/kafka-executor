@@ -10,44 +10,44 @@ variable "project_name" {
 
 variable "cloud_name" {
   description = "Aiven cloud"
-  type = string
+  type        = string
 }
 
 variable "maintenance_dow" {
   description = "Maintenance Window Day of Week"
-  type = string
+  type        = string
 }
 
 variable "maintenance_time" {
   description = "Maintenance Window Time"
-  type = string
+  type        = string
 }
 
 
 variable "AWS_ACCESS_KEY_ID" {
   description = "AWS Access Key"
-  type = string
+  type        = string
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
   description = "AWS Secret Key"
-  type = string
+  type        = string
 }
 
 variable "AWS_SESSION_TOKEN" {
   description = "AWS Session Token"
-  type = string
+  type        = string
 }
 
 variable "aws_region" {
   description = "AWS Region"
-  type = string
+  type        = string
 }
 
 variable "dg_instance_name" {
   description = "Name of the instance to be created"
-  type = string
-  default = "dataGenerator"
+  type        = string
+  default     = "dataGenerator"
 }
 
 variable "dg_instance_type" {
@@ -59,30 +59,30 @@ variable "dg_instance_type" {
 }
 
 variable "dg_disk_gb" {
-  type = number
-  default=16
+  type    = number
+  default = 16
 }
 
 variable "dg_ami_id" {
   description = "The AMI to use - Amazon Machine Image (Operating System)"
-  type = string
+  type        = string
 }
 
 variable "dg_sg_id" {
   description = "The Security Group to use"
-  type = string
+  type        = string
 }
 
 
 variable "dg_number_of_instances" {
   description = "Number of instances to be created"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "dg_key_pair_name" {
   description = "Name of PEM file to be used"
-  type = string
+  type        = string
 }
 
 variable "web_user" {
@@ -97,18 +97,18 @@ variable "web_password" {
 
 variable "kafka_plan" {
   description = "Aiven Kafka Plan Name"
-  type = string
-  default = "business-4"
+  type        = string
+  default     = "business-4"
 }
 
 variable "kafka_version" {
   description = "Version of Kafka"
-  type = string
-  default = "3.7"
+  type        = string
+  default     = "3.7"
 }
 
 variable "git_cmd" {
   description = "ie. git clone -b yourBranch https://YOUR_PERSONAL_ACCESS_TOKEN@github.com/JohnRTurner/kafka_executor.git"
-  type = string
-  default = "git clone https://github.com/JohnRTurner/kafka_executor.git"
+  type        = string
+  default     = "git clone https://github.com/JohnRTurner/kafka_executor.git"
 }

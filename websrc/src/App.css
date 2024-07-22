@@ -1,100 +1,101 @@
 body,
 html {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch; /* Ensure items stretch to fill container */
-  height: 100vh; /* Full height of viewport */
-  color: rgba(255, 255, 255, 0.87); /* Text color */
-  background-color: #242424; /* Background color */
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Ensure items stretch to fill container */
+    height: 100vh; /* Full height of viewport */
+    color: rgba(255, 255, 255, 0.87); /* Text color */
+    background-color: #242424; /* Background color */
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 }
 
 .banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #1a1a1a; /* Adjusted banner background color */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #1a1a1a; /* Adjusted banner background color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .banner h1 {
-  font-size: 1.5rem; /* Adjusted font size for the banner title */
-  margin: 0; /* Remove default margin */
+    font-size: 1.5rem; /* Adjusted font size for the banner title */
+    margin: 0; /* Remove default margin */
 }
 
 .menu-button {
-  background-color: #1a1a1a; /* Adjusted button background color */
-  color: #646cff; /* Adjusted button text color */
-  border: none;
-  padding: 10px 20px;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background-color 0.25s, color 0.25s;
+    background-color: #1a1a1a; /* Adjusted button background color */
+    color: #646cff; /* Adjusted button text color */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.25s, color 0.25s;
 }
 
 .menu-button:hover {
-  background-color: #646cff; /* Adjusted hover background color */
-  color: #ffffff; /* Adjusted hover text color */
+    background-color: #646cff; /* Adjusted hover background color */
+    color: #ffffff; /* Adjusted hover text color */
 }
 
 .dropdown-menu {
-  position: absolute;
-  top: 50px; /* Adjust as needed */
-  right: 20px;
-  background-color: #1a1a1a; /* Adjusted dropdown background color */
-  border: 1px solid #646cff; /* Adjusted dropdown border color */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    right: 20px;
+    background-color: #1a1a1a; /* Adjusted dropdown background color */
+    border: 1px solid #646cff; /* Adjusted dropdown border color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
 }
 
 .dropdown-menu button {
-  background-color: transparent;
-  border: none;
-  padding: 10px;
-  color: #646cff; /* Adjusted dropdown button text color */
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    color: #646cff; /* Adjusted dropdown button text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-menu button:hover {
-  background-color: #646cff; /* Adjusted dropdown button hover background color */
-  color: #ffffff; /* Adjusted dropdown button hover text color */
+    background-color: #646cff; /* Adjusted dropdown button hover background color */
+    color: #ffffff; /* Adjusted dropdown button hover text color */
 }
 
 .back-button {
-  background-color: transparent;
-  border: none;
-  color: #646cff;
-  cursor: pointer;
-  padding: 10px;
-  transition: color 0.3s ease;
+    background-color: transparent;
+    border: none;
+    color: #646cff;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.3s ease;
 }
 
 .back-button:hover {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 .external-content {
-  width: 100%;
-  height: 100%;
-  border: none;
+    width: 100%;
+    height: 100%;
+    border: none;
 }
+
 .main-content {
-  position: relative;
-  height: calc(100vh - 3rem); /* Adjust based on your banner height */
-  display: flex;
-  #justify-content: center;
-  #align-items: center;
+    position: relative;
+    height: calc(100vh - 3rem); /* Adjust based on your banner height */
+    display: flex;
+    #justify-content: center;
+    #align-items: center;
 }

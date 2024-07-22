@@ -19,16 +19,18 @@ resource "aiven_service_integration" "thanos1_dashboard_grafana1" {
   integration_type         = "dashboard"
   source_service_name      = aiven_grafana.grafana1.service_name
   destination_service_name = aiven_thanos.thanos1.service_name
-  depends_on = [aiven_thanos.thanos1, aiven_grafana.grafana1]
+  depends_on               = [aiven_thanos.thanos1, aiven_grafana.grafana1]
 }
 
 
-output "grafana_uri"{ #same as host port
-  value = aiven_grafana.grafana1.service_uri
+output "grafana_uri" {
+  #same as host port
+  value     = aiven_grafana.grafana1.service_uri
   sensitive = true
 }
 
-output "grafana_user_pass"{ #same as host port
-  value = format("%s:%s", aiven_grafana.grafana1.service_username, aiven_grafana.grafana1.service_password)
+output "grafana_user_pass" {
+  #same as host port
+  value     = format("%s:%s", aiven_grafana.grafana1.service_username, aiven_grafana.grafana1.service_password)
   sensitive = true
 }

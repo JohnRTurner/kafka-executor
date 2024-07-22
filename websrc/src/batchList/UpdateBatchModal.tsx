@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Modal from 'react-modal';
-import { BatchStatus } from '../api';
+import {BatchStatus} from '../api';
 import './BatchList.css';
 
 interface UpdateBatchModalProps {

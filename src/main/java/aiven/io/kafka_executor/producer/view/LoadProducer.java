@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
-
 @Slf4j
 public class LoadProducer {
     private static final HashMap<String, KafkaProducer<String, DataInterface>> jsonProducers = new HashMap<>();
@@ -167,7 +166,7 @@ public class LoadProducer {
         Iterator<Map.Entry<String, KafkaProducer<String, DataInterface>>> jsonIterator = jsonProducers.entrySet().iterator();
         while (jsonIterator.hasNext()) {
             KafkaProducer<String, DataInterface> producer = jsonIterator.next().getValue();
-            try{
+            try {
                 producer.flush();
                 producer.close();
             } catch (Exception e) {
@@ -179,7 +178,7 @@ public class LoadProducer {
         Iterator<Map.Entry<String, KafkaProducer<String, GenericRecord>>> avroIterator = avroProducers.entrySet().iterator();
         while (avroIterator.hasNext()) {
             KafkaProducer<String, GenericRecord> producer = avroIterator.next().getValue();
-            try{
+            try {
                 producer.flush();
                 producer.close();
             } catch (Exception e) {
@@ -191,7 +190,7 @@ public class LoadProducer {
         Iterator<Map.Entry<String, KafkaProducer<String, DynamicMessage>>> protoIterator = protobufProducers.entrySet().iterator();
         while (protoIterator.hasNext()) {
             KafkaProducer<String, DynamicMessage> producer = protoIterator.next().getValue();
-            try{
+            try {
                 producer.flush();
                 producer.close();
             } catch (Exception e) {
@@ -238,12 +237,12 @@ public class LoadProducer {
                 DataInterface dataInterface1 = dataInterface.generateData((startId < 0) ? -1 : startId + i,
                         (correlatedStartIdInc < 0) ? -1 : correlatedStartIdInc + (i % correlatedRange));
                 producerAvro.send(new ProducerRecord<>(topic, AvroUtils.serializeToAvro(dataInterface1,
-                                dataInterface1.retAvroSchema())), (recordMetadata, e) -> {
-                            if (e != null) {
-                                log.error(e.getMessage());
-                            }
-                            log.trace("Metadata {}", recordMetadata.toString());
-                        });
+                        dataInterface1.retAvroSchema())), (recordMetadata, e) -> {
+                    if (e != null) {
+                        log.error(e.getMessage());
+                    }
+                    log.trace("Metadata {}", recordMetadata.toString());
+                });
             }
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON ||
                 dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON_NO_SCHEMA) {

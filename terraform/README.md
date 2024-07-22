@@ -4,28 +4,31 @@
 
 ### Start by downloading this repository to your local machine (or wherever you would like to issue the Terraform commands from)
 
-* If you do not have Terraform installed, please install from [Hashicorp](https://developer.hashicorp.com/terraform/install)
+* If you do not have Terraform installed, please install
+  from [Hashicorp](https://developer.hashicorp.com/terraform/install)
 
 ### Setup variables
 
 * Copy terraform.tfvars.sample to terraform.tfvars
 * Update terrform.tfvars with the relevant data
-  * Follow these steps to get an [Aiven API Key](Aiven_API.md)
-  * Use a [github token](GitHub_Token.md) to allow secure access for GitHub.
-  * [Generate a key](AWS_key_pair.md) for SSH to the AWS instances.
-  * [Set the temporary Access](AWS_Access_Secret_Session.md) for accessing AWS, these will expire and need to be reset.
-  * **Please note that the AWS AMI is tied to the region.**  After you set the region, please find a valid AMI from the EC2 AMI catalog.
+    * Follow these steps to get an [Aiven API Key](Aiven_API.md)
+    * Use a [github token](GitHub_Token.md) to allow secure access for GitHub.
+    * [Generate a key](AWS_key_pair.md) for SSH to the AWS instances.
+    * [Set the temporary Access](AWS_Access_Secret_Session.md) for accessing AWS, these will expire and need to be
+      reset.
+    * **Please note that the AWS AMI is tied to the region.**  After you set the region, please find a valid AMI from
+      the EC2 AMI catalog.
 
 ### Build
 
 * `terraform init`
 * `terraform apply -auto-approve`
-*  The kafka_executors will build for a few minutes after terraform finishes.
+* The kafka_executors will build for a few minutes after terraform finishes.
 
 ### Connect
 
 * Connect to the application servers using `terraform output dataGeneratorURL`
-  * The username and password are in terraform.tfvars, and seen via `terraform output dataGeneratorUserPass`
+    * The username and password are in terraform.tfvars, and seen via `terraform output dataGeneratorUserPass`
 * Can connect to Grafana through the application or through the Aiven console.
 
 ### Teardown
@@ -34,11 +37,9 @@
 
 Please be responsible and teardown your environment when your testing as completed.
 
-
-
 ## Terraform commands
 
-### All terraform commands must be issued inside the Terraform directory!!! and while Thanos is in Beta please execute the following export for Terraform... 
+### All terraform commands must be issued inside the Terraform directory!!! and while Thanos is in Beta please execute the following export for Terraform...
 
 `export PROVIDER_AIVEN_ENABLE_BETA=true`
 
@@ -55,7 +56,8 @@ Please be responsible and teardown your environment when your testing as complet
 ## Terminal commands
 
 * `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][0]')`
-* `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][1]')` to get 2nd instance
+* `ssh -i ~/Downloads/ohio-jturner.pem ubuntu@$(terraform output -json dataGeneratorDNS |jq -r '.[0][1]')` to get 2nd
+  instance
 
 **Please update the commands to use the pem file defined in terraform.tfvars**
 

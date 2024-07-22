@@ -133,7 +133,7 @@ public class LoadConsumer {
         Iterator<Map.Entry<String, KafkaConsumer<String, DataInterface>>> jsonIterator = jsonConsumers.entrySet().iterator();
         while (jsonIterator.hasNext()) {
             KafkaConsumer<String, DataInterface> consumer = jsonIterator.next().getValue();
-            try{
+            try {
                 consumer.close();
             } catch (Exception e) {
                 log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);
@@ -144,7 +144,7 @@ public class LoadConsumer {
         Iterator<Map.Entry<String, KafkaConsumer<String, GenericRecord>>> avroIterator = avroConsumers.entrySet().iterator();
         while (avroIterator.hasNext()) {
             KafkaConsumer<String, GenericRecord> consumer = avroIterator.next().getValue();
-            try{
+            try {
                 consumer.close();
             } catch (Exception e) {
                 log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);
@@ -155,7 +155,7 @@ public class LoadConsumer {
         Iterator<Map.Entry<String, KafkaConsumer<String, DynamicMessage>>> protoIterator = protobufConsumers.entrySet().iterator();
         while (protoIterator.hasNext()) {
             KafkaConsumer<String, DynamicMessage> consumer = protoIterator.next().getValue();
-            try{
+            try {
                 consumer.close();
             } catch (Exception e) {
                 log.error("Error flushing consumer for topic {}", jsonIterator.next().getKey(), e);

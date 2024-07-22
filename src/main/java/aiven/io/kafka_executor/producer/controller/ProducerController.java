@@ -16,12 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.TreeSet;
 
 import static aiven.io.kafka_executor.data.DataClass.values;
 
@@ -56,7 +52,7 @@ public class ProducerController {
     public ResponseEntity<Set<String>> getListTopics(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         try {
-            Set<String> filteredSortedTopics = LoadProducer.getTopics(connectionConfig).names().get().stream()
+            Set<String> filteredSortedTopics = Objects.requireNonNull(LoadProducer.getTopics(connectionConfig)).names().get().stream()
                     .filter(topic -> !topic.startsWith("_"))  //Remove underscore topics
                     .sorted() //alphabetical is nice.
                     .collect(Collectors.toCollection(TreeSet::new));

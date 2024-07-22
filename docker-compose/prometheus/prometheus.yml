@@ -20,7 +20,7 @@ scrape_configs:
       - targets:
           - localhost:9090
   - job_name: executor
-    scrape_interval:     5s
+    scrape_interval: 5s
     static_configs:
       - targets: [ 'executor:8080' ]
     metrics_path: "/api/actuator/prometheus"
@@ -30,7 +30,7 @@ scrape_configs:
         replacement: "LOCALHOSTNAME"
   - job_name: node
     static_configs:
-      - targets: ['node-exporter:9100']
+      - targets: [ 'node-exporter:9100' ]
     relabel_configs:
       - source_labels: [ __address__ ]
         target_label: instance

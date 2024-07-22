@@ -18,7 +18,8 @@
     - Provide a name for your API key to help you identify its purpose later.
 
 5. **Set Permissions (Optional)**
-    - Depending on your needs, you can set specific permissions for the API key. By default, it will have full access. Adjust permissions if you want to limit the scope of this key.
+   - Depending on your needs, you can set specific permissions for the API key. By default, it will have full access.
+     Adjust permissions if you want to limit the scope of this key.
 
 6. **Generate the API Key**
     - Click on "Create" to generate the API key.
@@ -28,7 +29,8 @@
     - Save it securely in a password manager or a secure location.
 
 8. **Use the API Key**
-    - To use the API key, include it in your API requests to Aiven services. For example, you can use it in a curl command as follows:
+   - To use the API key, include it in your API requests to Aiven services. For example, you can use it in a curl
+     command as follows:
       ```sh
       curl -H "Authorization: Bearer <your-api-key>" https://api.aiven.io/v1/project
       ```

@@ -62,7 +62,7 @@ public class AvroUtils {
     }
 
     public static DataInterface generateData(GenericRecord record, DataClass dataClass) {
-        DataInterface dataInterface = null;
+        DataInterface dataInterface;
         try {
             dataInterface = dataClass.getDataInterfaceClass().getConstructor().newInstance();
         } catch (Exception e) {

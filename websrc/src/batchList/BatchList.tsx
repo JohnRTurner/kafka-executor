@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Modal from 'react-modal';
-import { BatchControllerApi, BatchStatus, ProducerControllerApi } from '../api';
+import {BatchControllerApi, BatchStatus, ProducerControllerApi} from '../api';
 import BatchItem from './BatchItem';
 import UpdateBatchModal from './UpdateBatchModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
@@ -191,12 +191,13 @@ const BatchList: React.FC = () => {
             {batchStatus && batchStatus.length > 0 && (
                 <ul>
                     {batchStatus.map((item, index) => (
-                        <BatchItem key={index} batchStatus={item} onEdit={handleUpdateScreen} onDelete={handleDeleteScreen}/>
+                        <BatchItem key={index} batchStatus={item} onEdit={handleUpdateScreen}
+                                   onDelete={handleDeleteScreen}/>
                     ))}
                 </ul>
             )}
-            <p ref={errorRef} style={{ color: 'red' }}></p>
-            <p ref={messageRef} style={{ color: 'green' }}></p>
+            <p ref={errorRef} style={{color: 'red'}}></p>
+            <p ref={messageRef} style={{color: 'green'}}></p>
             <button className="batch-button" onClick={handleCreateProducerBatch}>New Producer Batch</button>
             <button className="batch-button" onClick={handleCreateConsumerBatch}>New Consumer Batch</button>
             {isUpdateBatchModalOpen && selectedBatch && (

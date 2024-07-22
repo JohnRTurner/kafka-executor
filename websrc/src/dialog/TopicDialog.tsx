@@ -5,17 +5,17 @@ import './Modal.css';
 
 type TopicDialogProps = {
     isOpen: boolean;
-    message: string|null;
+    message: string | null;
     onClose: () => void;
-    onConfirm: ((numberOfPartitions:number, replication:number) => void)|undefined;
+    onConfirm: ((numberOfPartitions: number, replication: number) => void) | undefined;
 };
 
-const TopicDialog: React.FC<TopicDialogProps> = ({ isOpen, message, onClose, onConfirm }) => {
+const TopicDialog: React.FC<TopicDialogProps> = ({isOpen, message, onClose, onConfirm}) => {
     const [numberOfPartitions, setNumberOfPartitions] = useState<number>(6);
     const [replication, setReplication] = useState<number>(2);
 
     const handleConfirm = () => {
-        if(onConfirm != undefined && numberOfPartitions != undefined && replication != undefined) {
+        if (onConfirm != undefined && numberOfPartitions != undefined && replication != undefined) {
             onConfirm(numberOfPartitions, replication);
         }
     };

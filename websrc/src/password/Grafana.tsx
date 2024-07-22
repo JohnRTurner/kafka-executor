@@ -9,7 +9,7 @@ const Grafana: React.FC = () => {
 
     return (
         <div>
-            <p>Grafana User Password: <strong>{grafanaPassword}</strong> </p>
+            <p>Grafana User Password: <strong>{grafanaPassword}</strong></p>
         </div>
     );
 };

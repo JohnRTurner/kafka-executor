@@ -4,12 +4,12 @@ import './Modal.css';
 
 type ConfirmationDialogProps = {
     isOpen: boolean;
-    message: string|null;
+    message: string | null;
     onClose: () => void;
-    onConfirm: (() => void)|undefined;
+    onConfirm: (() => void) | undefined;
 };
 
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ isOpen, message, onClose, onConfirm }) => {
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({isOpen, message, onClose, onConfirm}) => {
 
     return (
         <Modal
