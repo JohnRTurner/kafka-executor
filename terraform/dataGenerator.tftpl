@@ -4,12 +4,12 @@ sudo apt install docker.io docker-compose nmon kafkacat jq -y
 sudo usermod -a -G docker ubuntu
 
 cd /
-git clone https://github.com/JohnRTurner/kafka_executor.git
+git clone https://github.com/JohnRTurner/kafka-executor.git
 eval ${GIT_CMD}
-cd /kafka_executor/src/main/resources
+cd /kafka-executor/src/main/resources
 cp application.properties.example application.properties
 
-cd /kafka_executor/certs
+cd /kafka-executor/certs
 
 cat <<EOF > ca.pem
 ${CA_CERT}
@@ -21,25 +21,25 @@ cat <<EOF > service.key
 ${ACCESS_KEY}
 EOF
 
-cd /kafka_executor/docker-compose/prometheus
+cd /kafka-executor/docker-compose/prometheus
 sed -i "s|THANOS_REMOTE_WRITE_URL|${THANOS_REMOTE_WRITE_URL}|g" prometheus.yml
 sed -i "s|LOCALHOSTNAME|`ec2metadata --public-hostname`|g" prometheus.yml
 
-cd /kafka_executor/docker-compose/executor
-cp /kafka_executor/pom.xml pom.xml
-cp -pr /kafka_executor/src .
-cp -pr /kafka_executor/certs .
+cd /kafka-executor/docker-compose/executor
+cp /kafka-executor/pom.xml pom.xml
+cp -pr /kafka-executor/src .
+cp -pr /kafka-executor/certs .
 
-cd /kafka_executor/docker-compose/nginx
-cp -pr /kafka_executor/websrc .
+cd /kafka-executor/docker-compose/nginx
+cp -pr /kafka-executor/websrc .
 
-cd /kafka_executor/docker-compose/grafana
+cd /kafka-executor/docker-compose/grafana
 
 cat Executor_Dashboard_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
 cat JVM-Micro_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
 cat Node_Exporter_api.json|sed "s/XXXPROMXXX/`curl -X GET -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/datasources|jq -r '.[0].uid'`/"|curl -X POST -H "Content-Type: application/json" -d @- -u ${GRAFANA_USER_PASS} --url ${GRAFANA_URL}/api/dashboards/import
 
-cd /kafka_executor/docker-compose
+cd /kafka-executor/docker-compose
 cat << EOF > .env
 CERT_PASS=${CERT_PASS}
 KAFKA_EXECUTOR_HOST=${KAFKA_EXECUTOR_HOST}
@@ -54,7 +54,7 @@ WEB_USER=${WEB_USER}
 WEB_PASSWORD=${WEB_PASSWORD}
 EOF
 
-sudo chown -R 1000:1000 /kafka_executor
+sudo chown -R 1000:1000 /kafka-executor
 
 sudo -u ubuntu docker-compose build
 

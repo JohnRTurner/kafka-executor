@@ -30,15 +30,19 @@
 
 ### Teardown
 
+* `terraform destroy -auto-approve`
+
 Please be responsible and teardown your environment when your testing as completed.
 
 
 
 ## Terraform commands
 
-The commands must be issued inside the Terraform directory
+### All terraform commands must be issued inside the Terraform directory!!! and while Thanos is in Beta please execute the following export for Terraform... 
 
-While Thanos is in Beta please execute the following for Terraform... `export PROVIDER_AIVEN_ENABLE_BETA=true`
+`export PROVIDER_AIVEN_ENABLE_BETA=true`
+
+### Common Terraform commands
 
 * `terraform init` - Used to initialize the Terraform client
 * `terraform plan` - Used to check what Terraform plans to do if applied

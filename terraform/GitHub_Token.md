@@ -24,6 +24,7 @@
 7. **Token Details**
     - **Name**: Give your token a descriptive name.
     - **Expiration**: Set an expiration date for the token. Choose a short duration if you only need temporary access.
+    - **Resource Owner**: The owner of the repository you with to give access to.
 
 8. **Select Repository Access**
     - **Repository Access**: Choose "Only select repositories" and specify the repository for which you need clone access.
@@ -41,7 +42,7 @@
 12. **Use the Token**
     - You perform a `git clone`, use the token in the command. For example:
       ```sh
-      git clone https://<your-token>@github.com/username/repository.git
+      git clone https://<your-token>@github.com/aiven/kafka-executor.git
       ```
     - Update the git command in the terraform.tfvars file.  
 

@@ -41,7 +41,7 @@ web_user = "admin"
 web_password = "Admin123"
 
 # see the GitHubToken.md file for how to generate a Personal Access Token(PAT).
-git_cmd="git clone https://github.com/JohnRTurner/kafka_executor.git"
+git_cmd="git clone https://github.com/aiven/kafka-executor"
 
 # You may have to update these if they are set to expire
 AWS_ACCESS_KEY_ID="your_key"
