@@ -106,3 +106,9 @@ variable "kafka_version" {
   type = string
   default = "3.7"
 }
+
+variable "git_cmd" {
+  description = "ie. git clone -b yourBranch https://YOUR_PERSONAL_ACCESS_TOKEN@github.com/JohnRTurner/kafka_executor.git"
+  type = string
+  default = "git clone https://github.com/JohnRTurner/kafka_executor.git"
+}

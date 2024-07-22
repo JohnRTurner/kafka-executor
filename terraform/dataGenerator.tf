@@ -15,6 +15,8 @@ resource "aws_instance" "data-generator" {
   key_name = var.dg_key_pair_name
   user_data = templatefile("dataGenerator.tftpl",
     {
+      GIT_CMD=var.git_cmd
+
       CA_CERT=data.aiven_project.proj1.ca_cert
       ACCESS_CERT=aiven_kafka.kafka1.kafka[0].access_cert
       ACCESS_KEY=aiven_kafka.kafka1.kafka[0].access_key

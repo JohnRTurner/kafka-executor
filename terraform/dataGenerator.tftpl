@@ -5,6 +5,7 @@ sudo usermod -a -G docker ubuntu
 
 cd /
 git clone https://github.com/JohnRTurner/kafka_executor.git
+eval ${GIT_CMD}
 cd /kafka_executor/src/main/resources
 cp application.properties.example application.properties
 
