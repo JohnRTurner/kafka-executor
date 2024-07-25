@@ -108,7 +108,6 @@ function App() {
             setExternalUrl(menuItem.url);
             setMenuOpen(false);
         } else if (menuItem.externalUrl) {
-            setSelectedDisplay('External');
             window.open(menuItem.externalUrl, '_blank');
             setMenuOpen(false);
         }
