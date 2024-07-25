@@ -1,6 +1,6 @@
 package aiven.io.kafka_executor.consumer.view;
 
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.data.DataInterface;
@@ -26,23 +26,23 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
-public class LoadConsumer {
+public class KafkaLoadConsumer {
     private static final HashMap<String, KafkaConsumer<String, DataInterface>> jsonConsumers = new HashMap<>();
     private static final HashMap<String, KafkaConsumer<String, GenericRecord>> avroConsumers = new HashMap<>();
     private static final HashMap<String, KafkaConsumer<String, DynamicMessage>> protobufConsumers = new HashMap<>();
 
-    private static KafkaConsumer<String, DataInterface> getConsumerJSON(String topic, int server, DataClass dataClass, ConnectionConfig connectionConfig) {
+    private static KafkaConsumer<String, DataInterface> getConsumerJSON(String topic, int server, DataClass dataClass, KafkaConnectionConfig kafkaConnectionConfig) {
         //JSON has schema JSON_NO_SCHEMA does not
         boolean registry = (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON);
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaConsumer<String, DataInterface> consumer = jsonConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
                         Properties properties = (registry) ?
-                                connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER) :
-                                connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
+                                kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.CONSUMER) :
+                                kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, (registry) ?
                                 KafkaJsonSchemaDeserializer.class.getName() :
@@ -71,14 +71,14 @@ public class LoadConsumer {
         return consumer;
     }
 
-    private static KafkaConsumer<String, GenericRecord> getConsumerAvro(String topic, int server, ConnectionConfig connectionConfig) {
+    private static KafkaConsumer<String, GenericRecord> getConsumerAvro(String topic, int server, KafkaConnectionConfig kafkaConnectionConfig) {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, GenericRecord> consumer = avroConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
+                        Properties properties = kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
@@ -100,14 +100,14 @@ public class LoadConsumer {
         return consumer;
     }
 
-    private static KafkaConsumer<String, DynamicMessage> getConsumerProtobuf(String topic, int server, ConnectionConfig connectionConfig) {
+    private static KafkaConsumer<String, DynamicMessage> getConsumerProtobuf(String topic, int server, KafkaConnectionConfig kafkaConnectionConfig) {
         String key = topic.concat(Integer.toString(server));
         KafkaConsumer<String, DynamicMessage> consumer = protobufConsumers.get(key);
         if (consumer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.CONSUMER);
+                        Properties properties = kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.CONSUMER);
                         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaProtobufDeserializer.class.getName());
                         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, topic);
@@ -164,7 +164,7 @@ public class LoadConsumer {
         }
     }
 
-    public static ConsumerStatus generateLoad(String topic, int server, int batchSize, int maxTries, DataClass dataClass, ConnectionConfig connectionConfig) {
+    public static ConsumerStatus generateLoad(String topic, int server, int batchSize, int maxTries, DataClass dataClass, KafkaConnectionConfig kafkaConnectionConfig) {
         ConsumerStatus status = new ConsumerStatus();
         KafkaConsumer<String, ? extends DataInterface> consumerJSON = null;
         KafkaConsumer<String, ? extends GenericRecord> consumerAvro = null;
@@ -172,13 +172,13 @@ public class LoadConsumer {
 
         switch (dataClass.getKafkaFormat()) {
             case JSON, JSON_NO_SCHEMA:
-                consumerJSON = getConsumerJSON(topic, server, dataClass, connectionConfig);
+                consumerJSON = getConsumerJSON(topic, server, dataClass, kafkaConnectionConfig);
                 break;
             case AVRO:
-                consumerAvro = getConsumerAvro(topic, server, connectionConfig);
+                consumerAvro = getConsumerAvro(topic, server, kafkaConnectionConfig);
                 break;
             case PROTOBUF:
-                consumerProtobuf = getConsumerProtobuf(topic, server, connectionConfig);
+                consumerProtobuf = getConsumerProtobuf(topic, server, kafkaConnectionConfig);
         }
 
         if (consumerJSON == null && consumerAvro == null && consumerProtobuf == null) {

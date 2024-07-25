@@ -23,36 +23,36 @@ public class BatchController {
     }
 
     @RequestMapping(value = "/stopAllTasks", method = RequestMethod.GET)
-    public ResponseEntity<String> getClean(HttpServletRequest request) {
+    public ResponseEntity<String> stopAllTasks(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         batchExecutionService.stopAllTasks();
         return new ResponseEntity<>("Stopped All Tasks.", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/batchStatus", method = RequestMethod.GET)
-    public ResponseEntity<BatchStatus[]> getBatchStatuses(HttpServletRequest request) {
+    public ResponseEntity<BatchStatus[]> batchStatus(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
         return new ResponseEntity<>(batchExecutionService.getBatchStatuses().toArray(new BatchStatus[0]), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/list/producers", method = RequestMethod.GET)
-    public ResponseEntity<String[]> getProducers(HttpServletRequest request) {
+    @RequestMapping(value = "/listKafkaProducers", method = RequestMethod.GET)
+    public ResponseEntity<String[]> listKafkaProducers(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
-        return new ResponseEntity<>(batchExecutionService.getProducerBatchNames().toArray(new String[0]), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.getKafkaProducerBatchNames().toArray(new String[0]), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/list/consumers", method = RequestMethod.GET)
-    public ResponseEntity<String[]> getConsumers(HttpServletRequest request) {
+    @RequestMapping(value = "/listKafkaConsumers", method = RequestMethod.GET)
+    public ResponseEntity<String[]> listKafkaConsumers(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
-        return new ResponseEntity<>(batchExecutionService.getConsumerBatchNames().toArray(new String[0]), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.getKafkaConsumerBatchNames().toArray(new String[0]), HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/generateConsumerTask", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> createConsumerTask(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+    @RequestMapping(value = "/generateKafkaConsumerTask", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> generateKafkaConsumerTask(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
                                                       @RequestParam(value = "numThreads", defaultValue = "1") int numThreads,
                                                       @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
                                                       @RequestParam(value = "maxTries", defaultValue = "100") int maxTries,
@@ -66,11 +66,11 @@ public class BatchController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(batchExecutionService.createConsumerTask(topicName.concat("_").concat(dataClass), topicName, dataClass1, batchSize, maxTries, sleepMillis, numThreads), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.createKafkaConsumerTask(topicName.concat("_").concat(dataClass), topicName, dataClass1, batchSize, maxTries, sleepMillis, numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/generateProducerTask", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> createProducerTask(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+    @RequestMapping(value = "/generateKafkaProducerTask", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> generateKafkaProducerTask(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
                                                       @RequestParam(value = "numThreads", defaultValue = "1") int numThreads,
                                                       @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
                                                       @RequestParam(value = "startId", defaultValue = "-1") long startId,
@@ -86,40 +86,40 @@ public class BatchController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(batchExecutionService.createProducerTask(topicName.concat("_").concat(dataClass),
+        return new ResponseEntity<>(batchExecutionService.createKafkaProducerTask(topicName.concat("_").concat(dataClass),
                 topicName, dataClass1, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis,
                 numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/dropProducerTask", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> dropProducerTask(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
+    @RequestMapping(value = "/dropKafkaProducerTask", method = RequestMethod.DELETE)
+    public ResponseEntity<Boolean> dropKafkaProducerTask(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                     HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        return new ResponseEntity<>(batchExecutionService.dropProducerTask(taskName), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.dropKafkaProducerTask(taskName), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/dropConsumerTask", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> dropConsumerTask(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
+    @RequestMapping(value = "/dropKafkaConsumerTask", method = RequestMethod.DELETE)
+    public ResponseEntity<Boolean> dropKafkaConsumerTask(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                     HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        return new ResponseEntity<>(batchExecutionService.dropConsumerTask(taskName), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.dropKafkaConsumerTask(taskName), HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/changeConsumerTaskCount", method = RequestMethod.PATCH)
-    public ResponseEntity<Boolean> changeConsumerTaskCount(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
+    @RequestMapping(value = "/changeKafkaConsumerTaskCount", method = RequestMethod.PATCH)
+    public ResponseEntity<Boolean> changeKafkaConsumerTaskCount(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                            @RequestParam(value = "numThreads", defaultValue = "4") int numThreads,
                                                            HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        return new ResponseEntity<>(batchExecutionService.changeConsumerTaskCount(taskName, numThreads), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.changeKafkaConsumerTaskCount(taskName, numThreads), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/changeProducerTaskCount", method = RequestMethod.PATCH)
-    public ResponseEntity<Boolean> changeProducerTaskCount(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
+    @RequestMapping(value = "/changeKafkaProducerTaskCount", method = RequestMethod.PATCH)
+    public ResponseEntity<Boolean> changeKafkaProducerTaskCount(@RequestParam(value = "taskName", defaultValue = "CUSTOMER_JSON_CUSTOMER_JSON") String taskName,
                                                            @RequestParam(value = "numThreads", defaultValue = "4") int numThreads,
                                                            HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        return new ResponseEntity<>(batchExecutionService.changeProducerTaskCount(taskName, numThreads), HttpStatus.OK);
+        return new ResponseEntity<>(batchExecutionService.changeKafkaProducerTaskCount(taskName, numThreads), HttpStatus.OK);
     }
 
 }

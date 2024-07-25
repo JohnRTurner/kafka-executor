@@ -1,9 +1,9 @@
 package aiven.io.kafka_executor.config.controller;
 
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
-import aiven.io.kafka_executor.config.model.ConnectionConfigDTO;
-import aiven.io.kafka_executor.consumer.view.LoadConsumer;
-import aiven.io.kafka_executor.producer.view.LoadProducer;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfigDTO;
+import aiven.io.kafka_executor.consumer.view.KafkaLoadConsumer;
+import aiven.io.kafka_executor.producer.view.KafkaLoadProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.record.CompressionType;
@@ -23,42 +23,42 @@ import java.util.stream.Collectors;
 @RequestMapping("/server")
 @Slf4j
 public class ConfigController {
-    private final ConnectionConfig connectionConfig;
+    private final KafkaConnectionConfig kafkaConnectionConfig;
 
-    public ConfigController(ConnectionConfig connectionConfig) {
-        this.connectionConfig = connectionConfig;
+    public ConfigController(KafkaConnectionConfig kafkaConnectionConfig) {
+        this.kafkaConnectionConfig = kafkaConnectionConfig;
     }
 
 
-    @RequestMapping(value = "/compressionTypes", method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getCompressionTypes() {
+    @RequestMapping(value = "/kafkaCompressionTypes", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> kafkaCompressionTypes() {
         List<String> compressionTypes = Arrays.stream(CompressionType.values())
                 .map(CompressionType::name)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(compressionTypes, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/ackTypes", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, String>> getAckTypes() {
-        Map<String, String> acks = Arrays.stream(ConnectionConfig.ACKS.values())
-                .collect(Collectors.toMap(Enum::name, ConnectionConfig.ACKS::getValue));
+    @RequestMapping(value = "/kafkaAckTypes", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, String>> kafkaAckTypes() {
+        Map<String, String> acks = Arrays.stream(KafkaConnectionConfig.ACKS.values())
+                .collect(Collectors.toMap(Enum::name, KafkaConnectionConfig.ACKS::getValue));
 
         return new ResponseEntity<>(acks, HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/connection", method = RequestMethod.GET)
-    public ResponseEntity<ConnectionConfigDTO> getStatus(HttpServletRequest request) {
+    @RequestMapping(value = "/kafkaConnection", method = RequestMethod.GET)
+    public ResponseEntity<KafkaConnectionConfigDTO> kafkaConnection(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        ConnectionConfigDTO responseDTO = connectionConfig.retConfig();
+        KafkaConnectionConfigDTO responseDTO = kafkaConnectionConfig.retConfig();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/connection", method = RequestMethod.PUT)
-    public void updateConnectionConfig(@RequestBody ConnectionConfigDTO configDTO, HttpServletRequest request) {
+    @RequestMapping(value = "/kafkaConnection", method = RequestMethod.PUT)
+    public void kafkaConnection(@RequestBody KafkaConnectionConfigDTO configDTO, HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        connectionConfig.loadConfig(configDTO);
-        LoadConsumer.clean();
-        LoadProducer.clean();
+        kafkaConnectionConfig.loadConfig(configDTO);
+        KafkaLoadConsumer.clean();
+        KafkaLoadProducer.clean();
     }
 }

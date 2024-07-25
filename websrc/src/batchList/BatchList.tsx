@@ -31,7 +31,7 @@ const BatchList: React.FC = () => {
     const [correlatedEndIdInc, setCorrelatedEndIdInc] = useState(-1);
 
     const fetchBatchStatus = () => {
-        batchController.getBatchStatuses()
+        batchController.batchStatus()
             .then(response => {
                 const newBatchStatus = response.data;
                 setBatchStatus(newBatchStatus);
@@ -45,11 +45,11 @@ const BatchList: React.FC = () => {
 
     const fetchTopicTypes = async () => {
         try {
-            const response = await producerController.getListDataClasses();
+            const response = await producerController.listKafkaDataClasses()
             setTopicTypes(response.data);
             setTopicName(response.data[0]);
         } catch (error) {
-            console.error('Error fetching compression types:', error);
+            console.error('Error fetching data classes:', error);
             setTopicTypes([]);
         }
     };
@@ -86,7 +86,7 @@ const BatchList: React.FC = () => {
 
     const handleUpdate = (numThreads: number) => {
         if (selectedBatch?.BatchType === 'Producer') {
-            batchController.changeProducerTaskCount(selectedBatch.BatchName, numThreads)
+            batchController.changeKafkaProducerTaskCount(selectedBatch.BatchName, numThreads)
                 .then(response => {
                     if (messageRef.current) messageRef.current.textContent = 'Update Producer Batch Task Count Result: ' + response.data;
                     if (errorRef.current) errorRef.current.textContent = '';
@@ -97,7 +97,7 @@ const BatchList: React.FC = () => {
                     if (messageRef.current) messageRef.current.textContent = '';
                 });
         } else if (selectedBatch?.BatchType === 'Consumer') {
-            batchController.changeConsumerTaskCount(selectedBatch.BatchName, numThreads)
+            batchController.changeKafkaConsumerTaskCount(selectedBatch.BatchName, numThreads)
                 .then(response => {
                     if (messageRef.current) messageRef.current.textContent = 'Update Consumer Batch Task Count Result: ' + response.data;
                     if (errorRef.current) errorRef.current.textContent = '';
@@ -113,7 +113,7 @@ const BatchList: React.FC = () => {
 
     const handleDelete = () => {
         if (selectedBatch?.BatchType === 'Producer') {
-            batchController.dropProducerTask(selectedBatch.BatchName)
+            batchController.dropKafkaProducerTask(selectedBatch.BatchName)
                 .then(response => {
                     if (messageRef.current) messageRef.current.textContent = 'Drop Producer Batch Result: ' + response.data;
                     if (errorRef.current) errorRef.current.textContent = '';
@@ -124,7 +124,7 @@ const BatchList: React.FC = () => {
                     if (messageRef.current) messageRef.current.textContent = '';
                 });
         } else if (selectedBatch?.BatchType === 'Consumer') {
-            batchController.dropConsumerTask(selectedBatch.BatchName)
+            batchController.dropKafkaConsumerTask(selectedBatch.BatchName)
                 .then(response => {
                     if (messageRef.current) messageRef.current.textContent = 'Drop Consumer Batch Result: ' + response.data;
                     if (errorRef.current) errorRef.current.textContent = '';
@@ -150,7 +150,7 @@ const BatchList: React.FC = () => {
 
     const handleCreateConsumer = () => {
         console.log('Creating new batch');
-        batchController.createConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, topicName)
+        batchController.generateKafkaConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, topicName)
             .then(response => {
                 if (messageRef.current) messageRef.current.textContent = 'Create Consumer Batch Result: ' + response.data;
                 if (errorRef.current) errorRef.current.textContent = '';
@@ -166,7 +166,7 @@ const BatchList: React.FC = () => {
 
     const handleCreateProducer = () => {
         console.log('Creating new batch');
-        batchController.createProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, topicName)
+        batchController.generateKafkaProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, topicName)
             .then(response => {
                 if (messageRef.current) messageRef.current.textContent = 'Create Producer Batch Result: ' + response.data;
                 if (errorRef.current) errorRef.current.textContent = '';

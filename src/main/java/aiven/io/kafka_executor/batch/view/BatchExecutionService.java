@@ -1,7 +1,7 @@
 package aiven.io.kafka_executor.batch.view;
 
 import aiven.io.kafka_executor.batch.model.BatchStatus;
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.log.model.Statistics;
 import org.springframework.stereotype.Service;
@@ -15,56 +15,56 @@ import java.util.Map;
 public class BatchExecutionService {
     public static final String CONSUMER = "Consumer";
     public static final String PRODUCER = "Producer";
-    private static final Map<String, ConsumerBatchExecutor> consumerBatchExecutorHashMap = new HashMap<>();
-    private static final Map<String, ProducerBatchExecutor> producerBatchExecutorHashMap = new HashMap<>();
-    private final ConnectionConfig connectionConfig;
+    private static final Map<String, ConsumerKafkaBatchExecutor> consumerBatchExecutorHashMap = new HashMap<>();
+    private static final Map<String, ProducerKafkaBatchExecutor> producerBatchExecutorHashMap = new HashMap<>();
+    private final KafkaConnectionConfig kafkaConnectionConfig;
     private final Statistics statistics;
 
 
-    BatchExecutionService(ConnectionConfig connectionConfig, Statistics statistics) {
-        this.connectionConfig = connectionConfig;
+    BatchExecutionService(KafkaConnectionConfig kafkaConnectionConfig, Statistics statistics) {
+        this.kafkaConnectionConfig = kafkaConnectionConfig;
         this.statistics = statistics;
     }
 
-    public boolean createConsumerTask(String batchName, String topic, DataClass dataClass, int batchSize, int maxTries,
-                                      long sleepMillis, int numThreads) {
-        ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
-        if (consumerBatchExecutor == null) {
+    public boolean createKafkaConsumerTask(String batchName, String topic, DataClass dataClass, int batchSize, int maxTries,
+                                           long sleepMillis, int numThreads) {
+        ConsumerKafkaBatchExecutor consumerKafkaBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
+        if (consumerKafkaBatchExecutor == null) {
             consumerBatchExecutorHashMap.put(batchName,
-                    new ConsumerBatchExecutor(topic, dataClass, batchSize, maxTries, connectionConfig, sleepMillis,
+                    new ConsumerKafkaBatchExecutor(topic, dataClass, batchSize, maxTries, kafkaConnectionConfig, sleepMillis,
                             statistics, numThreads));
             return true;
         }
         return false;
     }
 
-    public boolean createProducerTask(String batchName, String topic, DataClass dataClass, int batchSize, long startId,
-                                      int correlatedStartIdInc, int correlatedEndIdInc, long sleepMillis, int numThreads) {
-        ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
-        if (producerBatchExecutor == null) {
+    public boolean createKafkaProducerTask(String batchName, String topic, DataClass dataClass, int batchSize, long startId,
+                                           int correlatedStartIdInc, int correlatedEndIdInc, long sleepMillis, int numThreads) {
+        ProducerKafkaBatchExecutor producerKafkaBatchExecutor = producerBatchExecutorHashMap.get(batchName);
+        if (producerKafkaBatchExecutor == null) {
             producerBatchExecutorHashMap.put(batchName,
-                    new ProducerBatchExecutor(topic, dataClass, batchSize, startId, correlatedStartIdInc,
-                            correlatedEndIdInc, connectionConfig, sleepMillis, statistics, numThreads));
+                    new ProducerKafkaBatchExecutor(topic, dataClass, batchSize, startId, correlatedStartIdInc,
+                            correlatedEndIdInc, kafkaConnectionConfig, sleepMillis, statistics, numThreads));
             return true;
         }
         return false;
     }
 
 
-    public boolean dropConsumerTask(String batchName) {
-        ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
-        if (consumerBatchExecutor != null) {
-            consumerBatchExecutor.stopTasks();
+    public boolean dropKafkaConsumerTask(String batchName) {
+        ConsumerKafkaBatchExecutor consumerKafkaBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
+        if (consumerKafkaBatchExecutor != null) {
+            consumerKafkaBatchExecutor.stopTasks();
             consumerBatchExecutorHashMap.remove(batchName);
             return true;
         }
         return false;
     }
 
-    public boolean dropProducerTask(String batchName) {
-        ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
-        if (producerBatchExecutor != null) {
-            producerBatchExecutor.stopTasks();
+    public boolean dropKafkaProducerTask(String batchName) {
+        ProducerKafkaBatchExecutor producerKafkaBatchExecutor = producerBatchExecutorHashMap.get(batchName);
+        if (producerKafkaBatchExecutor != null) {
+            producerKafkaBatchExecutor.stopTasks();
             producerBatchExecutorHashMap.remove(batchName);
             return true;
         }
@@ -72,40 +72,40 @@ public class BatchExecutionService {
     }
 
 
-    public boolean changeConsumerTaskCount(String batchName, int numThreads) {
-        ConsumerBatchExecutor consumerBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
-        if (consumerBatchExecutor != null) {
-            consumerBatchExecutor.changeTaskCount(numThreads);
+    public boolean changeKafkaConsumerTaskCount(String batchName, int numThreads) {
+        ConsumerKafkaBatchExecutor consumerKafkaBatchExecutor = consumerBatchExecutorHashMap.get(batchName);
+        if (consumerKafkaBatchExecutor != null) {
+            consumerKafkaBatchExecutor.changeTaskCount(numThreads);
             return true;
         }
         return false;
     }
 
-    public boolean changeProducerTaskCount(String batchName, int numThreads) {
-        ProducerBatchExecutor producerBatchExecutor = producerBatchExecutorHashMap.get(batchName);
-        if (producerBatchExecutor != null) {
-            producerBatchExecutor.changeTaskCount(numThreads);
+    public boolean changeKafkaProducerTaskCount(String batchName, int numThreads) {
+        ProducerKafkaBatchExecutor producerKafkaBatchExecutor = producerBatchExecutorHashMap.get(batchName);
+        if (producerKafkaBatchExecutor != null) {
+            producerKafkaBatchExecutor.changeTaskCount(numThreads);
             return true;
         }
         return false;
     }
 
-    public List<String> getConsumerBatchNames() {
+    public List<String> getKafkaConsumerBatchNames() {
         return consumerBatchExecutorHashMap.keySet().stream().toList();
     }
 
-    public List<String> getProducerBatchNames() {
+    public List<String> getKafkaProducerBatchNames() {
         return producerBatchExecutorHashMap.keySet().stream().toList();
     }
 
     public void stopAllTasks() {
-        for (Map.Entry<String, ConsumerBatchExecutor> entry : consumerBatchExecutorHashMap.entrySet()) {
-            ConsumerBatchExecutor task = entry.getValue();
+        for (Map.Entry<String, ConsumerKafkaBatchExecutor> entry : consumerBatchExecutorHashMap.entrySet()) {
+            ConsumerKafkaBatchExecutor task = entry.getValue();
             task.stopTasks();
         }
         consumerBatchExecutorHashMap.clear();
-        for (Map.Entry<String, ProducerBatchExecutor> entry : producerBatchExecutorHashMap.entrySet()) {
-            ProducerBatchExecutor task = entry.getValue();
+        for (Map.Entry<String, ProducerKafkaBatchExecutor> entry : producerBatchExecutorHashMap.entrySet()) {
+            ProducerKafkaBatchExecutor task = entry.getValue();
             task.stopTasks();
         }
         producerBatchExecutorHashMap.clear();
@@ -114,12 +114,12 @@ public class BatchExecutionService {
 
     public List<BatchStatus> getBatchStatuses() {
         List<BatchStatus> batchStatuses = new ArrayList<>();
-        for (Map.Entry<String, ConsumerBatchExecutor> entry : consumerBatchExecutorHashMap.entrySet()) {
-            ConsumerBatchExecutor task = entry.getValue();
+        for (Map.Entry<String, ConsumerKafkaBatchExecutor> entry : consumerBatchExecutorHashMap.entrySet()) {
+            ConsumerKafkaBatchExecutor task = entry.getValue();
             batchStatuses.add(new BatchStatus(entry.getKey(), CONSUMER, task.getTaskCount()));
         }
-        for (Map.Entry<String, ProducerBatchExecutor> entry : producerBatchExecutorHashMap.entrySet()) {
-            ProducerBatchExecutor task = entry.getValue();
+        for (Map.Entry<String, ProducerKafkaBatchExecutor> entry : producerBatchExecutorHashMap.entrySet()) {
+            ProducerKafkaBatchExecutor task = entry.getValue();
             batchStatuses.add(new BatchStatus(entry.getKey(), PRODUCER, task.getTaskCount()));
         }
         return batchStatuses;

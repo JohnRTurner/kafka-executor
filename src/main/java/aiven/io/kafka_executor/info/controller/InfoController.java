@@ -21,7 +21,7 @@ public class InfoController {
 
 
     @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public ResponseEntity<About> getStatus(HttpServletRequest request) {
+    public ResponseEntity<About> about(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         about.updateTime();
         return new ResponseEntity<>(about, HttpStatus.OK);

@@ -1,8 +1,8 @@
 package aiven.io.kafka_executor.consumer.controller;
 
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
 import aiven.io.kafka_executor.consumer.model.ConsumerStatus;
-import aiven.io.kafka_executor.consumer.view.LoadConsumer;
+import aiven.io.kafka_executor.consumer.view.KafkaLoadConsumer;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.log.model.Statistics;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,32 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/consumer")
 @Slf4j
 public class ConsumerController {
-    private final ConnectionConfig connectionConfig;
+    private final KafkaConnectionConfig kafkaConnectionConfig;
     private final Statistics statistics;
 
-    public ConsumerController(ConnectionConfig connectionConfig, Statistics statistics) {
-        this.connectionConfig = connectionConfig;
+    public ConsumerController(KafkaConnectionConfig kafkaConnectionConfig, Statistics statistics) {
+        this.kafkaConnectionConfig = kafkaConnectionConfig;
         this.statistics = statistics;
     }
 
 
-    @RequestMapping(value = "/test/clean", method = RequestMethod.GET)
-    public ResponseEntity<String> getClean(HttpServletRequest request) {
+    @RequestMapping(value = "/cleanKafkaConnectionPool", method = RequestMethod.GET)
+    public ResponseEntity<String> cleanKafkaConnectionPool(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        LoadConsumer.clean();
+        KafkaLoadConsumer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseEntity<DataClass[]> getList(HttpServletRequest request) {
-        log.debug("Path: {}", request.getRequestURI());
 
-        return new ResponseEntity<>(DataClass.values(), HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/generateLoad", method = RequestMethod.GET, params = {"topicName", "server"})
-    public ResponseEntity<ConsumerStatus> getStatus(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+    @RequestMapping(value = "/generateKafkaLoad", method = RequestMethod.GET, params = {"topicName", "server"})
+    public ResponseEntity<ConsumerStatus> generateKafkaLoad(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
                                                     @RequestParam(value = "server", defaultValue = "1") int server,
                                                     @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
                                                     @RequestParam(value = "maxTries", defaultValue = "100") int maxTries,
@@ -61,7 +54,7 @@ public class ConsumerController {
             status.setCount(0);
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
-        ConsumerStatus consumerStatus = LoadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1, connectionConfig);
+        ConsumerStatus consumerStatus = KafkaLoadConsumer.generateLoad(topicName, server, batchSize, maxTries, dataClass1, kafkaConnectionConfig);
         statistics.consumerSet(dataClass1.name(), consumerStatus.getCount());
         return new ResponseEntity<>(consumerStatus, HttpStatus.OK);
     }

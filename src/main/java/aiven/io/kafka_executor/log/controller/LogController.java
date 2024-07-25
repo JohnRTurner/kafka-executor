@@ -22,14 +22,14 @@ public class LogController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseEntity<ClassStatistic[]> getList(HttpServletRequest request) {
+    public ResponseEntity<ClassStatistic[]> list(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 
         return new ResponseEntity<>(statistic.getClassStatistics(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/listClass", method = RequestMethod.GET)
-    public ResponseEntity<ClassStatistic> getList(@RequestParam(value = "className", defaultValue = "CUSTOMER_JSON") String className,
+    public ResponseEntity<ClassStatistic> listClass(@RequestParam(value = "className", defaultValue = "CUSTOMER_JSON") String className,
                                                   HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
 

@@ -60,6 +60,7 @@ function App() {
         {
             label: 'External Links',
             subMenuItems: [
+                {label: 'Aiven Console', externalUrl: 'https://console.aiven.io/'},
                 {label: 'Grafana', externalUrl: grafanaUrl},
                 {
                     label: 'Grafana Password', action: () => {
@@ -131,7 +132,7 @@ function App() {
 
     const handleCleanTasks = () => {
         setShowConfirmation(false);
-        batchController.getClean2()
+        batchController.stopAllTasks()
             .then(response => {
                 const reply = response.data;
                 setApiResult(reply);
@@ -145,7 +146,7 @@ function App() {
 
     const handleCleanProducer = () => {
         setShowConfirmation(false);
-        producerController.getClean()
+        producerController.cleanKafkaConnectionPool()
             .then(response => {
                 const reply = response.data;
                 setApiResult(reply);
@@ -159,7 +160,7 @@ function App() {
 
     const handleCleanConsumer = () => {
         setShowConfirmation(false);
-        consumerController.getClean1()
+        consumerController.cleanKafkaConnectionPool1()
             .then(response => {
                 const reply = response.data;
                 setApiResult(reply);
@@ -174,7 +175,7 @@ function App() {
     const handleResetTopics = (numberOfPartitions: number, replication: number) => {
         setShowTopic(false);
         const resetTopics = async () => {
-            await producerController.deleteTopics()
+            await producerController.deleteKafkaTopics()
                 .then(response1 => {
                     console.log("Deleted Topics Successfully");
                     console.log(response1);
@@ -183,7 +184,7 @@ function App() {
                     console.log("Failed to Delete Topics");
                     console.log('Error: ' + error);
                 });
-            await producerController.createTopics(undefined, numberOfPartitions, replication)
+            await producerController.createKafkaTopics(undefined, numberOfPartitions, replication)
                 .then(response2 => {
                     console.log(response2);
                     setApiResult('Created Successfully');

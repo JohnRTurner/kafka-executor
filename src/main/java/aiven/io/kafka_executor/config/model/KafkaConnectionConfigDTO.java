@@ -6,7 +6,7 @@ import org.apache.kafka.common.record.CompressionType;
 
 @Data
 @NoArgsConstructor
-public class ConnectionConfigDTO {
+public class KafkaConnectionConfigDTO {
     private String host;
     private String port;
     private String cert_password;
@@ -21,7 +21,7 @@ public class ConnectionConfigDTO {
     private CompressionType compressionType;
     private long bufferMemory;
     private boolean idempotenceEnabled;
-    private ConnectionConfig.ACKS acks;
+    private KafkaConnectionConfig.ACKS acks;
     private int maxPollRecords;
     private int fetchMinByes;
     private int fetchMaxWaitMS;

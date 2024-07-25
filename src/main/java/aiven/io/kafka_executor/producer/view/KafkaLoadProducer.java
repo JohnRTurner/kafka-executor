@@ -1,6 +1,6 @@
 package aiven.io.kafka_executor.producer.view;
 
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.data.DataInterface;
 import aiven.io.kafka_executor.data.avro.AvroUtils;
@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 
 @Slf4j
-public class LoadProducer {
+public class KafkaLoadProducer {
     private static final HashMap<String, KafkaProducer<String, DataInterface>> jsonProducers = new HashMap<>();
     private static final HashMap<String, KafkaProducer<String, GenericRecord>> avroProducers = new HashMap<>();
     private static final HashMap<String, KafkaProducer<String, DynamicMessage>> protobufProducers = new HashMap<>();
@@ -33,8 +33,8 @@ public class LoadProducer {
     //private static final Faker faker = new Faker();
 
 
-    public static ListTopicsResult getTopics(ConnectionConfig connectionConfig) {
-        Properties properties = connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN);
+    public static ListTopicsResult getTopics(KafkaConnectionConfig kafkaConnectionConfig) {
+        Properties properties = kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN);
         properties.put("client.dns.lookup", "use_all_dns_ips");
         try (AdminClient adminClient = AdminClient.create(properties)) {
             DescribeClusterResult cluster = adminClient.describeCluster();
@@ -48,8 +48,8 @@ public class LoadProducer {
     }
 
     public static CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication,
-                                                  ConnectionConfig connectionConfig) {
-        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+                                                  KafkaConnectionConfig kafkaConnectionConfig) {
+        try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
             Collection<NewTopic> newTopics = new ArrayList<>();
             for (String topic : topics) {
                 newTopics.add(new NewTopic(topic, partitions, replication));
@@ -61,8 +61,8 @@ public class LoadProducer {
         }
     }
 
-    public static DeleteTopicsResult deleteTopics(Collection<String> topics, ConnectionConfig connectionConfig) {
-        try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+    public static DeleteTopicsResult deleteTopics(Collection<String> topics, KafkaConnectionConfig kafkaConnectionConfig) {
+        try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
             return adminClient.deleteTopics(topics);
         } catch (Exception e) {
             log.error("Error creating topics", e);
@@ -72,16 +72,16 @@ public class LoadProducer {
 
 
     private static KafkaProducer<String, DataInterface> getProducerJSON(String topic, int server, boolean registry,
-                                                                        ConnectionConfig connectionConfig) {
+                                                                        KafkaConnectionConfig kafkaConnectionConfig) {
         String key = topic.concat(Integer.toString(server).concat(Boolean.toString(registry)));
         KafkaProducer<String, DataInterface> producer = jsonProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
                         Properties properties = (registry) ?
-                                connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.PRODUCER) :
-                                connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.PRODUCER);
+                                kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.PRODUCER) :
+                                kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.PRODUCER);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, (registry) ?
@@ -104,14 +104,14 @@ public class LoadProducer {
     }
 
     private static KafkaProducer<String, DynamicMessage> getProducerProtobuf(String topic, int server,
-                                                                             ConnectionConfig connectionConfig) {
+                                                                             KafkaConnectionConfig kafkaConnectionConfig) {
         String key = topic.concat(Integer.toString(server).concat("True"));
         KafkaProducer<String, DynamicMessage> producer = protobufProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.PRODUCER);
+                        Properties properties = kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.PRODUCER);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
@@ -134,14 +134,14 @@ public class LoadProducer {
 
 
     private static KafkaProducer<String, GenericRecord> getProducerAvro(String topic, int server,
-                                                                        ConnectionConfig connectionConfig) {
+                                                                        KafkaConnectionConfig kafkaConnectionConfig) {
         String key = topic.concat(Integer.toString(server).concat("False"));
         KafkaProducer<String, GenericRecord> producer = avroProducers.get(key);
         if (producer == null) {
-            try (AdminClient adminClient = AdminClient.create(connectionConfig.connectionProperties(ConnectionConfig.KAFKA_TYPE.ADMIN))) {
+            try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
                 for (String name : adminClient.listTopics().names().get()) {
                     if (name.equals(topic)) {
-                        Properties properties = connectionConfig.connectionWithSchemaRegistryProperties(ConnectionConfig.KAFKA_TYPE.PRODUCER);
+                        Properties properties = kafkaConnectionConfig.connectionWithSchemaRegistryProperties(KafkaConnectionConfig.KAFKA_TYPE.PRODUCER);
                         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                                 StringSerializer.class.getName());
                         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
@@ -203,7 +203,7 @@ public class LoadProducer {
 
     public static ProducerStatus generateLoad(String topic, int server, DataClass dataClass, int batchSize,
                                               long startId, int correlatedStartIdInc, int correlatedEndIdInc,
-                                              ConnectionConfig connectionConfig) {
+                                              KafkaConnectionConfig kafkaConnectionConfig) {
         ProducerStatus status = new ProducerStatus();
         KafkaProducer<String, GenericRecord> producerAvro = null;
         KafkaProducer<String, DataInterface> producerJSON = null;
@@ -216,13 +216,13 @@ public class LoadProducer {
         }
 
         if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.AVRO) {
-            producerAvro = getProducerAvro(topic, server, connectionConfig);
+            producerAvro = getProducerAvro(topic, server, kafkaConnectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON_NO_SCHEMA) {
-            producerJSON = getProducerJSON(topic, server, false, connectionConfig);
+            producerJSON = getProducerJSON(topic, server, false, kafkaConnectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.JSON) {
-            producerJSON = getProducerJSON(topic, server, true, connectionConfig);
+            producerJSON = getProducerJSON(topic, server, true, kafkaConnectionConfig);
         } else if (dataClass.getKafkaFormat() == DataClass.KafkaFormat.PROTOBUF) {
-            producerProtobuf = getProducerProtobuf(topic, server, connectionConfig);
+            producerProtobuf = getProducerProtobuf(topic, server, kafkaConnectionConfig);
         }
 
         if (producerAvro == null && producerJSON == null && producerProtobuf == null) {

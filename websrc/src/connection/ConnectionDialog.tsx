@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal, Tab, Tabs} from 'react-bootstrap';
-import {ConfigControllerApi, ConnectionConfigDTO} from "../api";
+import {ConfigControllerApi, KafkaConnectionConfigDTO} from "../api";
 import apiConfig from "../apiConfig.tsx";
 import BasicTab from './BasicTab.tsx';
 import SchemaTab from './SchemaTab.tsx';
@@ -32,13 +32,13 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
     const [selectedCompressionType, setSelectedCompressionType] = useState<string>('');
     const [ackTypes, setAckTypes] = useState<KeyValue[]>([]);
     const [selectedAckType, setSelectedAckType] = useState<string>('');
-    const [connectionConfig, setConnectionConfig] = useState<ConnectionConfigDTO>({});
+    const [connectionConfig, setConnectionConfig] = useState<KafkaConnectionConfigDTO>({});
     const [activeTab, setActiveTab] = useState<string>('Basic');
 
     useEffect(() => {
         const fetchCompressionTypes = async () => {
             try {
-                const response = await configController.getCompressionTypes();
+                const response = await configController.kafkaCompressionTypes();
                 setCompressionTypes(response.data);
             } catch (error) {
                 console.error('Error fetching compression types:', error);
@@ -47,7 +47,7 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
         };
         const fetchAckTypes = async () => {
             try {
-                const response = await configController.getAckTypes();
+                const response = await configController.kafkaAckTypes();
                 const x: KeyValue[] = convertToKeyValueArray(response.data);
                 setAckTypes(x);
             } catch (error) {
@@ -57,7 +57,7 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
         };
         const fetchStatus = async () => {
             try {
-                const response = await configController.getStatus();
+                const response = await configController.kafkaConnection1();
                 setConnectionConfig(response.data);
                 if (response.data.compressionType != undefined) {
                     setSelectedCompressionType(response.data.compressionType.toUpperCase())
@@ -97,7 +97,7 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
     const handleConfirm = async () => {
         let retMessage = 'Call to update the Connection Configuration has failed!';
         try {
-            await configController.updateConnectionConfig(connectionConfig);
+            await configController.kafkaConnection(connectionConfig);
             retMessage = 'Successfully updated the Connection Configuration.';
         } catch (error) {
             console.error('Error saving the Connection Configuration.', error);

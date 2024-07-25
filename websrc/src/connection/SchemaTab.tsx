@@ -1,9 +1,9 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import {ConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO} from "../api";
 
 interface SchemaTabProps {
-    connectionConfig: ConnectionConfigDTO;
+    connectionConfig: KafkaConnectionConfigDTO;
     handleInputChange: (field: string, value: string | number | boolean) => void;
 }
 

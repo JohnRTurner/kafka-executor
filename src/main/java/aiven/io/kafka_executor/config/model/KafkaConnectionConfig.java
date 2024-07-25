@@ -14,7 +14,7 @@ import java.util.Properties;
 @Configuration
 @NoArgsConstructor
 @Data
-public class ConnectionConfig {
+public class KafkaConnectionConfig {
     /* Basic Connection */
     @Value("${kafka_executor.host}")
     private String host;
@@ -93,7 +93,7 @@ public class ConnectionConfig {
         return properties;
     }
 
-    public void loadConfig(ConnectionConfigDTO configDTO) {
+    public void loadConfig(KafkaConnectionConfigDTO configDTO) {
         this.host = configDTO.getHost();
         this.port = configDTO.getPort();
         this.cert_password = configDTO.getCert_password();
@@ -124,8 +124,8 @@ public class ConnectionConfig {
 
     }
 
-    public ConnectionConfigDTO retConfig() {
-        ConnectionConfigDTO configDTO = new ConnectionConfigDTO();
+    public KafkaConnectionConfigDTO retConfig() {
+        KafkaConnectionConfigDTO configDTO = new KafkaConnectionConfigDTO();
 
         // Copy values from current object to configDTO
         configDTO.setHost(this.host);

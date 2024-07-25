@@ -1,10 +1,10 @@
 package aiven.io.kafka_executor.producer.controller;
 
-import aiven.io.kafka_executor.config.model.ConnectionConfig;
+import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.log.model.Statistics;
 import aiven.io.kafka_executor.producer.model.ProducerStatus;
-import aiven.io.kafka_executor.producer.view.LoadProducer;
+import aiven.io.kafka_executor.producer.view.KafkaLoadProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
@@ -26,33 +26,43 @@ import static aiven.io.kafka_executor.data.DataClass.values;
 @Slf4j
 public class ProducerController {
 
-    private final ConnectionConfig connectionConfig;
+    private final KafkaConnectionConfig kafkaConnectionConfig;
     private final Statistics statistics;
 
-    public ProducerController(ConnectionConfig connectionConfig, Statistics statistics) {
-        this.connectionConfig = connectionConfig;
+    public ProducerController(KafkaConnectionConfig kafkaConnectionConfig, Statistics statistics) {
+        this.kafkaConnectionConfig = kafkaConnectionConfig;
         this.statistics = statistics;
     }
 
 
-    @RequestMapping(value = "/clean", method = RequestMethod.GET)
-    public ResponseEntity<String> getClean(HttpServletRequest request) {
+    @RequestMapping(value = "/cleanKafkaConnectionPool", method = RequestMethod.GET)
+    public ResponseEntity<String> cleanKafkaConnectionPool(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        LoadProducer.clean();
+        KafkaLoadProducer.clean();
         return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/listDataClasses", method = RequestMethod.GET)
-    public ResponseEntity<DataClass[]> getListDataClasses(HttpServletRequest request) {
+    @RequestMapping(value = "/listKafkaDataClasses", method = RequestMethod.GET)
+    public ResponseEntity<DataClass[]> listKafkaDataClasses(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         return new ResponseEntity<>(values(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/listTopics", method = RequestMethod.GET)
-    public ResponseEntity<Set<String>> getListTopics(HttpServletRequest request) {
+    @RequestMapping(value = "/listDataTypes", method = RequestMethod.GET)
+    public ResponseEntity<String[]> listDataTypes(HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        return new ResponseEntity<>(Arrays.stream(DataClass.values())
+                .map(dataClass -> dataClass.getDataInterfaceClass().getSimpleName())
+                .distinct() // Optional: To ensure no duplicate class names
+                .toArray(String[]::new), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/listKafkaTopics", method = RequestMethod.GET)
+    public ResponseEntity<Set<String>> listKafkaTopics(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         try {
-            Set<String> filteredSortedTopics = Objects.requireNonNull(LoadProducer.getTopics(connectionConfig)).names().get().stream()
+            Set<String> filteredSortedTopics = Objects.requireNonNull(KafkaLoadProducer.getTopics(kafkaConnectionConfig)).names().get().stream()
                     .filter(topic -> !topic.startsWith("_"))  //Remove underscore topics
                     .sorted() //alphabetical is nice.
                     .collect(Collectors.toCollection(TreeSet::new));
@@ -64,8 +74,8 @@ public class ProducerController {
 
     }
 
-    @RequestMapping(value = "/createTopics", method = RequestMethod.PUT)
-    public ResponseEntity<CreateTopicsResult> createTopics(
+    @RequestMapping(value = "/createKafkaTopics", method = RequestMethod.PUT)
+    public ResponseEntity<CreateTopicsResult> createKafkaTopics(
             @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
             @RequestParam(value = "partitions", defaultValue = "6") int partitions,
             @RequestParam(value = "replication", defaultValue = "2") short replication,
@@ -80,11 +90,11 @@ public class ProducerController {
         if (topicList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(LoadProducer.createTopics(topicList, partitions, replication, connectionConfig), HttpStatus.OK);
+        return new ResponseEntity<>(KafkaLoadProducer.createTopics(topicList, partitions, replication, kafkaConnectionConfig), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteTopics", method = RequestMethod.DELETE)
-    public ResponseEntity<DeleteTopicsResult> deleteTopics(
+    @RequestMapping(value = "/deleteKafkaTopics", method = RequestMethod.DELETE)
+    public ResponseEntity<DeleteTopicsResult> deleteKafkaTopics(
             @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
             HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
@@ -98,12 +108,12 @@ public class ProducerController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(LoadProducer.deleteTopics(topicList, connectionConfig), HttpStatus.OK);
+        return new ResponseEntity<>(KafkaLoadProducer.deleteTopics(topicList, kafkaConnectionConfig), HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/generateLoad", method = RequestMethod.PUT, params = {"topicName", "server"})
-    public ResponseEntity<ProducerStatus> putGenerateLoad(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
+    @RequestMapping(value = "/generateKafkaLoad", method = RequestMethod.PUT, params = {"topicName", "server"})
+    public ResponseEntity<ProducerStatus> generateKafkaLoad(@RequestParam(value = "topicName", defaultValue = "CUSTOMER_JSON") String topicName,
                                                           @RequestParam(value = "server", defaultValue = "1") int server,
                                                           @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
                                                           @RequestParam(value = "startId", defaultValue = "-1") long startId,
@@ -123,8 +133,8 @@ public class ProducerController {
             status.setCount(0);
             return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
         }
-        ProducerStatus producerStatus = LoadProducer.generateLoad(topicName, server, dataClass1, batchSize,
-                startId, correlatedStartIdInc, correlatedEndIdInc, connectionConfig);
+        ProducerStatus producerStatus = KafkaLoadProducer.generateLoad(topicName, server, dataClass1, batchSize,
+                startId, correlatedStartIdInc, correlatedEndIdInc, kafkaConnectionConfig);
         statistics.producerSet(dataClass1.name(), producerStatus.getCount());
         return new ResponseEntity<>(producerStatus, HttpStatus.OK);
     }
