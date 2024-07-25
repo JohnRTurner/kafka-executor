@@ -67,7 +67,7 @@ function App() {
                         setShowResultDialog(true);
                     }
                 },
-                {label: 'GitHub Project', externalUrl: 'https://github.com/JohnRTurner/kafka_executor'},
+                {label: 'GitHub Project', externalUrl: 'https://github.com/JohnRTurner/kafka-executor'},
             ],
         },
         {
