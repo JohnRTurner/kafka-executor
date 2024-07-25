@@ -1,6 +1,6 @@
 import React from 'react';
+import {Button, ListGroup} from 'react-bootstrap';
 import {BatchStatus} from '../api';
-import './BatchList.css';
 
 interface BatchItemProps {
     batchStatus: BatchStatus;
@@ -10,28 +10,20 @@ interface BatchItemProps {
 
 const BatchItem: React.FC<BatchItemProps> = ({batchStatus, onEdit, onDelete}) => {
     return (
-        <li>
-            <div className="batch-status-container">
-                <div className="batch-button-container">
-                    <button className="batch-button" onClick={() => onEdit(batchStatus)}>Modify</button>
-                    <button className="batch-button" onClick={() => onDelete(batchStatus)}>Delete</button>
+        <ListGroup.Item>
+            <div className="d-flex justify-content-between align-items-center">
+                <div>
+                    <div><strong>Batch Name:</strong> {batchStatus.BatchName}</div>
+                    <div><strong>Type:</strong> {batchStatus.BatchType}</div>
+                    <div><strong>Current Date and Time:</strong> {batchStatus.CurrentDateTime}</div>
+                    <div><strong>Jobs:</strong> {batchStatus.RunningJobs}</div>
                 </div>
-                <div className="batch-details-container">
-                    <div className="label-container">
-                        <b className="label">Batch Name:</b> {batchStatus.BatchName}
-                    </div>
-                    <div className="label-container">
-                        <b className="label">Type:</b> {batchStatus.BatchType}
-                    </div>
-                    <div className="label-container">
-                        <b className="label">Current Date and Time:</b> {batchStatus.CurrentDateTime}
-                    </div>
-                    <div className="label-container">
-                        <b className="label">Jobs:</b> {batchStatus.RunningJobs}
-                    </div>
+                <div>
+                    <Button variant="primary" onClick={() => onEdit(batchStatus)} className="me-2">Modify</Button>
+                    <Button variant="danger" onClick={() => onDelete(batchStatus)}>Delete</Button>
                 </div>
             </div>
-        </li>
+        </ListGroup.Item>
     );
 };
 

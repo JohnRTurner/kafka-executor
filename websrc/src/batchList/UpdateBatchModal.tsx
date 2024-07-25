@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Modal from 'react-modal';
-import {BatchStatus} from '../api';
-import './BatchList.css';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import {BatchStatus} from "../api";
+import Form from "react-bootstrap/Form";
+import {Col, Row} from "react-bootstrap";
 
 interface UpdateBatchModalProps {
     isOpen: boolean;
@@ -14,7 +16,7 @@ const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
                                                                isOpen,
                                                                onRequestClose,
                                                                selectedBatch,
-                                                               onUpdate
+                                                               onUpdate,
                                                            }) => {
     const [tempNumThreads, setTempNumThreads] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -33,27 +35,61 @@ const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
     };
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onRequestClose}
-            contentLabel="Update Batch Modal"
-            className="modal"
-            overlayClassName="overlay"
-        >
-            <h2>Update Batch</h2>
-            <p>Batch Name: {selectedBatch.BatchName}</p>
-            <p>Current Threads: {selectedBatch.RunningJobs}</p>
-            <label>
-                New Threads:
-                <input
-                    type="number"
-                    value={tempNumThreads}
-                    onChange={(e) => setTempNumThreads(Number(e.target.value))}
-                    ref={inputRef} // Ref to focus on this input
-                />
-            </label>
-            <button onClick={handleConfirmUpdate}>Update</button>
-            <button onClick={onRequestClose}>Cancel</button>
+        <Modal show={isOpen} onHide={onRequestClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Update Batch</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group as={Row} controlId="formBatchName">
+                        <Form.Label column sm="6">
+                            Batch Name:
+                        </Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                plaintext
+                                readOnly
+                                defaultValue={selectedBatch.BatchName}
+                            />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId="formCurrentThreads">
+                        <Form.Label column sm="6">
+                            Current Threads:
+                        </Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                plaintext
+                                readOnly
+                                defaultValue={selectedBatch.RunningJobs}
+                            />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId="formNewThreads">
+                        <Form.Label column sm="6">
+                            New Threads:
+                        </Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                type="number"
+                                value={tempNumThreads}
+                                onChange={(e) => setTempNumThreads(Number(e.target.value))}
+                                ref={inputRef}
+                            />
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onRequestClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleConfirmUpdate}>
+                    Update
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

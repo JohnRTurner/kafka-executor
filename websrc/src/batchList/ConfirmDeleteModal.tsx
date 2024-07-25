@@ -1,6 +1,6 @@
 import React from 'react';
-import Modal from 'react-modal';
-import './BatchList.css'
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 interface ConfirmDeleteModalProps {
     isOpen: boolean;
@@ -11,19 +11,24 @@ interface ConfirmDeleteModalProps {
 const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
                                                                    isOpen,
                                                                    onRequestClose,
-                                                                   onDelete
+                                                                   onDelete,
                                                                }) => {
     return (
-        <Modal isOpen={isOpen}
-               onRequestClose={onRequestClose}
-               contentLabel="Confirm Delete Modal"
-               className="modal"
-               overlayClassName="overlay"
-        >
-            <h2>Confirm Delete</h2>
-            <p>Are you sure you want to delete this batch?</p>
-            <button onClick={onDelete}>Delete</button>
-            <button onClick={onRequestClose}>Cancel</button>
+        <Modal show={isOpen} onHide={onRequestClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirm Delete</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>Are you sure you want to delete this batch?</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onRequestClose}>
+                    Cancel
+                </Button>
+                <Button variant="danger" onClick={onDelete}>
+                    Delete
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

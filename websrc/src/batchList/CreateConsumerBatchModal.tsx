@@ -1,6 +1,8 @@
 import React from 'react';
-import Modal from 'react-modal';
-import './BatchList.css'
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import {Col, Row} from "react-bootstrap";
 
 interface CreateConsumerBatchModalProps {
     isOpen: boolean;
@@ -33,59 +35,81 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                                                                                maxTries,
                                                                                setMaxTries,
                                                                                sleepMillis,
-                                                                               setSleepMillis
+                                                                               setSleepMillis,
                                                                            }) => {
     return (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose}
-               contentLabel="Create Consumer Batch Modal"
-               className="modal"
-               overlayClassName="overlay"
-        >
-            <h2>Create Consumer Batch</h2>
-            <label>
-                Topic Name:
-                <select value={topicName} onChange={(e) => setTopicName(e.target.value)}>
-                    {topicTypes.map((type, index) => (
-                        <option key={index} value={type}>
-                            {type}
-                        </option>
-                    ))}
-                </select>
-            </label>
-            <label>
-                Threads:
-                <input
-                    type="number"
-                    value={numThreads}
-                    onChange={(e) => setNumThreads(Number(e.target.value))}
-                />
-            </label>
-            <label>
-                Batch Size:
-                <input
-                    type="number"
-                    value={batchSize}
-                    onChange={(e) => setBatchSize(Number(e.target.value))}
-                />
-            </label>
-            <label>
-                Max Tries:
-                <input
-                    type="number"
-                    value={maxTries}
-                    onChange={(e) => setMaxTries(Number(e.target.value))}
-                />
-            </label>
-            <label>
-                Sleep Millis:
-                <input
-                    type="number"
-                    value={sleepMillis}
-                    onChange={(e) => setSleepMillis(Number(e.target.value))}
-                />
-            </label>
-            <button onClick={onCreate}>Create</button>
-            <button onClick={onRequestClose}>Cancel</button>
+        <Modal show={isOpen} onHide={onRequestClose} scrollable={true}>
+            <Modal.Header closeButton>
+                <Modal.Title>Create Consumer Batch</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group as={Row} controlId="formTopicName">
+                        <Form.Label column sm="6">Topic Name</Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                as="select"
+                                value={topicName}
+                                onChange={(e) => setTopicName(e.target.value)}
+                            >
+                                {topicTypes.map((type, index) => (
+                                    <option key={index} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} controlId="formNumThreads">
+                        <Form.Label column sm="6">Threads</Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                type="number"
+                                value={numThreads}
+                                onChange={(e) => setNumThreads(Number(e.target.value))}
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} controlId="formBatchSize">
+                        <Form.Label column sm="6">Batch Size</Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                type="number"
+                                value={batchSize}
+                                onChange={(e) => setBatchSize(Number(e.target.value))}
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} controlId="formMaxTries">
+                        <Form.Label column sm="6">Max Tries</Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                type="number"
+                                value={maxTries}
+                                onChange={(e) => setMaxTries(Number(e.target.value))}
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} controlId="formSleepMillis">
+                        <Form.Label column sm="6">Sleep Milliseconds</Form.Label>
+                        <Col sm="6">
+                            <Form.Control
+                                type="number"
+                                value={sleepMillis}
+                                onChange={(e) => setSleepMillis(Number(e.target.value))}
+                            />
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onRequestClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={onCreate}>
+                    Create
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

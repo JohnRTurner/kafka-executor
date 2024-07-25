@@ -1,6 +1,5 @@
 import React from 'react';
-import Modal from 'react-modal';
-import './Modal.css';
+import {Button, Modal} from 'react-bootstrap';
 
 type ConfirmationDialogProps = {
     isOpen: boolean;
@@ -10,21 +9,22 @@ type ConfirmationDialogProps = {
 };
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({isOpen, message, onClose, onConfirm}) => {
-
     return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            contentLabel="Confirmation"
-            className="confirmation-modal"
-            overlayClassName="confirmation-modal-overlay"
-        >
-            <h2>Confirmation</h2>
-            <p>{message}</p>
-            <div className="confirmation-buttons">
-                <button onClick={onConfirm}>OK</button>
-                <button onClick={onClose}>Cancel</button>
-            </div>
+        <Modal show={isOpen} onHide={onClose} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{message}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={onConfirm}>
+                    OK
+                </Button>
+                <Button variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

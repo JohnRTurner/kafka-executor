@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import Modal from 'react-modal';
-import './Modal.css';
-
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from "react-bootstrap/Form";
+import {Col, Row} from "react-bootstrap";
 
 type TopicDialogProps = {
     isOpen: boolean;
@@ -15,39 +16,58 @@ const TopicDialog: React.FC<TopicDialogProps> = ({isOpen, message, onClose, onCo
     const [replication, setReplication] = useState<number>(2);
 
     const handleConfirm = () => {
-        if (onConfirm != undefined && numberOfPartitions != undefined && replication != undefined) {
+        if (onConfirm && numberOfPartitions && replication) {
             onConfirm(numberOfPartitions, replication);
         }
     };
-    return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            contentLabel="Confirmation"
-            className="confirmation-modal"
-            overlayClassName="confirmation-modal-overlay"
-        >
-            <h2>Confirmation</h2>
-            <p>{message}</p>
-            <h2>Enter Number of Partitions</h2>
-            <input
-                type="number"
-                value={numberOfPartitions}
-                onChange={(e) => setNumberOfPartitions(Number(e.target.value))}
-                min="1"
-            />
-            <h2>Replication Facto</h2>
-            <input
-                type="number"
-                value={replication}
-                onChange={(e) => setReplication(Number(e.target.value))}
-                min="1"
-            />
 
-            <div className="confirmation-buttons">
-                <button onClick={handleConfirm}>OK</button>
-                <button onClick={onClose}>Cancel</button>
-            </div>
+    return (
+        <Modal show={isOpen} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{message}</p>
+                <Form>
+                    <Form.Group as={Row} controlId="formNumberOfPartitions">
+                        <Form.Label column sm="8">
+                            Enter Number of Partitions
+                        </Form.Label>
+                        <Col sm="4">
+                            <Form.Control
+                                type="number"
+                                value={numberOfPartitions}
+                                onChange={(e) => setNumberOfPartitions(Number(e.target.value))}
+                                min="1"
+                                placeholder="Number of Partitions"
+                            />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId="formReplicationFactor">
+                        <Form.Label column sm="8">
+                            Replication Factor
+                        </Form.Label>
+                        <Col sm="4">
+                            <Form.Control
+                                type="number"
+                                value={replication}
+                                onChange={(e) => setReplication(Number(e.target.value))}
+                                min="1"
+                                placeholder="Replication Factor"
+                            />
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleConfirm}>
+                    OK
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

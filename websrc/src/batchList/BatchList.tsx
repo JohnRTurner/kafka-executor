@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Modal from 'react-modal';
+import {Button, Container, ListGroup} from 'react-bootstrap';
 import {BatchControllerApi, BatchStatus, ProducerControllerApi} from '../api';
 import BatchItem from './BatchItem';
 import UpdateBatchModal from './UpdateBatchModal';
@@ -7,12 +7,9 @@ import ConfirmDeleteModal from './ConfirmDeleteModal';
 import CreateProducerBatchModal from './CreateProducerBatchModal';
 import CreateConsumerBatchModal from './CreateConsumerBatchModal';
 import apiConfig from '../apiConfig';
-import './BatchList.css';
 
 const batchController = new BatchControllerApi(apiConfig);
 const producerController = new ProducerControllerApi(apiConfig);
-
-Modal.setAppElement('#root'); // Required for accessibility
 
 const BatchList: React.FC = () => {
     const [batchStatus, setBatchStatus] = useState<BatchStatus[] | null>(null);
@@ -184,22 +181,22 @@ const BatchList: React.FC = () => {
     };
 
     return (
-        <div>
+        <Container>
             <h1>Batch Status</h1>
             {batchStatus === null && <p>Loading...</p>}
             {batchStatus && batchStatus.length === 0 && <p>No batch statuses available.</p>}
             {batchStatus && batchStatus.length > 0 && (
-                <ul>
+                <ListGroup>
                     {batchStatus.map((item, index) => (
                         <BatchItem key={index} batchStatus={item} onEdit={handleUpdateScreen}
                                    onDelete={handleDeleteScreen}/>
                     ))}
-                </ul>
+                </ListGroup>
             )}
-            <p ref={errorRef} style={{color: 'red'}}></p>
-            <p ref={messageRef} style={{color: 'green'}}></p>
-            <button className="batch-button" onClick={handleCreateProducerBatch}>New Producer Batch</button>
-            <button className="batch-button" onClick={handleCreateConsumerBatch}>New Consumer Batch</button>
+            <p ref={errorRef} className="text-danger"></p>
+            <p ref={messageRef} className="text-success"></p>
+            <Button className="m-2" variant="primary" onClick={handleCreateProducerBatch}>New Producer Batch</Button>
+            <Button className="m-2" variant="primary" onClick={handleCreateConsumerBatch}>New Consumer Batch</Button>
             {isUpdateBatchModalOpen && selectedBatch && (
                 <UpdateBatchModal
                     isOpen={isUpdateBatchModalOpen}
@@ -255,9 +252,8 @@ const BatchList: React.FC = () => {
                     setSleepMillis={setSleepMillis}
                 />
             )}
-        </div>
+        </Container>
     );
 };
 
 export default BatchList;
-

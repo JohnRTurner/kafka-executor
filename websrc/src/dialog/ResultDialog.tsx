@@ -1,6 +1,5 @@
 import React from 'react';
-import Modal from 'react-modal';
-import './Modal.css';
+import {Button, Modal} from 'react-bootstrap';
 
 type ResultDialogProps = {
     isOpen: boolean;
@@ -10,16 +9,18 @@ type ResultDialogProps = {
 
 const ResultDialog: React.FC<ResultDialogProps> = ({isOpen, message, onClose}) => {
     return (
-        <Modal
-            isOpen={isOpen}
-            contentLabel="Result"
-            className="result-modal"
-            overlayClassName="result-modal-overlay"
-        >
-            <div className="result-dialog">
+        <Modal show={isOpen} onHide={onClose} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Result</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <p>{message}</p>
-                <button onClick={onClose}>OK</button>
-            </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={onClose}>
+                    OK
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };
