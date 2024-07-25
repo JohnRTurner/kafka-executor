@@ -85,7 +85,11 @@ function App() {
                 },
                 {
                     label: 'Create/Reset Topics',
-                    action: () => handleOpenConfirmation('Drop if they exist, then create all the test topics.', () => setShowTopic(true))
+                    action: () => handleOpenConfirmation('Drop if they exist, then create all the test topics.',
+                        () => {
+                            setShowConfirmation(false);
+                            setShowTopic(true)
+                        })
                 },
             ],
         },
