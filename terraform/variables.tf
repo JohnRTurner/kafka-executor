@@ -112,3 +112,9 @@ variable "git_cmd" {
   type        = string
   default     = "git clone https://github.com/JohnRTurner/kafka_executor.git"
 }
+
+variable "kafka_populate" {
+  description = "Use Kafka"
+  type        = bool
+  default     = true
+}

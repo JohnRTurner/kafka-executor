@@ -22,13 +22,21 @@ public class Statistics {
         HashMap<String, Counter> p_amount = new HashMap<>();
 
         for (DataClass dataClass : DataClass.values()) {
-            c_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.count").
+            c_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.calls").
+                    tag("class", dataClass.name().toLowerCase()).
+                    tag("type", "consumer.calls").
                     description("Kafka consumer calls").register(registry));
-            c_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.amount").
+            c_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.records").
+                    tag("class", dataClass.name().toLowerCase()).
+                    tag("type", "consumer.records").
                     description("Kafka consumer generated rows").register(registry));
-            p_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.count").
+            p_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.calls").
+                    tag("class", dataClass.name().toLowerCase()).
+                    tag("type", "producer.calls").
                     description("Kafka producer calls").register(registry));
-            p_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.amount").
+            p_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.records").
+                    tag("class", dataClass.name().toLowerCase()).
+                    tag("type", "producer.records").
                     description("Kafka producer generated rows").register(registry));
         }
         this.consumerCount = c_count;
