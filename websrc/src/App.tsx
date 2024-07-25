@@ -212,7 +212,7 @@ function App() {
     };
 
     return (
-        <Container>
+        <Container fluid className="d-flex flex-column vh-100">
             <Navbar bg="dark" variant="dark" expand="lg">
                 <Navbar.Brand>Kafka Executor Demo</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleMenu}/>
@@ -243,10 +243,11 @@ function App() {
                 </Navbar.Collapse>
             </Navbar>
 
-            <div className="main-content">
+            <div className="main-content" style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 {selectedDisplay === 'BatchList' && <BatchList/>}
                 {selectedDisplay === 'External' && (
-                    <iframe src={externalUrl} title="External Content" className="external-content"/>
+                    <iframe src={externalUrl} title="External Content" className="external-content"
+                            style={{flex: 1, width: '100%', border: 'none'}}/>
                 )}
             </div>
 
