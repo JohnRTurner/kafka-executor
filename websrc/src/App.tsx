@@ -7,6 +7,7 @@ import ConfirmationDialog from "./dialog/ConfirmationDialog.tsx";
 import TopicDialog from "./dialog/TopicDialog.tsx";
 import ConnectionDialog from "./connection/ConnectionDialog.tsx";
 import {Container, Dropdown, Nav, Navbar} from 'react-bootstrap';
+import {useGlobalContext} from './GlobalContext';
 
 const batchController = new BatchControllerApi(apiConfig);
 const consumerController = new ConsumerControllerApi(apiConfig);
@@ -19,6 +20,7 @@ type MenuItem = {
     url?: string;
     externalUrl?: string;
 };
+
 
 function App() {
 
@@ -36,10 +38,11 @@ function App() {
     }); // State for API call result
     const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null); // State for API call result
 
-    const grafanaUrl = import.meta.env.VITE_GRAFANA_URL;
-    const grafanaPassword = (import.meta.env.VITE_GRAFANA_USER_PASSWORD) ?
-        "Grafana User Password: " + import.meta.env.VITE_GRAFANA_USER_PASSWORD :
-        "GRAFANA USER PASSWORD is not defined."
+
+    const grafanaPassword = useGlobalContext().grafanaPassword;
+    const grafanaPasswordTxt = grafanaPassword ?
+        "Grafana User Password: " + grafanaPassword :
+        "GRAFANA USER PASSWORD is not defined.";
 
 
     const menuItems: MenuItem[] = [
@@ -61,10 +64,10 @@ function App() {
             label: 'External Links',
             subMenuItems: [
                 {label: 'Aiven Console', externalUrl: 'https://console.aiven.io/'},
-                {label: 'Grafana', externalUrl: grafanaUrl},
+                {label: 'Grafana', externalUrl: useGlobalContext().grafanaUrl},
                 {
                     label: 'Grafana Password', action: () => {
-                        setApiResult(grafanaPassword);
+                        setApiResult(grafanaPasswordTxt);
                         setShowResultDialog(true);
                     }
                 },

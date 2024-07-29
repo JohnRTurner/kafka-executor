@@ -22,6 +22,8 @@ resource "aws_instance" "data-generator" {
       ACCESS_KEY  = aiven_kafka.kafka1[0].kafka[0].access_key
       CERT_PASS   = "test1234" /* only used internally to encrypt/decrypt above */
 
+      KAFKA_ENABLE = var.kafka_populate
+
       KAFKA_EXECUTOR_HOST = aiven_kafka.kafka1[0].components[0].host
       KAFKA_EXECUTOR_PORT = aiven_kafka.kafka1[0].components[0].port
 

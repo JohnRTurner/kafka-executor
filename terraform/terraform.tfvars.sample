@@ -34,6 +34,7 @@ dg_instance_type = "c6in.2xlarge"
 # How many Executors do you need?
 dg_number_of_instances = 1
 
+kafka_populate = true
 kafka_plan = "business-4"
 kafka_version = "3.7"
 
