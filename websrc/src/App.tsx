@@ -19,10 +19,12 @@ type MenuItem = {
     action?: () => void;
     url?: string;
     externalUrl?: string;
+    disabled?: boolean;
+    hidden?: boolean;
 };
 
-
 function App() {
+    const {kafkaEnable, setKafkaEnable, grafanaPassword, grafanaUrl, repoUrl} = useGlobalContext();
 
     const [selectedDisplay, setSelectedDisplay] = useState<'BatchList' | 'External'>('BatchList');
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,12 +40,13 @@ function App() {
     }); // State for API call result
     const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null); // State for API call result
 
-
-    const grafanaPassword = useGlobalContext().grafanaPassword;
     const grafanaPasswordTxt = grafanaPassword ?
         "Grafana User Password: " + grafanaPassword :
         "GRAFANA USER PASSWORD is not defined.";
 
+    const handleToggleKafkaEnable = () => {
+        setKafkaEnable(!kafkaEnable);
+    };
 
     const menuItems: MenuItem[] = [
         {label: 'Batch List', action: () => handleDisplayChange('BatchList')},
@@ -64,28 +67,36 @@ function App() {
             label: 'External Links',
             subMenuItems: [
                 {label: 'Aiven Console', externalUrl: 'https://console.aiven.io/'},
-                {label: 'Grafana', externalUrl: useGlobalContext().grafanaUrl},
+                {label: 'Grafana', externalUrl: grafanaUrl},
                 {
                     label: 'Grafana Password', action: () => {
                         setApiResult(grafanaPasswordTxt);
                         setShowResultDialog(true);
                     }
                 },
-                {label: 'GitHub Project', externalUrl: 'https://github.com/JohnRTurner/kafka-executor'},
+                {label: 'GitHub Project', externalUrl: repoUrl},
             ],
         },
         {
             label: 'Settings',
             subMenuItems: [
-                {label: 'Update Connections', action: () => setShowConnection(true)},
-                {label: 'Stop All Tasks', action: () => handleOpenConfirmation('Stop All Tasks.', handleCleanTasks)},
+                {
+                    label: 'Update Connections', action: () => setShowConnection(true),
+                    disabled: !kafkaEnable
+                },
+                {
+                    label: 'Stop All Tasks', action: () => handleOpenConfirmation('Stop All Tasks.', handleCleanTasks),
+                    disabled: !kafkaEnable
+                },
                 {
                     label: 'Clean Producer Connections',
-                    action: () => handleOpenConfirmation('Delete All Producer Connections.', handleCleanProducer)
+                    action: () => handleOpenConfirmation('Delete All Producer Connections.', handleCleanProducer),
+                    disabled: !kafkaEnable
                 },
                 {
                     label: 'Clean Consumer Connections',
-                    action: () => handleOpenConfirmation('Delete All Consumer Connections.', handleCleanConsumer)
+                    action: () => handleOpenConfirmation('Delete All Consumer Connections.', handleCleanConsumer),
+                    disabled: !kafkaEnable
                 },
                 {
                     label: 'Create/Reset Topics',
@@ -93,8 +104,20 @@ function App() {
                         () => {
                             setShowConfirmation(false);
                             setShowTopic(true)
-                        })
+                        }),
+                    disabled: !kafkaEnable
                 },
+                {
+                    label: `${kafkaEnable ? 'Disable' : 'Enable'} Kafka Server`,
+                    action: () => handleOpenConfirmation((kafkaEnable) ? 'Disable Kafka Menu Items' :
+                            `To manually connect, set the connection string and place the certificate files on each application server.  More information at ${repoUrl}/tree/main/certs.`,
+                        () => {
+                            setShowConfirmation(false);
+                            handleToggleKafkaEnable();
+                        }),
+                    hidden: kafkaEnable
+                    /* disabled: kafkaEnable */
+                }
             ],
         },
     ];
@@ -233,9 +256,11 @@ function App() {
                                             {item.label}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            {item.subMenuItems.map((subItem, subIndex) => (
+                                            {item.subMenuItems.filter(subItem => !subItem.hidden)
+                                                .map((subItem, subIndex) => (
                                                 <Dropdown.Item key={subIndex}
-                                                               onClick={() => handleMenuItemClick(subItem)}>
+                                                               onClick={() => handleMenuItemClick(subItem)}
+                                                               disabled={subItem.disabled}>
                                                     {subItem.label}
                                                 </Dropdown.Item>
                                             ))}

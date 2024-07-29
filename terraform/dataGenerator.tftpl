@@ -55,6 +55,9 @@ WEB_USER=${WEB_USER}
 WEB_PASSWORD=${WEB_PASSWORD}
 EOF
 
+echo ${GIT_CMD} | sed -E 's|git clone -b [^ ]+ ||; s|git clone https://[^@]+@([^ ]+)\.git|https://\1|; s|git clone https://([^ ]+)\.git|https://\1|' | awk '{print "REPO="$0}' >> .env
+
+
 sudo chown -R 1000:1000 /kafka-executor
 
 sudo -u ubuntu docker-compose build

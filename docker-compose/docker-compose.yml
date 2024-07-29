@@ -10,6 +10,7 @@ services:
         VITE_GRAFANA_URL: ${GRAFANA_URL}
         VITE_GRAFANA_USER_PASSWORD: ${GRAFANA_USER_PASS}
         VITE_KAFKA_ENABLE: ${KAFKA_ENABLE}
+        VITE_REPO_URL: ${REPO}
     container_name: nginx
     ports:
       - "8000:8000"

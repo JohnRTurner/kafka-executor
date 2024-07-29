@@ -42,6 +42,7 @@ web_user = "admin"
 web_password = "Admin123"
 
 # see the GitHubToken.md file for how to generate a Personal Access Token(PAT).
+# ie. git clone -b your-cool-branch https://yourPATgoesHere@github.com/aiven/kafka-executor.git
 git_cmd="git clone https://github.com/aiven/kafka-executor"
 
 # You may have to update these if they are set to expire

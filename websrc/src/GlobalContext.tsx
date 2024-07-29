@@ -1,4 +1,4 @@
-import React, {createContext, useContext} from 'react';
+import {createContext, useContext} from 'react';
 
 // Define the context value type
 interface GlobalContextType {
@@ -8,6 +8,8 @@ interface GlobalContextType {
     setGrafanaPassword: React.Dispatch<React.SetStateAction<string>>;
     grafanaUrl: string;
     setGrafanaUrl: React.Dispatch<React.SetStateAction<string>>;
+    repoUrl: string;
+    setRepoUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Create the context with a default value
