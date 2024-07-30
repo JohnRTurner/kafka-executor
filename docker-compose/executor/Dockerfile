@@ -25,7 +25,7 @@ RUN if [[ -n $CERT_PASS ]]; then openssl pkcs12 -export \
     -in service.cert \
     -out client.keystore.p12 \
     -name service_key \
-    -passout pass:${CERT_PASS}
+    -passout pass:${CERT_PASS} ; fi
 
 # Import CA certificate into truststore
 RUN if [[ -n $CERT_PASS ]]; then keytool -import \
@@ -33,7 +33,7 @@ RUN if [[ -n $CERT_PASS ]]; then keytool -import \
     -alias CA \
     -keystore client.truststore.jks \
     -storepass ${CERT_PASS} \
-    -noprompt
+    -noprompt ; fi
 
 RUN chown -R 1000:1000 /certs
 
