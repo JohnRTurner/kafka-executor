@@ -18,20 +18,20 @@ resource "aws_instance" "data-generator" {
       GIT_CMD = var.git_cmd
 
       CA_CERT     = data.aiven_project.proj1.ca_cert
-      ACCESS_CERT = aiven_kafka.kafka1[0].kafka[0].access_cert
-      ACCESS_KEY  = aiven_kafka.kafka1[0].kafka[0].access_key
+      ACCESS_CERT = var.kafka_populate ? aiven_kafka.kafka1[0].kafka[0].access_cert : ""
+      ACCESS_KEY  = var.kafka_populate ? aiven_kafka.kafka1[0].kafka[0].access_key : ""
       CERT_PASS   = "test1234" /* only used internally to encrypt/decrypt above */
 
       KAFKA_ENABLE = var.kafka_populate
 
-      KAFKA_EXECUTOR_HOST = aiven_kafka.kafka1[0].components[0].host
-      KAFKA_EXECUTOR_PORT = aiven_kafka.kafka1[0].components[0].port
+      KAFKA_EXECUTOR_HOST = var.kafka_populate ? aiven_kafka.kafka1[0].components[0].host : ""
+      KAFKA_EXECUTOR_PORT = var.kafka_populate ? aiven_kafka.kafka1[0].components[0].port : ""
 
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST = aiven_kafka.kafka1[0].components[6].host
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT = aiven_kafka.kafka1[0].components[6].port
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].host : ""
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].port : ""
 
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER     = aiven_kafka.kafka1[0].service_username
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD = aiven_kafka.kafka1[0].service_password
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER     = var.kafka_populate ? aiven_kafka.kafka1[0].service_username : ""
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD = var.kafka_populate ? aiven_kafka.kafka1[0].service_password : ""
 
       THANOS_REMOTE_WRITE_URL = aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
 
