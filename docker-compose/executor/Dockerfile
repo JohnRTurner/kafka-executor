@@ -20,7 +20,7 @@ COPY ./certs/* /certs/
 RUN echo "CERT_PASS is ${CERT_PASS}"
 
 # Create PKCS12 keystore
-RUN if [[ -n "$CERT_PASS" ]]; then openssl pkcs12 -export \
+RUN if [[ `cat service.key|wc -c` -gt 1 ]]; then openssl pkcs12 -export \
     -inkey service.key \
     -in service.cert \
     -out client.keystore.p12 \
@@ -28,7 +28,7 @@ RUN if [[ -n "$CERT_PASS" ]]; then openssl pkcs12 -export \
     -passout pass:${CERT_PASS} ; fi
 
 # Import CA certificate into truststore
-RUN if [[ -n "$CERT_PASS" ]]; then keytool -import \
+RUN if [[  `cat service.key|wc -c` -gt 1 ]]; then keytool -import \
     -file ca.pem \
     -alias CA \
     -keystore client.truststore.jks \
