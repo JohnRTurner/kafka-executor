@@ -22,21 +22,25 @@ public class Statistics {
         HashMap<String, Counter> p_amount = new HashMap<>();
 
         for (DataClass dataClass : DataClass.values()) {
-            c_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.calls").
+            c_count.put(dataClass.name(), Counter.builder("kafka_executor").
                     tag("class", dataClass.name().toLowerCase()).
-                    tag("type", "consumer.calls").
+                    tag("job_type", "consumer").
+                    tag("stat_type", "calls").
                     description("Kafka consumer calls").register(registry));
-            c_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".consumer.records").
+            c_amount.put(dataClass.name(), Counter.builder("kafka_executor").
                     tag("class", dataClass.name().toLowerCase()).
-                    tag("type", "consumer.records").
+                    tag("job_type", "consumer").
+                    tag("stat_type", "records").
                     description("Kafka consumer generated rows").register(registry));
-            p_count.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.calls").
+            p_count.put(dataClass.name(), Counter.builder("kafka_executor").
                     tag("class", dataClass.name().toLowerCase()).
-                    tag("type", "producer.calls").
+                    tag("job_type", "producer").
+                    tag("stat_type", "calls").
                     description("Kafka producer calls").register(registry));
-            p_amount.put(dataClass.name(), Counter.builder(dataClass.name().toLowerCase() + ".producer.records").
+            p_amount.put(dataClass.name(), Counter.builder("kafka_executor").
                     tag("class", dataClass.name().toLowerCase()).
-                    tag("type", "producer.records").
+                    tag("job_type", "producer").
+                    tag("stat_type", "records").
                     description("Kafka producer generated rows").register(registry));
         }
         this.consumerCount = c_count;

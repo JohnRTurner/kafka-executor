@@ -7,6 +7,7 @@ import org.apache.kafka.common.record.CompressionType;
 @Data
 @NoArgsConstructor
 public class KafkaConnectionConfigDTO {
+    private boolean enable;
     private String host;
     private String port;
     private String cert_password;

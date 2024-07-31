@@ -2,8 +2,6 @@ import {createContext, useContext} from 'react';
 
 // Define the context value type
 interface GlobalContextType {
-    kafkaEnable: boolean;
-    setKafkaEnable: React.Dispatch<React.SetStateAction<boolean>>;
     grafanaPassword: string;
     setGrafanaPassword: React.Dispatch<React.SetStateAction<string>>;
     grafanaUrl: string;

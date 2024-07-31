@@ -1,10 +1,12 @@
 package aiven.io.kafka_executor.producer.controller;
 
 import aiven.io.kafka_executor.config.model.KafkaConnectionConfig;
+import aiven.io.kafka_executor.config.model.OpensearchConnectionConfig;
 import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.log.model.Statistics;
 import aiven.io.kafka_executor.producer.model.ProducerStatus;
 import aiven.io.kafka_executor.producer.view.KafkaLoadProducer;
+import aiven.io.kafka_executor.producer.view.OpensearchLoadProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
@@ -27,10 +29,12 @@ import static aiven.io.kafka_executor.data.DataClass.values;
 public class ProducerController {
 
     private final KafkaConnectionConfig kafkaConnectionConfig;
+    private final OpensearchConnectionConfig opensearchConnectionConfig;
     private final Statistics statistics;
 
-    public ProducerController(KafkaConnectionConfig kafkaConnectionConfig, Statistics statistics) {
+    public ProducerController(KafkaConnectionConfig kafkaConnectionConfig, OpensearchConnectionConfig opensearchConnectionConfig, Statistics statistics) {
         this.kafkaConnectionConfig = kafkaConnectionConfig;
+        this.opensearchConnectionConfig = opensearchConnectionConfig;
         this.statistics = statistics;
     }
 
@@ -135,6 +139,99 @@ public class ProducerController {
         }
         ProducerStatus producerStatus = KafkaLoadProducer.generateLoad(topicName, server, dataClass1, batchSize,
                 startId, correlatedStartIdInc, correlatedEndIdInc, kafkaConnectionConfig);
+        statistics.producerSet(dataClass1.name(), producerStatus.getCount());
+        return new ResponseEntity<>(producerStatus, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/cleanOpenSearchConnection", method = RequestMethod.GET)
+    public ResponseEntity<String> cleanOpenSearchConnection(HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        OpensearchLoadProducer.clean(opensearchConnectionConfig);
+        return new ResponseEntity<>("Executed Clean.", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/listOpenSearchDataClasses", method = RequestMethod.GET)
+    public ResponseEntity<DataClass[]> listOpenSearchDataClasses(HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        return new ResponseEntity<>((DataClass[]) Arrays.stream(values()).filter(val -> val.getKafkaFormat() == DataClass.KafkaFormat.JSON).toArray(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/listOpenSearchIndexes", method = RequestMethod.GET)
+    public ResponseEntity<Set<String>> listOpenSearchIndexes(HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        return new ResponseEntity<>((Set<String>) Arrays.stream(OpensearchLoadProducer.getIndexes(opensearchConnectionConfig)).
+                collect(Collectors.toCollection(TreeSet::new)), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/createOpenSearchIndexes", method = RequestMethod.PUT)
+    public ResponseEntity<Boolean> createOpenSearchIndexes(
+            @RequestParam(value = "indexes[]", defaultValue = "Default List") String[] indexes,
+            @RequestParam(value = "shards", defaultValue = "6") int shards,
+            @RequestParam(value = "replicas", defaultValue = "2") int replicas,
+            @RequestParam(value = "refreshSeconds", defaultValue = "1") int refreshSeconds,
+            HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        Collection<String> indexList;
+        if (indexes.length == 1 && indexes[0].equals("Default List")) {
+            indexList = Arrays.stream(values())
+                    .filter(val -> val.getKafkaFormat() == DataClass.KafkaFormat.JSON)
+                    .map(DataClass::name)
+                    .collect(Collectors.toList());
+        } else {
+            indexList = new ArrayList<>(Arrays.asList(indexes));
+        }
+        if (indexList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(OpensearchLoadProducer.createIndexes(indexList, shards, replicas, refreshSeconds, opensearchConnectionConfig), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/deleteOpenSearchIndexes", method = RequestMethod.DELETE)
+    public ResponseEntity<Boolean> deleteOpenSearchIndexes(
+            @RequestParam(value = "indexes[]", defaultValue = "Default List") String[] indexes,
+            HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        Collection<String> indexList;
+        if (indexes.length == 1 && indexes[0].equals("Default List")) {
+            indexList = Arrays.stream(values())
+                    .filter(val -> val.getKafkaFormat() == DataClass.KafkaFormat.JSON)
+                    .map(DataClass::name)
+                    .collect(Collectors.toList());
+        } else {
+            indexList = new ArrayList<>(Arrays.asList(indexes));
+        }
+        if (indexList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(OpensearchLoadProducer.deleteIndexes(indexList, opensearchConnectionConfig), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/generateOpenSearchLoad", method = RequestMethod.PUT, params = {"topicName", "server"})
+    public ResponseEntity<ProducerStatus> generateOpenSearchLoad(@RequestParam(value = "indexName", defaultValue = "CUSTOMER_JSON") String indexName,
+                                                                 @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
+                                                                 @RequestParam(value = "startId", defaultValue = "-1") long startId,
+                                                                 @RequestParam(value = "correlatedStartIdInc", defaultValue = "-1") int correlatedStartIdInc,
+                                                                 @RequestParam(value = "correlatedEndIdInc", defaultValue = "-1") int correlatedEndIdInc,
+                                                                 @RequestParam(value = "dataClass", defaultValue = "CUSTOMER_JSON") String dataClass,
+                                                                 HttpServletRequest request) {
+        log.debug("Path: {}", request.getRequestURI());
+        DataClass dataClass1;
+        try {
+            dataClass1 = DataClass.valueOf(dataClass);
+        } catch (IllegalArgumentException e) {
+            ProducerStatus status = new ProducerStatus();
+            status.setError(true);
+            status.setErrorMessage(e.getMessage());
+            status.setStatus("Error");
+            status.setCount(0);
+            return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+        }
+        ProducerStatus producerStatus = OpensearchLoadProducer.generateLoad(indexName, dataClass1, batchSize, startId,
+                correlatedStartIdInc, correlatedEndIdInc, opensearchConnectionConfig);
         statistics.producerSet(dataClass1.name(), producerStatus.getCount());
         return new ResponseEntity<>(producerStatus, HttpStatus.OK);
     }

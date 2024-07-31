@@ -1,6 +1,7 @@
 package aiven.io.kafka_executor.data;
 
 import aiven.io.kafka_executor.data.avro.AvroUtils;
+import aiven.io.kafka_executor.data.json.JsonUtils;
 import com.google.protobuf.Descriptors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.apache.avro.Schema;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class WeatherIOT implements DataInterface {
     private static final int MAX_CORRELATED_IDS = 20000; //Protects us from blowing out memory
     private static final Faker faker = new Faker();
     private static final Schema schema = AvroUtils.generateSchema(WeatherIOT.class);
+    private static final XContentBuilder openSearchSchema = JsonUtils.generateMapping(Customer.class);
     private static final List<String> directions = List.of("N", "NE", "E", "SE", "S", "SW", "W", "NW");
     private static final List<Account> ACCOUNTS = new ArrayList<>();
 
@@ -61,6 +64,11 @@ public class WeatherIOT implements DataInterface {
     @Override
     public Schema retAvroSchema() {
         return schema;
+    }
+
+    @Override
+    public XContentBuilder retOpensearchSchema() {
+        return openSearchSchema;
     }
 
     public DataInterface generateData(long genId, int correlatedId) {

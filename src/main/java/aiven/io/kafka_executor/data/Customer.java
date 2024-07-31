@@ -1,6 +1,7 @@
 package aiven.io.kafka_executor.data;
 
 import aiven.io.kafka_executor.data.avro.AvroUtils;
+import aiven.io.kafka_executor.data.json.JsonUtils;
 import com.google.protobuf.Descriptors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.apache.avro.Schema;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.springframework.stereotype.Component;
 
 import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorFromPojo;
@@ -21,6 +23,7 @@ public class Customer implements DataInterface {
     public static final Descriptors.Descriptor protoSchema;
     private static final Faker faker = new Faker();
     private static final Schema schema = AvroUtils.generateSchema(Customer.class);
+    private static final XContentBuilder openSearchSchema = JsonUtils.generateMapping(Customer.class);
 
     static {
         Descriptors.Descriptor protoSchemaTmp = null;
@@ -56,6 +59,11 @@ public class Customer implements DataInterface {
     @Override
     public Schema retAvroSchema() {
         return schema;
+    }
+
+    @Override
+    public XContentBuilder retOpensearchSchema() {
+        return openSearchSchema;
     }
 
     @Override

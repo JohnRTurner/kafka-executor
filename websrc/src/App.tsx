@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import BatchList from "./batchList/BatchList.tsx";
-import {BatchControllerApi, ConsumerControllerApi, ProducerControllerApi} from "./api";
+import {BatchControllerApi, ConfigControllerApi, ConsumerControllerApi, ProducerControllerApi} from "./api";
 import apiConfig from "./apiConfig.tsx";
 import ResultDialog from "./dialog/ResultDialog.tsx";
 import ConfirmationDialog from "./dialog/ConfirmationDialog.tsx";
@@ -12,6 +12,7 @@ import {useGlobalContext} from './GlobalContext';
 const batchController = new BatchControllerApi(apiConfig);
 const consumerController = new ConsumerControllerApi(apiConfig);
 const producerController = new ProducerControllerApi(apiConfig);
+const configController = new ConfigControllerApi(apiConfig);
 
 type MenuItem = {
     label: string;
@@ -24,7 +25,7 @@ type MenuItem = {
 };
 
 function App() {
-    const {kafkaEnable, setKafkaEnable, grafanaPassword, grafanaUrl, repoUrl} = useGlobalContext();
+    const {grafanaPassword, grafanaUrl, repoUrl} = useGlobalContext();
 
     const [selectedDisplay, setSelectedDisplay] = useState<'BatchList' | 'External'>('BatchList');
     const [menuOpen, setMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ function App() {
     const [showResult, setShowResultDialog] = useState(false); // State for showing result dialog
     const [apiResult, setApiResult] = useState<string>(""); // State for API call result
 
+    const [kafkaEnable, setKafkaEnable] = useState(true)
+
     const [handleConfirmation, setHandleConfirmation] = useState<() => void>(() => {
     }); // State for API call result
     const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null); // State for API call result
@@ -44,8 +47,20 @@ function App() {
         "Grafana User Password: " + grafanaPassword :
         "GRAFANA USER PASSWORD is not defined.";
 
+
+    useEffect(() => {
+        configController.enableKafka1().then((response) => {
+            console.log(response);
+            setKafkaEnable(response.data)
+        });
+    }, []); // Empty dependency array ensures this effect runs only once
+
     const handleToggleKafkaEnable = () => {
-        setKafkaEnable(!kafkaEnable);
+        configController.enableKafka(!kafkaEnable).then(
+            () => {
+                configController.enableKafka1().then((response) => setKafkaEnable(response.data));
+            },
+        )
     };
 
     const menuItems: MenuItem[] = [

@@ -15,6 +15,15 @@ kafka_executor.schema_registry_port=XXXX
 kafka_executor.schema_registry_user=XXXX
 kafka_executor.schema_registry_password=XXXX
 
+kafka_executor.kafka_enable=true
+
+kafka_executor.opensearch_host=XXXX
+kafka_executor.opensearch_port=XXXX
+kafka_executor.opensearch_user=XXXX
+kafka_executor.opensearch_password=XXXX
+
+kafka_executor.opensearch_enable=true
+
 spring.kafka.consumer.properties.spring.json.trusted.packages=aiven.io.kafka_executor.data
 
 management.endpoints.web.exposure.include=health, metrics, prometheus

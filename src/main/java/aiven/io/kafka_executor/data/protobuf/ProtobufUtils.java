@@ -63,7 +63,7 @@ public class ProtobufUtils {
                 .build();
 
         Descriptors.FileDescriptor fileDescriptor = Descriptors.FileDescriptor.buildFrom(fileDescriptorProto, new Descriptors.FileDescriptor[0]);
-        return fileDescriptor.getMessageTypes().get(0);
+        return fileDescriptor.getMessageTypes().getFirst();
     }
 
     public static DynamicMessage serializeToProtobuf(Object object, Descriptors.Descriptor descriptor) {

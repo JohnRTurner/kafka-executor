@@ -15,6 +15,8 @@ import java.util.Properties;
 @NoArgsConstructor
 @Data
 public class KafkaConnectionConfig {
+    @Value("${kafka_executor.kafka_enable}")
+    private boolean enable;
     /* Basic Connection */
     @Value("${kafka_executor.host}")
     private String host;
@@ -94,6 +96,8 @@ public class KafkaConnectionConfig {
     }
 
     public void loadConfig(KafkaConnectionConfigDTO configDTO) {
+        this.enable = configDTO.isEnable();
+
         this.host = configDTO.getHost();
         this.port = configDTO.getPort();
         this.cert_password = configDTO.getCert_password();
@@ -127,6 +131,8 @@ public class KafkaConnectionConfig {
     public KafkaConnectionConfigDTO retConfig() {
         KafkaConnectionConfigDTO configDTO = new KafkaConnectionConfigDTO();
 
+        // FrontEnd
+        configDTO.setEnable(this.enable);
         // Copy values from current object to configDTO
         configDTO.setHost(this.host);
         configDTO.setPort(this.port);
