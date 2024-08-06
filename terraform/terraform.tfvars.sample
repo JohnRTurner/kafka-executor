@@ -38,6 +38,10 @@ kafka_populate = true
 kafka_plan = "business-4"
 kafka_version = "3.7"
 
+os_populate = false
+os_plan = "business-4"
+os_version = "2"
+
 web_user = "admin"
 web_password = "Admin123"
 

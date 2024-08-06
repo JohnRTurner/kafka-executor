@@ -95,6 +95,12 @@ variable "web_password" {
   type        = string
 }
 
+variable "git_cmd" {
+  description = "ie. git clone -b yourBranch https://YOUR_PERSONAL_ACCESS_TOKEN@github.com/JohnRTurner/kafka_executor.git"
+  type        = string
+  default     = "git clone https://github.com/JohnRTurner/kafka_executor.git"
+}
+
 variable "kafka_plan" {
   description = "Aiven Kafka Plan Name"
   type        = string
@@ -107,14 +113,27 @@ variable "kafka_version" {
   default     = "3.7"
 }
 
-variable "git_cmd" {
-  description = "ie. git clone -b yourBranch https://YOUR_PERSONAL_ACCESS_TOKEN@github.com/JohnRTurner/kafka_executor.git"
-  type        = string
-  default     = "git clone https://github.com/JohnRTurner/kafka_executor.git"
-}
-
 variable "kafka_populate" {
   description = "Use Kafka"
   type        = bool
   default     = true
 }
+
+variable "os_plan" {
+  description = "Aiven OpenSearch Plan Name"
+  type        = string
+  default     = "business-4"
+}
+
+variable "os_version" {
+  description = "Version of OpenSearch"
+  type        = string
+  default     = "2"
+}
+
+variable "os_populate" {
+  description = "Use OpenSearch"
+  type        = bool
+  default     = false
+}
+

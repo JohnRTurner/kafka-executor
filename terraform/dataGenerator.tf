@@ -27,11 +27,17 @@ resource "aws_instance" "data-generator" {
       KAFKA_EXECUTOR_HOST = var.kafka_populate ? aiven_kafka.kafka1[0].components[0].host : ""
       KAFKA_EXECUTOR_PORT = var.kafka_populate ? aiven_kafka.kafka1[0].components[0].port : ""
 
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].host : ""
-      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].port : ""
-
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_HOST     = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].host : ""
+      KAFKA_EXECUTOR_SCHEMA_REGISTRY_PORT     = var.kafka_populate ? aiven_kafka.kafka1[0].components[6].port : ""
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_USER     = var.kafka_populate ? aiven_kafka.kafka1[0].service_username : ""
       KAFKA_EXECUTOR_SCHEMA_REGISTRY_PASSWORD = var.kafka_populate ? aiven_kafka.kafka1[0].service_password : ""
+
+
+      KAFKA_EXECUTOR_OPENSEARCH_ENABLE   = var.os_populate
+      KAFKA_EXECUTOR_OPENSEARCH_HOST     = var.os_populate ? aiven_opensearch.os1[0].service_host : ""
+      KAFKA_EXECUTOR_OPENSEARCH_PORT     = var.os_populate ? aiven_opensearch.os1[0].service_port : ""
+      KAFKA_EXECUTOR_OPENSEARCH_USER     = var.os_populate ? aiven_opensearch.os1[0].service_username : ""
+      KAFKA_EXECUTOR_OPENSEARCH_PASSWORD = var.os_populate ? aiven_opensearch.os1[0].service_password : ""
 
       THANOS_REMOTE_WRITE_URL = aiven_thanos.thanos1.thanos[0].receiver_remote_write_uri
 
