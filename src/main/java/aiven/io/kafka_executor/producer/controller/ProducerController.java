@@ -153,7 +153,10 @@ public class ProducerController {
     @RequestMapping(value = "/listOpenSearchDataClasses", method = RequestMethod.GET)
     public ResponseEntity<DataClass[]> listOpenSearchDataClasses(HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
-        return new ResponseEntity<>((DataClass[]) Arrays.stream(values()).filter(val -> val.getKafkaFormat() == DataClass.KafkaFormat.JSON).toArray(), HttpStatus.OK);
+        DataClass[] filteredDataClasses = Arrays.stream(DataClass.values())
+                .filter(val -> val.getKafkaFormat() == DataClass.KafkaFormat.JSON)
+                .toArray(DataClass[]::new);
+        return new ResponseEntity<>(filteredDataClasses, HttpStatus.OK);
     }
 
 
