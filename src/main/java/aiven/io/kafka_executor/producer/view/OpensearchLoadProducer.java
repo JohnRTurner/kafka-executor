@@ -17,6 +17,8 @@ import org.opensearch.client.indices.CreateIndexRequest;
 import org.opensearch.client.indices.CreateIndexResponse;
 import org.opensearch.client.indices.GetIndexRequest;
 import org.opensearch.common.settings.Settings;
+import org.opensearch.common.xcontent.XContentType;
+import org.opensearch.core.xcontent.XContentBuilder;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -45,20 +47,33 @@ public class OpensearchLoadProducer {
                                         OpensearchConnectionConfig connectionConfig) {
         RestHighLevelClient client = connectionConfig.getClient();
         for (String index : indexes) {
-            CreateIndexRequest request = new CreateIndexRequest(index);
+
+            XContentBuilder xContentBuilder = null;
+            try {
+                DataInterface dataInterface = DataClass.valueOf(index).getDataInterface();
+                xContentBuilder = dataInterface.retOpensearchSchema();
+                log.info("Creating index {} {}", dataInterface.getClass().getSimpleName(), xContentBuilder);
+            } catch (Exception e) {
+                log.error("Error getting Index Schema", e);
+            }
+
+            CreateIndexRequest request = new CreateIndexRequest(index.toLowerCase());
+            if (xContentBuilder != null) request.mapping(xContentBuilder);
+
             request.settings(Settings.builder()
                     .put("index.number_of_shards", shards)
                     .put("index.number_of_replicas", replicas)
-                    .put("index.refresh_interval", Integer.toString(refreshSeconds) + "s")
+                    .put("index.refresh_interval", Integer.toString(refreshSeconds).concat("s"))
             );
+
             try {
                 CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
                 if (!createIndexResponse.isAcknowledged()) {
-                    log.error("Error creating index returned unacknowledged.");
+                    log.error("Error creating index {} returned unacknowledged.", index.toLowerCase());
                     return false;
                 }
-            } catch (IOException e) {
-                log.error("Error creating index", e);
+            } catch (Exception e) {
+                log.error("Error creating index {}", index.toLowerCase(), e);
                 return false;
             }
 
@@ -71,15 +86,15 @@ public class OpensearchLoadProducer {
         RestHighLevelClient client = connectionConfig.getClient();
         for (String index : indexes) {
             try {
-                DeleteIndexRequest request = new DeleteIndexRequest(index);
+                DeleteIndexRequest request = new DeleteIndexRequest(index.toLowerCase());
                 AcknowledgedResponse deleteResponse = client.indices().delete(request, RequestOptions.DEFAULT);
 
                 if (!deleteResponse.isAcknowledged()) {
-                    log.error("Error deleting index returned unacknowledged.");
+                    log.error("Error deleting index {} returned unacknowledged.", index.toLowerCase());
                     return false;
                 }
-            } catch (IOException e) {
-                log.error("Error deleting index", e);
+            } catch (Exception e) {
+                log.error("Error deleting index {}", index.toLowerCase(), e);
                 return false;
             }
 
@@ -130,8 +145,9 @@ public class OpensearchLoadProducer {
         for (int i = 0; i < batchSize; i++) {
             DataInterface dataInterface1 = dataInterface.generateData((startId < 0) ? -1 : startId + i,
                     (correlatedStartIdInc < 0) ? -1 : correlatedStartIdInc + (i % correlatedRange));
-            IndexRequest indexRequest = new IndexRequest(indexName).id(Long.toString(dataInterface1.getId())).
-                    source(JsonUtils.convertToJson(dataInterface1));
+            IndexRequest indexRequest = new IndexRequest(indexName.toLowerCase()).
+                    id(Long.toString(dataInterface1.getId())).
+                    source(JsonUtils.convertToJson(dataInterface1), XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
 
@@ -156,7 +172,7 @@ public class OpensearchLoadProducer {
             return status;
         }
 
-        log.debug("Completed sending {} message for indexName {} of type {}!", batchSize, indexName, dataInterface.getClass().getSimpleName());
+        log.debug("Completed sending {} message for indexName {} of type {}!", batchSize, indexName.toLowerCase(), dataInterface.getClass().getSimpleName());
         status.setError(false);
         status.setErrorMessage("");
         status.setStatus("Success");

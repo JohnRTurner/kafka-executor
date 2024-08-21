@@ -213,9 +213,9 @@ public class ProducerController {
     }
 
 
-    @RequestMapping(value = "/generateOpenSearchLoad", method = RequestMethod.PUT, params = {"topicName", "server"})
+    @RequestMapping(value = "/generateOpenSearchLoad", method = RequestMethod.PUT)
     public ResponseEntity<ProducerStatus> generateOpenSearchLoad(@RequestParam(value = "indexName", defaultValue = "CUSTOMER_JSON") String indexName,
-                                                                 @RequestParam(value = "batchSize", defaultValue = "100000") int batchSize,
+                                                                 @RequestParam(value = "batchSize", defaultValue = "10000") int batchSize,
                                                                  @RequestParam(value = "startId", defaultValue = "-1") long startId,
                                                                  @RequestParam(value = "correlatedStartIdInc", defaultValue = "-1") int correlatedStartIdInc,
                                                                  @RequestParam(value = "correlatedEndIdInc", defaultValue = "-1") int correlatedEndIdInc,

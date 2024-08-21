@@ -8,6 +8,7 @@ import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.core.xcontent.XContentBuilder;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -36,6 +37,9 @@ public class JsonUtils {
                 builder.startObject("properties");
                 {
                     for (Field field : clazz.getDeclaredFields()) {
+                        if (Modifier.isStatic(field.getModifiers())) {
+                            continue; // Skip static fields
+                        }
                         field.setAccessible(true);
                         String fieldName = field.getName();
                         Class<?> fieldType = field.getType();

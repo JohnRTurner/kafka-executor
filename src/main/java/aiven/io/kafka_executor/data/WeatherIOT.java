@@ -29,7 +29,7 @@ public class WeatherIOT implements DataInterface {
     private static final int MAX_CORRELATED_IDS = 20000; //Protects us from blowing out memory
     private static final Faker faker = new Faker();
     private static final Schema schema = AvroUtils.generateSchema(WeatherIOT.class);
-    private static final XContentBuilder openSearchSchema = JsonUtils.generateMapping(Customer.class);
+    private static final XContentBuilder openSearchSchema = JsonUtils.generateMapping(WeatherIOT.class);
     private static final List<String> directions = List.of("N", "NE", "E", "SE", "S", "SW", "W", "NW");
     private static final List<Account> ACCOUNTS = new ArrayList<>();
 
