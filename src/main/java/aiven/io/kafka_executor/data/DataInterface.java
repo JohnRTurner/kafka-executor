@@ -14,7 +14,7 @@ public interface DataInterface {
     /* schema format created only once for Avro per class*/
     Schema retAvroSchema();
 
-    XContentBuilder retOpensearchSchema();
+    XContentBuilder retOpenSearchSchema();
 
     /*this generates the fake data*/
     DataInterface generateData(long genId, int correlatedId);

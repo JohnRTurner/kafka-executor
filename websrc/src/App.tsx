@@ -1,6 +1,11 @@
 import {useEffect, useState} from 'react';
 import BatchList from "./batchList/BatchList.tsx";
-import {BatchControllerApi, ConfigControllerApi, ConsumerControllerApi, ProducerControllerApi} from "./api";
+import {
+    RestBatchControllerApi,
+    RestConfigControllerApi,
+    RestConsumerControllerApi,
+    RestProducerControllerApi
+} from "./api";
 import apiConfig from "./apiConfig.tsx";
 import ResultDialog from "./dialog/ResultDialog.tsx";
 import ConfirmationDialog from "./dialog/ConfirmationDialog.tsx";
@@ -9,10 +14,10 @@ import ConnectionDialog from "./connection/ConnectionDialog.tsx";
 import {Container, Dropdown, Nav, Navbar} from 'react-bootstrap';
 import {useGlobalContext} from './GlobalContext';
 
-const batchController = new BatchControllerApi(apiConfig);
-const consumerController = new ConsumerControllerApi(apiConfig);
-const producerController = new ProducerControllerApi(apiConfig);
-const configController = new ConfigControllerApi(apiConfig);
+const batchController = new RestBatchControllerApi(apiConfig);
+const consumerController = new RestConsumerControllerApi(apiConfig);
+const producerController = new RestProducerControllerApi(apiConfig);
+const configController = new RestConfigControllerApi(apiConfig);
 
 type MenuItem = {
     label: string;

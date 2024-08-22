@@ -35,7 +35,7 @@ fi
 2. Update AWS_ACCOUNT_ID and AWS_ROLE_ARN to the required values of your access.
 3. Set the scripts permissions to 700.
 4. Call the script, passing your authenticator token to get your temporary access information.
-5. Update the terraform.tfvars with this information
+5. Update terraform.tfvars with this information
 
 **Note: The tokens will expire, but the terraform repository will continue to track your servers, so that you resume
 access upon updating the tokens.** 

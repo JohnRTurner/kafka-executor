@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Button, Container, ListGroup} from 'react-bootstrap';
-import {BatchControllerApi, BatchStatus, ProducerControllerApi} from '../api';
+import {BatchStatus, RestBatchControllerApi, RestProducerControllerApi} from '../api';
 import BatchItem from './BatchItem';
 import UpdateBatchModal from './UpdateBatchModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
@@ -8,8 +8,8 @@ import CreateProducerBatchModal from './CreateProducerBatchModal';
 import CreateConsumerBatchModal from './CreateConsumerBatchModal';
 import apiConfig from '../apiConfig';
 
-const batchController = new BatchControllerApi(apiConfig);
-const producerController = new ProducerControllerApi(apiConfig);
+const batchController = new RestBatchControllerApi(apiConfig);
+const producerController = new RestProducerControllerApi(apiConfig);
 
 const BatchList: React.FC = () => {
     const [batchStatus, setBatchStatus] = useState<BatchStatus[] | null>(null);

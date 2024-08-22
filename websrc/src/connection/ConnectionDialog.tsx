@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal, Tab, Tabs} from 'react-bootstrap';
-import {ConfigControllerApi, KafkaConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO, RestConfigControllerApi} from "../api";
 import apiConfig from "../apiConfig.tsx";
 import BasicTab from './BasicTab.tsx';
 import SchemaTab from './SchemaTab.tsx';
@@ -25,7 +25,7 @@ const convertToKeyValueArray = (data: { [p: string]: string }): KeyValue[] => {
     }));
 };
 
-const configController = new ConfigControllerApi(apiConfig);
+const configController = new RestConfigControllerApi(apiConfig);
 
 const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onConfirm}) => {
     const [compressionTypes, setCompressionTypes] = useState<string[]>([]);

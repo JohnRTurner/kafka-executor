@@ -171,7 +171,7 @@ export interface ConsumerStatus {
  */
 export interface KafkaConnectionConfigDTO {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof KafkaConnectionConfigDTO
      */
@@ -322,39 +322,39 @@ export const KafkaConnectionConfigDTOAcksEnum = {
 export type KafkaConnectionConfigDTOAcksEnum = typeof KafkaConnectionConfigDTOAcksEnum[keyof typeof KafkaConnectionConfigDTOAcksEnum];
 
 /**
- *
+ * 
  * @export
- * @interface OpensearchConnectionDTO
+ * @interface OpenSearchConnectionDTO
  */
-export interface OpensearchConnectionDTO {
+export interface OpenSearchConnectionDTO {
     /**
-     *
+     * 
      * @type {boolean}
-     * @memberof OpensearchConnectionDTO
+     * @memberof OpenSearchConnectionDTO
      */
     'enable'?: boolean;
     /**
-     *
+     * 
      * @type {string}
-     * @memberof OpensearchConnectionDTO
+     * @memberof OpenSearchConnectionDTO
      */
     'host'?: string;
     /**
-     *
+     * 
      * @type {number}
-     * @memberof OpensearchConnectionDTO
+     * @memberof OpenSearchConnectionDTO
      */
     'port'?: number;
     /**
-     *
+     * 
      * @type {string}
-     * @memberof OpensearchConnectionDTO
+     * @memberof OpenSearchConnectionDTO
      */
     'user'?: string;
     /**
-     *
+     * 
      * @type {string}
-     * @memberof OpensearchConnectionDTO
+     * @memberof OpenSearchConnectionDTO
      */
     'password'?: string;
 }
@@ -397,10 +397,10 @@ export interface ProducerStatus {
 }
 
 /**
- * BatchControllerApi - axios parameter creator
+ * RestBatchControllerApi - axios parameter creator
  * @export
  */
-export const BatchControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestBatchControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -431,7 +431,7 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -469,7 +469,7 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -577,7 +577,7 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
          * @param {string} [topicName]
          * @param {number} [numThreads]
          * @param {number} [batchSize]
-         * @param {number} [maxTries]
+         * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -637,7 +637,7 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -787,11 +787,11 @@ export const BatchControllerApiAxiosParamCreator = function (configuration?: Con
 };
 
 /**
- * BatchControllerApi - functional programming interface
+ * RestBatchControllerApi - functional programming interface
  * @export
  */
-export const BatchControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = BatchControllerApiAxiosParamCreator(configuration)
+export const RestBatchControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestBatchControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -801,11 +801,11 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async batchStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BatchStatus>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.batchStatus(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.batchStatus']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.batchStatus']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -814,11 +814,11 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async changeKafkaConsumerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.changeKafkaConsumerTaskCount(taskName, numThreads, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.changeKafkaConsumerTaskCount']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.changeKafkaConsumerTaskCount']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -827,11 +827,11 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async changeKafkaProducerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.changeKafkaProducerTaskCount(taskName, numThreads, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.changeKafkaProducerTaskCount']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.changeKafkaProducerTaskCount']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -839,11 +839,11 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async dropKafkaConsumerTask(taskName?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.dropKafkaConsumerTask(taskName, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.dropKafkaConsumerTask']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.dropKafkaConsumerTask']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -851,7 +851,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async dropKafkaProducerTask(taskName?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.dropKafkaProducerTask(taskName, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.dropKafkaProducerTask']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.dropKafkaProducerTask']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -859,7 +859,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
          * @param {string} [topicName]
          * @param {number} [numThreads]
          * @param {number} [batchSize]
-         * @param {number} [maxTries]
+         * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -868,7 +868,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async generateKafkaConsumerTask(topicName?: string, numThreads?: number, batchSize?: number, maxTries?: number, sleepMillis?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateKafkaConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, dataClass, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.generateKafkaConsumerTask']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.generateKafkaConsumerTask']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -878,7 +878,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -887,7 +887,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async generateKafkaProducerTask(topicName?: string, numThreads?: number, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, sleepMillis?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateKafkaProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, dataClass, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.generateKafkaProducerTask']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.generateKafkaProducerTask']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -898,7 +898,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async listKafkaConsumers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKafkaConsumers(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.listKafkaConsumers']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.listKafkaConsumers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -909,7 +909,7 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async listKafkaProducers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKafkaProducers(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.listKafkaProducers']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.listKafkaProducers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -920,18 +920,18 @@ export const BatchControllerApiFp = function (configuration?: Configuration) {
         async stopAllTasks(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.stopAllTasks(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BatchControllerApi.stopAllTasks']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestBatchControllerApi.stopAllTasks']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * BatchControllerApi - factory interface
+ * RestBatchControllerApi - factory interface
  * @export
  */
-export const BatchControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = BatchControllerApiFp(configuration)
+export const RestBatchControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestBatchControllerApiFp(configuration)
     return {
         /**
          * 
@@ -942,7 +942,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
             return localVarFp.batchStatus(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -952,7 +952,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
             return localVarFp.changeKafkaConsumerTaskCount(taskName, numThreads, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {number} [numThreads] 
          * @param {*} [options] Override http request option.
@@ -962,7 +962,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
             return localVarFp.changeKafkaProducerTaskCount(taskName, numThreads, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -971,7 +971,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
             return localVarFp.dropKafkaConsumerTask(taskName, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {string} [taskName] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -984,7 +984,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
          * @param {string} [topicName]
          * @param {number} [numThreads]
          * @param {number} [batchSize]
-         * @param {number} [maxTries]
+         * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -1000,7 +1000,7 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -1037,66 +1037,66 @@ export const BatchControllerApiFactory = function (configuration?: Configuration
 };
 
 /**
- * BatchControllerApi - object-oriented interface
+ * RestBatchControllerApi - object-oriented interface
  * @export
- * @class BatchControllerApi
+ * @class RestBatchControllerApi
  * @extends {BaseAPI}
  */
-export class BatchControllerApi extends BaseAPI {
+export class RestBatchControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public batchStatus(options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).batchStatus(options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).batchStatus(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {string} [taskName] 
      * @param {number} [numThreads] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public changeKafkaConsumerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).changeKafkaConsumerTaskCount(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).changeKafkaConsumerTaskCount(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {string} [taskName] 
      * @param {number} [numThreads] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public changeKafkaProducerTaskCount(taskName?: string, numThreads?: number, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).changeKafkaProducerTaskCount(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).changeKafkaProducerTaskCount(taskName, numThreads, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {string} [taskName] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public dropKafkaConsumerTask(taskName?: string, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).dropKafkaConsumerTask(taskName, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).dropKafkaConsumerTask(taskName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {string} [taskName] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public dropKafkaProducerTask(taskName?: string, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).dropKafkaProducerTask(taskName, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).dropKafkaProducerTask(taskName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1104,15 +1104,15 @@ export class BatchControllerApi extends BaseAPI {
      * @param {string} [topicName]
      * @param {number} [numThreads]
      * @param {number} [batchSize]
-     * @param {number} [maxTries]
+     * @param {number} [maxTries] 
      * @param {number} [sleepMillis] 
      * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public generateKafkaConsumerTask(topicName?: string, numThreads?: number, batchSize?: number, maxTries?: number, sleepMillis?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).generateKafkaConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, dataClass, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).generateKafkaConsumerTask(topicName, numThreads, batchSize, maxTries, sleepMillis, dataClass, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1122,59 +1122,59 @@ export class BatchControllerApi extends BaseAPI {
      * @param {number} [batchSize]
      * @param {number} [startId]
      * @param {number} [correlatedStartIdInc]
-     * @param {number} [correlatedEndIdInc]
+     * @param {number} [correlatedEndIdInc] 
      * @param {number} [sleepMillis] 
      * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public generateKafkaProducerTask(topicName?: string, numThreads?: number, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, sleepMillis?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).generateKafkaProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, dataClass, options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).generateKafkaProducerTask(topicName, numThreads, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, sleepMillis, dataClass, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public listKafkaConsumers(options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).listKafkaConsumers(options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).listKafkaConsumers(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public listKafkaProducers(options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).listKafkaProducers(options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).listKafkaProducers(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BatchControllerApi
+     * @memberof RestBatchControllerApi
      */
     public stopAllTasks(options?: RawAxiosRequestConfig) {
-        return BatchControllerApiFp(this.configuration).stopAllTasks(options).then((request) => request(this.axios, this.basePath));
+        return RestBatchControllerApiFp(this.configuration).stopAllTasks(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 
 /**
- * ConfigControllerApi - axios parameter creator
+ * RestConfigControllerApi - axios parameter creator
  * @export
  */
-export const ConfigControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestConfigControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          *
-         * @param {boolean} body
+         * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1207,7 +1207,7 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1236,14 +1236,14 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          *
-         * @param {boolean} body
+         * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        enableOpensearch: async (body: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        enableOpenSearch: async (body: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
-            assertParamExists('enableOpensearch', 'body', body)
-            const localVarPath = `/server/enableOpensearch`;
+            assertParamExists('enableOpenSearch', 'body', body)
+            const localVarPath = `/server/enableOpenSearch`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1269,12 +1269,12 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        enableOpensearch1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/server/enableOpensearch`;
+        enableOpenSearch1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/server/enableOpenSearch`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1416,14 +1416,14 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          *
-         * @param {OpensearchConnectionDTO} opensearchConnectionDTO
+         * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        opensearchConnection: async (opensearchConnectionDTO: OpensearchConnectionDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'opensearchConnectionDTO' is not null or undefined
-            assertParamExists('opensearchConnection', 'opensearchConnectionDTO', opensearchConnectionDTO)
-            const localVarPath = `/server/opensearchConnection`;
+        openSearchConnection: async (openSearchConnectionDTO: OpenSearchConnectionDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'openSearchConnectionDTO' is not null or undefined
+            assertParamExists('openSearchConnection', 'openSearchConnectionDTO', openSearchConnectionDTO)
+            const localVarPath = `/server/openSearchConnection`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1441,7 +1441,7 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(opensearchConnectionDTO, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(openSearchConnectionDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1449,12 +1449,12 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        opensearchConnection1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/server/opensearchConnection`;
+        openSearchConnection1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/server/openSearchConnection`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1481,14 +1481,14 @@ export const ConfigControllerApiAxiosParamCreator = function (configuration?: Co
 };
 
 /**
- * ConfigControllerApi - functional programming interface
+ * RestConfigControllerApi - functional programming interface
  * @export
  */
-export const ConfigControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = ConfigControllerApiAxiosParamCreator(configuration)
+export const RestConfigControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestConfigControllerApiAxiosParamCreator(configuration)
     return {
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1496,45 +1496,45 @@ export const ConfigControllerApiFp = function (configuration?: Configuration) {
         async enableKafka(body: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.enableKafka(body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.enableKafka']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.enableKafka']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async enableKafka1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.enableKafka1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.enableKafka1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.enableKafka1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          *
-         * @param {boolean} body
+         * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async enableOpensearch(body: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enableOpensearch(body, options);
+        async enableOpenSearch(body: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.enableOpenSearch(body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.enableOpensearch']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.enableOpenSearch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async enableOpensearch1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enableOpensearch1(options);
+        async enableOpenSearch1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.enableOpenSearch1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.enableOpensearch1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.enableOpenSearch1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1543,7 +1543,7 @@ export const ConfigControllerApiFp = function (configuration?: Configuration) {
         }>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.kafkaAckTypes(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.kafkaAckTypes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.kafkaAckTypes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1554,7 +1554,7 @@ export const ConfigControllerApiFp = function (configuration?: Configuration) {
         async kafkaCompressionTypes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.kafkaCompressionTypes(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.kafkaCompressionTypes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.kafkaCompressionTypes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1566,7 +1566,7 @@ export const ConfigControllerApiFp = function (configuration?: Configuration) {
         async kafkaConnection(kafkaConnectionConfigDTO: KafkaConnectionConfigDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.kafkaConnection(kafkaConnectionConfigDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.kafkaConnection']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.kafkaConnection']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1577,45 +1577,45 @@ export const ConfigControllerApiFp = function (configuration?: Configuration) {
         async kafkaConnection1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<KafkaConnectionConfigDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.kafkaConnection1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.kafkaConnection1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.kafkaConnection1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          *
-         * @param {OpensearchConnectionDTO} opensearchConnectionDTO
+         * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async opensearchConnection(opensearchConnectionDTO: OpensearchConnectionDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.opensearchConnection(opensearchConnectionDTO, options);
+        async openSearchConnection(openSearchConnectionDTO: OpenSearchConnectionDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.openSearchConnection(openSearchConnectionDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.opensearchConnection']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.openSearchConnection']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async opensearchConnection1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OpensearchConnectionDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.opensearchConnection1(options);
+        async openSearchConnection1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OpenSearchConnectionDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.openSearchConnection1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConfigControllerApi.opensearchConnection1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConfigControllerApi.openSearchConnection1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * ConfigControllerApi - factory interface
+ * RestConfigControllerApi - factory interface
  * @export
  */
-export const ConfigControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ConfigControllerApiFp(configuration)
+export const RestConfigControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestConfigControllerApiFp(configuration)
     return {
         /**
          *
-         * @param {boolean} body
+         * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1623,7 +1623,7 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
             return localVarFp.enableKafka(body, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1632,20 +1632,20 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
         },
         /**
          *
-         * @param {boolean} body
+         * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        enableOpensearch(body: boolean, options?: any): AxiosPromise<void> {
-            return localVarFp.enableOpensearch(body, options).then((request) => request(axios, basePath));
+        enableOpenSearch(body: boolean, options?: any): AxiosPromise<void> {
+            return localVarFp.enableOpenSearch(body, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        enableOpensearch1(options?: any): AxiosPromise<boolean> {
-            return localVarFp.enableOpensearch1(options).then((request) => request(axios, basePath));
+        enableOpenSearch1(options?: any): AxiosPromise<boolean> {
+            return localVarFp.enableOpenSearch1(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1682,91 +1682,91 @@ export const ConfigControllerApiFactory = function (configuration?: Configuratio
         },
         /**
          *
-         * @param {OpensearchConnectionDTO} opensearchConnectionDTO
+         * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        opensearchConnection(opensearchConnectionDTO: OpensearchConnectionDTO, options?: any): AxiosPromise<void> {
-            return localVarFp.opensearchConnection(opensearchConnectionDTO, options).then((request) => request(axios, basePath));
+        openSearchConnection(openSearchConnectionDTO: OpenSearchConnectionDTO, options?: any): AxiosPromise<void> {
+            return localVarFp.openSearchConnection(openSearchConnectionDTO, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        opensearchConnection1(options?: any): AxiosPromise<OpensearchConnectionDTO> {
-            return localVarFp.opensearchConnection1(options).then((request) => request(axios, basePath));
+        openSearchConnection1(options?: any): AxiosPromise<OpenSearchConnectionDTO> {
+            return localVarFp.openSearchConnection1(options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * ConfigControllerApi - object-oriented interface
+ * RestConfigControllerApi - object-oriented interface
  * @export
- * @class ConfigControllerApi
+ * @class RestConfigControllerApi
  * @extends {BaseAPI}
  */
-export class ConfigControllerApi extends BaseAPI {
+export class RestConfigControllerApi extends BaseAPI {
     /**
      *
-     * @param {boolean} body
+     * @param {boolean} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
     public enableKafka(body: boolean, options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).enableKafka(body, options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).enableKafka(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
     public enableKafka1(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).enableKafka1(options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).enableKafka1(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      *
-     * @param {boolean} body
+     * @param {boolean} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
-    public enableOpensearch(body: boolean, options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).enableOpensearch(body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConfigControllerApi
-     */
-    public enableOpensearch1(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).enableOpensearch1(options).then((request) => request(this.axios, this.basePath));
+    public enableOpenSearch(body: boolean, options?: RawAxiosRequestConfig) {
+        return RestConfigControllerApiFp(this.configuration).enableOpenSearch(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
+     */
+    public enableOpenSearch1(options?: RawAxiosRequestConfig) {
+        return RestConfigControllerApiFp(this.configuration).enableOpenSearch1(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RestConfigControllerApi
      */
     public kafkaAckTypes(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).kafkaAckTypes(options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).kafkaAckTypes(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
     public kafkaCompressionTypes(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).kafkaCompressionTypes(options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).kafkaCompressionTypes(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1774,51 +1774,51 @@ export class ConfigControllerApi extends BaseAPI {
      * @param {KafkaConnectionConfigDTO} kafkaConnectionConfigDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
     public kafkaConnection(kafkaConnectionConfigDTO: KafkaConnectionConfigDTO, options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).kafkaConnection(kafkaConnectionConfigDTO, options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).kafkaConnection(kafkaConnectionConfigDTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
     public kafkaConnection1(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).kafkaConnection1(options).then((request) => request(this.axios, this.basePath));
+        return RestConfigControllerApiFp(this.configuration).kafkaConnection1(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      *
-     * @param {OpensearchConnectionDTO} opensearchConnectionDTO
+     * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
-    public opensearchConnection(opensearchConnectionDTO: OpensearchConnectionDTO, options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).opensearchConnection(opensearchConnectionDTO, options).then((request) => request(this.axios, this.basePath));
+    public openSearchConnection(openSearchConnectionDTO: OpenSearchConnectionDTO, options?: RawAxiosRequestConfig) {
+        return RestConfigControllerApiFp(this.configuration).openSearchConnection(openSearchConnectionDTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConfigControllerApi
+     * @memberof RestConfigControllerApi
      */
-    public opensearchConnection1(options?: RawAxiosRequestConfig) {
-        return ConfigControllerApiFp(this.configuration).opensearchConnection1(options).then((request) => request(this.axios, this.basePath));
+    public openSearchConnection1(options?: RawAxiosRequestConfig) {
+        return RestConfigControllerApiFp(this.configuration).openSearchConnection1(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 
 /**
- * ConsumerControllerApi - axios parameter creator
+ * RestConsumerControllerApi - axios parameter creator
  * @export
  */
-export const ConsumerControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestConsumerControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -1850,9 +1850,38 @@ export const ConsumerControllerApiAxiosParamCreator = function (configuration?: 
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cleanOpenSearchConnectionPool: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/consumer/cleanOpenSearchConnectionPool`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = {method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         *
          * @param {string} [topicName]
          * @param {number} [server]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -1901,15 +1930,69 @@ export const ConsumerControllerApiAxiosParamCreator = function (configuration?: 
                 options: localVarRequestOptions,
             };
         },
+        /**
+         *
+         * @param {string} [indexName]
+         * @param {number} [startId]
+         * @param {number} [endId]
+         * @param {number} [batchSize]
+         * @param {string} [dataClass]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generateOpenSearchLoad1: async (indexName?: string, startId?: number, endId?: number, batchSize?: number, dataClass?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/consumer/generateOpenSearchLoad`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = {method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (indexName !== undefined) {
+                localVarQueryParameter['indexName'] = indexName;
+            }
+
+            if (startId !== undefined) {
+                localVarQueryParameter['startId'] = startId;
+            }
+
+            if (endId !== undefined) {
+                localVarQueryParameter['endId'] = endId;
+            }
+
+            if (batchSize !== undefined) {
+                localVarQueryParameter['batchSize'] = batchSize;
+            }
+
+            if (dataClass !== undefined) {
+                localVarQueryParameter['dataClass'] = dataClass;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
 /**
- * ConsumerControllerApi - functional programming interface
+ * RestConsumerControllerApi - functional programming interface
  * @export
  */
-export const ConsumerControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = ConsumerControllerApiAxiosParamCreator(configuration)
+export const RestConsumerControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestConsumerControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -1919,14 +2002,25 @@ export const ConsumerControllerApiFp = function (configuration?: Configuration) 
         async cleanKafkaConnectionPool1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cleanKafkaConnectionPool1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConsumerControllerApi.cleanKafkaConnectionPool1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConsumerControllerApi.cleanKafkaConnectionPool1']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async cleanOpenSearchConnectionPool(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cleanOpenSearchConnectionPool(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RestConsumerControllerApi.cleanOpenSearchConnectionPool']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          *
          * @param {string} [topicName]
          * @param {number} [server]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -1935,18 +2029,34 @@ export const ConsumerControllerApiFp = function (configuration?: Configuration) 
         async generateKafkaLoad1(topicName?: string, server?: number, batchSize?: number, maxTries?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsumerStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateKafkaLoad1(topicName, server, batchSize, maxTries, dataClass, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConsumerControllerApi.generateKafkaLoad1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestConsumerControllerApi.generateKafkaLoad1']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         *
+         * @param {string} [indexName]
+         * @param {number} [startId]
+         * @param {number} [endId]
+         * @param {number} [batchSize]
+         * @param {string} [dataClass]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generateOpenSearchLoad1(indexName?: string, startId?: number, endId?: number, batchSize?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsumerStatus>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generateOpenSearchLoad1(indexName, startId, endId, batchSize, dataClass, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RestConsumerControllerApi.generateOpenSearchLoad1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * ConsumerControllerApi - factory interface
+ * RestConsumerControllerApi - factory interface
  * @export
  */
-export const ConsumerControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ConsumerControllerApiFp(configuration)
+export const RestConsumerControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestConsumerControllerApiFp(configuration)
     return {
         /**
          * 
@@ -1958,9 +2068,17 @@ export const ConsumerControllerApiFactory = function (configuration?: Configurat
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cleanOpenSearchConnectionPool(options?: any): AxiosPromise<string> {
+            return localVarFp.cleanOpenSearchConnectionPool(options).then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} [topicName]
          * @param {number} [server]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -1969,49 +2087,87 @@ export const ConsumerControllerApiFactory = function (configuration?: Configurat
         generateKafkaLoad1(topicName?: string, server?: number, batchSize?: number, maxTries?: number, dataClass?: string, options?: any): AxiosPromise<ConsumerStatus> {
             return localVarFp.generateKafkaLoad1(topicName, server, batchSize, maxTries, dataClass, options).then((request) => request(axios, basePath));
         },
+        /**
+         *
+         * @param {string} [indexName]
+         * @param {number} [startId]
+         * @param {number} [endId]
+         * @param {number} [batchSize]
+         * @param {string} [dataClass]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generateOpenSearchLoad1(indexName?: string, startId?: number, endId?: number, batchSize?: number, dataClass?: string, options?: any): AxiosPromise<ConsumerStatus> {
+            return localVarFp.generateOpenSearchLoad1(indexName, startId, endId, batchSize, dataClass, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
 /**
- * ConsumerControllerApi - object-oriented interface
+ * RestConsumerControllerApi - object-oriented interface
  * @export
- * @class ConsumerControllerApi
+ * @class RestConsumerControllerApi
  * @extends {BaseAPI}
  */
-export class ConsumerControllerApi extends BaseAPI {
+export class RestConsumerControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConsumerControllerApi
+     * @memberof RestConsumerControllerApi
      */
     public cleanKafkaConnectionPool1(options?: RawAxiosRequestConfig) {
-        return ConsumerControllerApiFp(this.configuration).cleanKafkaConnectionPool1(options).then((request) => request(this.axios, this.basePath));
+        return RestConsumerControllerApiFp(this.configuration).cleanKafkaConnectionPool1(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RestConsumerControllerApi
+     */
+    public cleanOpenSearchConnectionPool(options?: RawAxiosRequestConfig) {
+        return RestConsumerControllerApiFp(this.configuration).cleanOpenSearchConnectionPool(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      *
      * @param {string} [topicName]
      * @param {number} [server]
-     * @param {number} [batchSize]
+     * @param {number} [batchSize] 
      * @param {number} [maxTries] 
      * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConsumerControllerApi
+     * @memberof RestConsumerControllerApi
      */
     public generateKafkaLoad1(topicName?: string, server?: number, batchSize?: number, maxTries?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
-        return ConsumerControllerApiFp(this.configuration).generateKafkaLoad1(topicName, server, batchSize, maxTries, dataClass, options).then((request) => request(this.axios, this.basePath));
+        return RestConsumerControllerApiFp(this.configuration).generateKafkaLoad1(topicName, server, batchSize, maxTries, dataClass, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     *
+     * @param {string} [indexName]
+     * @param {number} [startId]
+     * @param {number} [endId]
+     * @param {number} [batchSize]
+     * @param {string} [dataClass]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RestConsumerControllerApi
+     */
+    public generateOpenSearchLoad1(indexName?: string, startId?: number, endId?: number, batchSize?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
+        return RestConsumerControllerApiFp(this.configuration).generateOpenSearchLoad1(indexName, startId, endId, batchSize, dataClass, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 
 /**
- * InfoControllerApi - axios parameter creator
+ * RestInfoControllerApi - axios parameter creator
  * @export
  */
-export const InfoControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestInfoControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -2045,11 +2201,11 @@ export const InfoControllerApiAxiosParamCreator = function (configuration?: Conf
 };
 
 /**
- * InfoControllerApi - functional programming interface
+ * RestInfoControllerApi - functional programming interface
  * @export
  */
-export const InfoControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = InfoControllerApiAxiosParamCreator(configuration)
+export const RestInfoControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestInfoControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -2059,18 +2215,18 @@ export const InfoControllerApiFp = function (configuration?: Configuration) {
         async about(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<About>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.about(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InfoControllerApi.about']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestInfoControllerApi.about']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * InfoControllerApi - factory interface
+ * RestInfoControllerApi - factory interface
  * @export
  */
-export const InfoControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = InfoControllerApiFp(configuration)
+export const RestInfoControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestInfoControllerApiFp(configuration)
     return {
         /**
          * 
@@ -2084,30 +2240,30 @@ export const InfoControllerApiFactory = function (configuration?: Configuration,
 };
 
 /**
- * InfoControllerApi - object-oriented interface
+ * RestInfoControllerApi - object-oriented interface
  * @export
- * @class InfoControllerApi
+ * @class RestInfoControllerApi
  * @extends {BaseAPI}
  */
-export class InfoControllerApi extends BaseAPI {
+export class RestInfoControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InfoControllerApi
+     * @memberof RestInfoControllerApi
      */
     public about(options?: RawAxiosRequestConfig) {
-        return InfoControllerApiFp(this.configuration).about(options).then((request) => request(this.axios, this.basePath));
+        return RestInfoControllerApiFp(this.configuration).about(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 
 /**
- * LogControllerApi - axios parameter creator
+ * RestLogControllerApi - axios parameter creator
  * @export
  */
-export const LogControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestLogControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -2174,11 +2330,11 @@ export const LogControllerApiAxiosParamCreator = function (configuration?: Confi
 };
 
 /**
- * LogControllerApi - functional programming interface
+ * RestLogControllerApi - functional programming interface
  * @export
  */
-export const LogControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = LogControllerApiAxiosParamCreator(configuration)
+export const RestLogControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestLogControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -2188,7 +2344,7 @@ export const LogControllerApiFp = function (configuration?: Configuration) {
         async list(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ClassStatistic>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['LogControllerApi.list']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestLogControllerApi.list']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2200,18 +2356,18 @@ export const LogControllerApiFp = function (configuration?: Configuration) {
         async listClass(className?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ClassStatistic>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listClass(className, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['LogControllerApi.listClass']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestLogControllerApi.listClass']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * LogControllerApi - factory interface
+ * RestLogControllerApi - factory interface
  * @export
  */
-export const LogControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = LogControllerApiFp(configuration)
+export const RestLogControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestLogControllerApiFp(configuration)
     return {
         /**
          * 
@@ -2234,20 +2390,20 @@ export const LogControllerApiFactory = function (configuration?: Configuration, 
 };
 
 /**
- * LogControllerApi - object-oriented interface
+ * RestLogControllerApi - object-oriented interface
  * @export
- * @class LogControllerApi
+ * @class RestLogControllerApi
  * @extends {BaseAPI}
  */
-export class LogControllerApi extends BaseAPI {
+export class RestLogControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof LogControllerApi
+     * @memberof RestLogControllerApi
      */
     public list(options?: RawAxiosRequestConfig) {
-        return LogControllerApiFp(this.configuration).list(options).then((request) => request(this.axios, this.basePath));
+        return RestLogControllerApiFp(this.configuration).list(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2255,20 +2411,20 @@ export class LogControllerApi extends BaseAPI {
      * @param {string} [className] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof LogControllerApi
+     * @memberof RestLogControllerApi
      */
     public listClass(className?: string, options?: RawAxiosRequestConfig) {
-        return LogControllerApiFp(this.configuration).listClass(className, options).then((request) => request(this.axios, this.basePath));
+        return RestLogControllerApiFp(this.configuration).listClass(className, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 
 /**
- * ProducerControllerApi - axios parameter creator
+ * RestProducerControllerApi - axios parameter creator
  * @export
  */
-export const ProducerControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RestProducerControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -2299,7 +2455,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2329,7 +2485,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
         },
         /**
          *
-         * @param {Array<string>} [topics]
+         * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
          * @param {*} [options] Override http request option.
@@ -2375,7 +2531,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
          * @param {number} [replicas]
-         * @param {number} [refreshSeconds]
+         * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2454,7 +2610,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
         },
         /**
          *
-         * @param {Array<string>} [indexes]
+         * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2492,7 +2648,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
          * @param {number} [server]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -2556,7 +2712,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
          * @param {number} [correlatedEndIdInc]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2693,7 +2849,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2721,7 +2877,7 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2753,11 +2909,11 @@ export const ProducerControllerApiAxiosParamCreator = function (configuration?: 
 };
 
 /**
- * ProducerControllerApi - functional programming interface
+ * RestProducerControllerApi - functional programming interface
  * @export
  */
-export const ProducerControllerApiFp = function (configuration?: Configuration) {
-    const localVarAxiosParamCreator = ProducerControllerApiAxiosParamCreator(configuration)
+export const RestProducerControllerApiFp = function (configuration?: Configuration) {
+    const localVarAxiosParamCreator = RestProducerControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -2767,23 +2923,23 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async cleanKafkaConnectionPool(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cleanKafkaConnectionPool(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.cleanKafkaConnectionPool']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.cleanKafkaConnectionPool']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async cleanOpenSearchConnection(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cleanOpenSearchConnection(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.cleanOpenSearchConnection']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.cleanOpenSearchConnection']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          *
-         * @param {Array<string>} [topics]
+         * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
          * @param {*} [options] Override http request option.
@@ -2792,7 +2948,7 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createKafkaTopics(topics, partitions, replication, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.createKafkaTopics']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.createKafkaTopics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2800,14 +2956,14 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
          * @param {number} [replicas]
-         * @param {number} [refreshSeconds]
+         * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async createOpenSearchIndexes(indexes?: Array<string>, shards?: number, replicas?: number, refreshSeconds?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createOpenSearchIndexes(indexes, shards, replicas, refreshSeconds, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.createOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.createOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2819,19 +2975,19 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async deleteKafkaTopics(topics?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteKafkaTopics(topics, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.deleteKafkaTopics']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.deleteKafkaTopics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          *
-         * @param {Array<string>} [indexes]
+         * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async deleteOpenSearchIndexes(indexes?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteOpenSearchIndexes(indexes, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.deleteOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.deleteOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2840,7 +2996,7 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
          * @param {number} [server]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -2849,7 +3005,7 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async generateKafkaLoad(topicName?: string, server?: number, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProducerStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateKafkaLoad(topicName, server, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.generateKafkaLoad']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.generateKafkaLoad']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2859,14 +3015,14 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
          * @param {number} [correlatedEndIdInc]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async generateOpenSearchLoad(indexName?: string, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, dataClass?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProducerStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateOpenSearchLoad(indexName, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.generateOpenSearchLoad']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.generateOpenSearchLoad']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2877,7 +3033,7 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async listDataTypes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listDataTypes(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.listDataTypes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.listDataTypes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2888,7 +3044,7 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async listKafkaDataClasses(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKafkaDataClasses(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.listKafkaDataClasses']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.listKafkaDataClasses']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2899,40 +3055,40 @@ export const ProducerControllerApiFp = function (configuration?: Configuration) 
         async listKafkaTopics(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKafkaTopics(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.listKafkaTopics']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.listKafkaTopics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async listOpenSearchDataClasses(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listOpenSearchDataClasses(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.listOpenSearchDataClasses']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.listOpenSearchDataClasses']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async listOpenSearchIndexes(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listOpenSearchIndexes(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProducerControllerApi.listOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.listOpenSearchIndexes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * ProducerControllerApi - factory interface
+ * RestProducerControllerApi - factory interface
  * @export
  */
-export const ProducerControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ProducerControllerApiFp(configuration)
+export const RestProducerControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RestProducerControllerApiFp(configuration)
     return {
         /**
          * 
@@ -2943,7 +3099,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
             return localVarFp.cleanKafkaConnectionPool(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2952,7 +3108,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
         },
         /**
          *
-         * @param {Array<string>} [topics]
+         * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
          * @param {*} [options] Override http request option.
@@ -2966,7 +3122,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
          * @param {number} [replicas]
-         * @param {number} [refreshSeconds]
+         * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2984,7 +3140,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
         },
         /**
          *
-         * @param {Array<string>} [indexes]
+         * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2997,7 +3153,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
          * @param {number} [server]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
@@ -3013,7 +3169,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
          * @param {number} [correlatedEndIdInc]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3045,7 +3201,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
             return localVarFp.listKafkaTopics(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3053,7 +3209,7 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
             return localVarFp.listOpenSearchDataClasses(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3064,43 +3220,43 @@ export const ProducerControllerApiFactory = function (configuration?: Configurat
 };
 
 /**
- * ProducerControllerApi - object-oriented interface
+ * RestProducerControllerApi - object-oriented interface
  * @export
- * @class ProducerControllerApi
+ * @class RestProducerControllerApi
  * @extends {BaseAPI}
  */
-export class ProducerControllerApi extends BaseAPI {
+export class RestProducerControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public cleanKafkaConnectionPool(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).cleanKafkaConnectionPool(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).cleanKafkaConnectionPool(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public cleanOpenSearchConnection(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).cleanOpenSearchConnection(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).cleanOpenSearchConnection(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      *
-     * @param {Array<string>} [topics]
+     * @param {Array<string>} [topics] 
      * @param {number} [partitions] 
      * @param {number} [replication] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).createKafkaTopics(topics, partitions, replication, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).createKafkaTopics(topics, partitions, replication, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3108,13 +3264,13 @@ export class ProducerControllerApi extends BaseAPI {
      * @param {Array<string>} [indexes]
      * @param {number} [shards]
      * @param {number} [replicas]
-     * @param {number} [refreshSeconds]
+     * @param {number} [refreshSeconds] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public createOpenSearchIndexes(indexes?: Array<string>, shards?: number, replicas?: number, refreshSeconds?: number, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).createOpenSearchIndexes(indexes, shards, replicas, refreshSeconds, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).createOpenSearchIndexes(indexes, shards, replicas, refreshSeconds, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3122,21 +3278,21 @@ export class ProducerControllerApi extends BaseAPI {
      * @param {Array<string>} [topics] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public deleteKafkaTopics(topics?: Array<string>, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).deleteKafkaTopics(topics, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).deleteKafkaTopics(topics, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      *
-     * @param {Array<string>} [indexes]
+     * @param {Array<string>} [indexes] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public deleteOpenSearchIndexes(indexes?: Array<string>, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).deleteOpenSearchIndexes(indexes, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).deleteOpenSearchIndexes(indexes, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3145,15 +3301,15 @@ export class ProducerControllerApi extends BaseAPI {
      * @param {number} [server]
      * @param {number} [batchSize]
      * @param {number} [startId]
-     * @param {number} [correlatedStartIdInc]
+     * @param {number} [correlatedStartIdInc] 
      * @param {number} [correlatedEndIdInc] 
      * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public generateKafkaLoad(topicName?: string, server?: number, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).generateKafkaLoad(topicName, server, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).generateKafkaLoad(topicName, server, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3163,63 +3319,63 @@ export class ProducerControllerApi extends BaseAPI {
      * @param {number} [startId]
      * @param {number} [correlatedStartIdInc]
      * @param {number} [correlatedEndIdInc]
-     * @param {string} [dataClass]
+     * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public generateOpenSearchLoad(indexName?: string, batchSize?: number, startId?: number, correlatedStartIdInc?: number, correlatedEndIdInc?: number, dataClass?: string, options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).generateOpenSearchLoad(indexName, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).generateOpenSearchLoad(indexName, batchSize, startId, correlatedStartIdInc, correlatedEndIdInc, dataClass, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public listDataTypes(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).listDataTypes(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).listDataTypes(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public listKafkaDataClasses(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).listKafkaDataClasses(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).listKafkaDataClasses(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public listKafkaTopics(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).listKafkaTopics(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).listKafkaTopics(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public listOpenSearchDataClasses(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).listOpenSearchDataClasses(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).listOpenSearchDataClasses(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProducerControllerApi
+     * @memberof RestProducerControllerApi
      */
     public listOpenSearchIndexes(options?: RawAxiosRequestConfig) {
-        return ProducerControllerApiFp(this.configuration).listOpenSearchIndexes(options).then((request) => request(this.axios, this.basePath));
+        return RestProducerControllerApiFp(this.configuration).listOpenSearchIndexes(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

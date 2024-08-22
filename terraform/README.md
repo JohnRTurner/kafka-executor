@@ -12,7 +12,7 @@
 * Copy terraform.tfvars.sample to terraform.tfvars
 * Update terrform.tfvars with the relevant data
     * Follow these steps to get an [Aiven API Key](Aiven_API.md)
-    * Use a [github token](GitHub_Token.md) to allow secure access for GitHub.
+  * Use a [GitHub token](GitHub_Token.md) to allow secure access for GitHub.
     * [Generate a key](AWS_key_pair.md) for SSH to the AWS instances.
     * [Set the temporary Access](AWS_Access_Secret_Session.md) for accessing AWS, these will expire and need to be
       reset.

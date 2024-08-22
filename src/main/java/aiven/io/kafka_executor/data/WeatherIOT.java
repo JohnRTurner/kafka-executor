@@ -1,7 +1,7 @@
 package aiven.io.kafka_executor.data;
 
-import aiven.io.kafka_executor.data.avro.AvroUtils;
-import aiven.io.kafka_executor.data.json.JsonUtils;
+import aiven.io.kafka_executor.data.utils.AvroUtils;
+import aiven.io.kafka_executor.data.utils.JsonUtils;
 import com.google.protobuf.Descriptors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorFromPojo;
+import static aiven.io.kafka_executor.data.utils.ProtobufUtils.getDescriptorFromPojo;
 
 @Component
 @NoArgsConstructor
@@ -67,7 +67,7 @@ public class WeatherIOT implements DataInterface {
     }
 
     @Override
-    public XContentBuilder retOpensearchSchema() {
+    public XContentBuilder retOpenSearchSchema() {
         return openSearchSchema;
     }
 

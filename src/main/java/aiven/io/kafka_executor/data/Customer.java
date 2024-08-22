@@ -1,7 +1,7 @@
 package aiven.io.kafka_executor.data;
 
-import aiven.io.kafka_executor.data.avro.AvroUtils;
-import aiven.io.kafka_executor.data.json.JsonUtils;
+import aiven.io.kafka_executor.data.utils.AvroUtils;
+import aiven.io.kafka_executor.data.utils.JsonUtils;
 import com.google.protobuf.Descriptors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import org.apache.avro.Schema;
 import org.opensearch.core.xcontent.XContentBuilder;
 import org.springframework.stereotype.Component;
 
-import static aiven.io.kafka_executor.data.protobuf.ProtobufUtils.getDescriptorFromPojo;
+import static aiven.io.kafka_executor.data.utils.ProtobufUtils.getDescriptorFromPojo;
 
 @Component
 @NoArgsConstructor
@@ -62,7 +62,7 @@ public class Customer implements DataInterface {
     }
 
     @Override
-    public XContentBuilder retOpensearchSchema() {
+    public XContentBuilder retOpenSearchSchema() {
         return openSearchSchema;
     }
 

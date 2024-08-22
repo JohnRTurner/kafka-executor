@@ -46,7 +46,7 @@
       ```sh
       git clone https://<your-token>@github.com/aiven/kafka-executor.git
       ```
-    - Update the git command in the terraform.tfvars file.
+    - Update the git command in terraform.tfvars file.
 
 By following these steps, you create a PAT with the least permissions required to clone a specific repository, ensuring
 fine-grained access control.

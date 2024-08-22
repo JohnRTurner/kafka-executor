@@ -28,7 +28,7 @@
     - Save the downloaded private key file (`.pem` or `.ppk`) in a secure location on your computer. Make sure it is not
       accessible to unauthorized users.
 
-8. **Set Permissions for the Private Key File (Linux/MacOS)**
+8. **Set Permissions for the Private Key File (Linux/macOS)**
     - If you are using a Unix-based system, set the correct permissions for the private key file to ensure it is not
       publicly viewable. Use the following command in your terminal:
       ```sh
@@ -42,6 +42,6 @@
       ```sh
       ssh -i /path/to/your-key-pair.pem ec2-user@your-ec2-instance-public-dns
       ```
-10. **Used the key in the terraform.tfvars for the dg_key_pair_name**
+10. **Used the key in terraform.tfvars for the dg_key_pair_name**
 
 By following these steps, you can generate a key pair in AWS for secure access to your EC2 instances.
