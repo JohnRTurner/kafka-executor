@@ -1,7 +1,6 @@
 package aiven.io.kafka_executor.data;
 
 import lombok.Getter;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Getter
@@ -15,8 +14,6 @@ public enum DataClass {
     WEATHER_IOT_JSON(aiven.io.kafka_executor.data.WeatherIOT.class, KafkaFormat.JSON),
     WEATHER_IOT_AVRO(aiven.io.kafka_executor.data.WeatherIOT.class, KafkaFormat.AVRO),
     WEATHER_IOT_PROTOBUF(aiven.io.kafka_executor.data.WeatherIOT.class, KafkaFormat.PROTOBUF);
-
-    private static final Logger log = LoggerFactory.getLogger(DataClass.class);
 
     private final Class<? extends DataInterface> dataInterfaceClass;
     private final KafkaFormat kafkaFormat;

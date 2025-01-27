@@ -1,7 +1,9 @@
 package aiven.io.kafka_executor.config;
 
 import aiven.io.kafka_executor.consumer.KafkaLoadConsumer;
+import aiven.io.kafka_executor.consumer.OpenSearchLoadConsumer;
 import aiven.io.kafka_executor.producer.KafkaLoadProducer;
+import aiven.io.kafka_executor.producer.OpenSearchLoadProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.record.CompressionType;
@@ -85,6 +87,8 @@ public class RestConfigController {
     public void openSearchConnection(@RequestBody OpenSearchConnectionDTO configDTO, HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
         openSearchConnectionConfig.loadConfig(configDTO);
+        OpenSearchLoadConsumer.clean(openSearchConnectionConfig);
+        OpenSearchLoadProducer.clean(openSearchConnectionConfig);
     }
 
     @RequestMapping(value = "/enableOpenSearch", method = RequestMethod.GET)

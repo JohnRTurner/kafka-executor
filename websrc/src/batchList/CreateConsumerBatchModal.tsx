@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Col, Row} from "react-bootstrap";
 
-interface CreateConsumerBatchModalProps {
+export interface CreateConsumerBatchModalProps {
     isOpen: boolean;
     onRequestClose: () => void;
     onCreate: () => void;
@@ -21,24 +21,10 @@ interface CreateConsumerBatchModalProps {
     setSleepMillis: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
-                                                                               isOpen,
-                                                                               onRequestClose,
-                                                                               onCreate,
-                                                                               topicTypes,
-                                                                               topicName,
-                                                                               setTopicName,
-                                                                               numThreads,
-                                                                               setNumThreads,
-                                                                               batchSize,
-                                                                               setBatchSize,
-                                                                               maxTries,
-                                                                               setMaxTries,
-                                                                               sleepMillis,
-                                                                               setSleepMillis,
-                                                                           }) => {
+const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = (createConsumerBatchModalProps: CreateConsumerBatchModalProps) => {
     return (
-        <Modal show={isOpen} onHide={onRequestClose} scrollable={true}>
+        <Modal show={createConsumerBatchModalProps.isOpen} onHide={createConsumerBatchModalProps.onRequestClose}
+               scrollable={true}>
             <Modal.Header closeButton>
                 <Modal.Title>Create Consumer Batch</Modal.Title>
             </Modal.Header>
@@ -49,10 +35,10 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 as="select"
-                                value={topicName}
-                                onChange={(e) => setTopicName(e.target.value)}
+                                value={createConsumerBatchModalProps.topicName}
+                                onChange={(e) => createConsumerBatchModalProps.setTopicName(e.target.value)}
                             >
-                                {topicTypes.map((type, index) => (
+                                {createConsumerBatchModalProps.topicTypes.map((type, index) => (
                                     <option key={index} value={type}>
                                         {type}
                                     </option>
@@ -65,8 +51,8 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={numThreads}
-                                onChange={(e) => setNumThreads(Number(e.target.value))}
+                                value={createConsumerBatchModalProps.numThreads}
+                                onChange={(e) => createConsumerBatchModalProps.setNumThreads(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -75,8 +61,8 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={batchSize}
-                                onChange={(e) => setBatchSize(Number(e.target.value))}
+                                value={createConsumerBatchModalProps.batchSize}
+                                onChange={(e) => createConsumerBatchModalProps.setBatchSize(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -85,8 +71,8 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={maxTries}
-                                onChange={(e) => setMaxTries(Number(e.target.value))}
+                                value={createConsumerBatchModalProps.maxTries}
+                                onChange={(e) => createConsumerBatchModalProps.setMaxTries(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -95,18 +81,18 @@ const CreateConsumerBatchModal: React.FC<CreateConsumerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={sleepMillis}
-                                onChange={(e) => setSleepMillis(Number(e.target.value))}
+                                value={createConsumerBatchModalProps.sleepMillis}
+                                onChange={(e) => createConsumerBatchModalProps.setSleepMillis(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onRequestClose}>
+                <Button variant="secondary" onClick={createConsumerBatchModalProps.onRequestClose}>
                     Cancel
                 </Button>
-                <Button variant="primary" onClick={onCreate}>
+                <Button variant="primary" onClick={createConsumerBatchModalProps.onCreate}>
                     Create
                 </Button>
             </Modal.Footer>

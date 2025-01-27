@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal, Tab, Tabs} from 'react-bootstrap';
-import {KafkaConnectionConfigDTO, RestConfigControllerApi} from "../api";
-import apiConfig from "../apiConfig.tsx";
+import {KafkaConnectionConfigDTO} from "../../api";
 import BasicTab from './BasicTab.tsx';
 import SchemaTab from './SchemaTab.tsx';
 import ProducerTab from './ProducerTab.tsx';
 import ConsumerTab from './ConsumerTab.tsx';
+import {configController} from "../../controllers";
 
-type ConnectionDialogProps = {
+export type ConnectionDialogProps = {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: ((result: string) => void) | undefined;
 };
 
-interface KeyValue {
+export interface KeyValue {
     key: string;
     value: string;
 }
@@ -25,9 +25,7 @@ const convertToKeyValueArray = (data: { [p: string]: string }): KeyValue[] => {
     }));
 };
 
-const configController = new RestConfigControllerApi(apiConfig);
-
-const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onConfirm}) => {
+const ConnectionDialog: React.FC<ConnectionDialogProps> = (connectionDialogProps: ConnectionDialogProps) => {
     const [compressionTypes, setCompressionTypes] = useState<string[]>([]);
     const [selectedCompressionType, setSelectedCompressionType] = useState<string>('');
     const [ackTypes, setAckTypes] = useState<KeyValue[]>([]);
@@ -100,9 +98,11 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
             await configController.kafkaConnection(connectionConfig);
             retMessage = 'Successfully updated the Connection Configuration.';
         } catch (error) {
-            console.error('Error saving the Connection Configuration.', error);
+            console.error('Error saving the Kafka Connection Configuration.', error);
+        } finally {
+            connectionDialogProps.onConfirm && connectionDialogProps.onConfirm(retMessage);
+            connectionDialogProps.onClose();
         }
-        onConfirm && onConfirm(retMessage);
     };
 
     const renderTabContent = () => {
@@ -132,9 +132,9 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
     };
 
     return (
-        <Modal show={isOpen} onHide={onClose} centered scrollable={true}>
+        <Modal show={connectionDialogProps.isOpen} onHide={connectionDialogProps.onClose} centered scrollable={true}>
             <Modal.Header closeButton>
-                <Modal.Title>Connection Configuration</Modal.Title>
+                <Modal.Title>Kafka Connection Configuration</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Tabs
@@ -157,7 +157,7 @@ const ConnectionDialog: React.FC<ConnectionDialogProps> = ({isOpen, onClose, onC
                 </Tabs>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>Cancel</Button>
+                <Button variant="secondary" onClick={connectionDialogProps.onClose}>Cancel</Button>
                 <Button variant="primary" onClick={handleConfirm}>Confirm</Button>
             </Modal.Footer>
         </Modal>

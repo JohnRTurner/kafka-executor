@@ -1,14 +1,14 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import {KafkaConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO} from "../../api";
 
 
-interface ConsumerTabProps {
+export interface ConsumerTabProps {
     connectionConfig: KafkaConnectionConfigDTO;
     handleInputChange: (field: string, value: string | number | boolean) => void;
 }
 
-const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputChange}) => {
+const ConsumerTab: React.FC<ConsumerTabProps> = (consumerTabProps: ConsumerTabProps) => {
     return (
         <>
             <Form.Group as={Row}>
@@ -17,8 +17,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="maxPollRecords"
                         type="number"
-                        value={connectionConfig.maxPollRecords || ''}
-                        onChange={(e) => handleInputChange('maxPollRecords', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.maxPollRecords || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('maxPollRecords', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -28,8 +28,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="fetchMinByes"
                         type="number"
-                        value={connectionConfig.fetchMinByes || ''}
-                        onChange={(e) => handleInputChange('fetchMinByes', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.fetchMinByes || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('fetchMinByes', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -39,8 +39,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="fetchMaxWaitMS"
                         type="number"
-                        value={connectionConfig.fetchMaxWaitMS || ''}
-                        onChange={(e) => handleInputChange('fetchMaxWaitMS', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.fetchMaxWaitMS || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('fetchMaxWaitMS', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -50,8 +50,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="sessionTimeoutMs"
                         type="number"
-                        value={connectionConfig.sessionTimeoutMs || ''}
-                        onChange={(e) => handleInputChange('sessionTimeoutMs', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.sessionTimeoutMs || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('sessionTimeoutMs', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -61,8 +61,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="heartbeatTimeoutMs"
                         type="number"
-                        value={connectionConfig.heartbeatTimeoutMs || ''}
-                        onChange={(e) => handleInputChange('heartbeatTimeoutMs', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.heartbeatTimeoutMs || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('heartbeatTimeoutMs', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -72,8 +72,8 @@ const ConsumerTab: React.FC<ConsumerTabProps> = ({connectionConfig, handleInputC
                     <Form.Control
                         id="autoCommitIntervalMs"
                         type="number"
-                        value={connectionConfig.autoCommitIntervalMs || ''}
-                        onChange={(e) => handleInputChange('autoCommitIntervalMs', Number(e.target.value))}
+                        value={consumerTabProps.connectionConfig.autoCommitIntervalMs || ''}
+                        onChange={(e) => consumerTabProps.handleInputChange('autoCommitIntervalMs', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>

@@ -576,7 +576,7 @@ export const RestBatchControllerApiAxiosParamCreator = function (configuration?:
          *
          * @param {string} [topicName]
          * @param {number} [numThreads]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -636,7 +636,7 @@ export const RestBatchControllerApiAxiosParamCreator = function (configuration?:
          * @param {number} [numThreads]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -858,7 +858,7 @@ export const RestBatchControllerApiFp = function (configuration?: Configuration)
          *
          * @param {string} [topicName]
          * @param {number} [numThreads]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -877,7 +877,7 @@ export const RestBatchControllerApiFp = function (configuration?: Configuration)
          * @param {number} [numThreads]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -983,7 +983,7 @@ export const RestBatchControllerApiFactory = function (configuration?: Configura
          *
          * @param {string} [topicName]
          * @param {number} [numThreads]
-         * @param {number} [batchSize]
+         * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -999,7 +999,7 @@ export const RestBatchControllerApiFactory = function (configuration?: Configura
          * @param {number} [numThreads]
          * @param {number} [batchSize]
          * @param {number} [startId]
-         * @param {number} [correlatedStartIdInc]
+         * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {number} [sleepMillis] 
          * @param {string} [dataClass] 
@@ -1103,7 +1103,7 @@ export class RestBatchControllerApi extends BaseAPI {
      *
      * @param {string} [topicName]
      * @param {number} [numThreads]
-     * @param {number} [batchSize]
+     * @param {number} [batchSize] 
      * @param {number} [maxTries] 
      * @param {number} [sleepMillis] 
      * @param {string} [dataClass] 
@@ -1121,7 +1121,7 @@ export class RestBatchControllerApi extends BaseAPI {
      * @param {number} [numThreads]
      * @param {number} [batchSize]
      * @param {number} [startId]
-     * @param {number} [correlatedStartIdInc]
+     * @param {number} [correlatedStartIdInc] 
      * @param {number} [correlatedEndIdInc] 
      * @param {number} [sleepMillis] 
      * @param {string} [dataClass] 
@@ -1173,7 +1173,7 @@ export class RestBatchControllerApi extends BaseAPI {
 export const RestConfigControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1235,7 +1235,7 @@ export const RestConfigControllerApiAxiosParamCreator = function (configuration?
             };
         },
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1415,7 +1415,7 @@ export const RestConfigControllerApiAxiosParamCreator = function (configuration?
             };
         },
         /**
-         *
+         * 
          * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1511,7 +1511,7 @@ export const RestConfigControllerApiFp = function (configuration?: Configuration
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1581,7 +1581,7 @@ export const RestConfigControllerApiFp = function (configuration?: Configuration
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1614,7 +1614,7 @@ export const RestConfigControllerApiFactory = function (configuration?: Configur
     const localVarFp = RestConfigControllerApiFp(configuration)
     return {
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1631,7 +1631,7 @@ export const RestConfigControllerApiFactory = function (configuration?: Configur
             return localVarFp.enableKafka1(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {boolean} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1681,7 +1681,7 @@ export const RestConfigControllerApiFactory = function (configuration?: Configur
             return localVarFp.kafkaConnection1(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1708,7 +1708,7 @@ export const RestConfigControllerApiFactory = function (configuration?: Configur
  */
 export class RestConfigControllerApi extends BaseAPI {
     /**
-     *
+     * 
      * @param {boolean} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1729,7 +1729,7 @@ export class RestConfigControllerApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {boolean} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1791,7 +1791,7 @@ export class RestConfigControllerApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {OpenSearchConnectionDTO} openSearchConnectionDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1849,7 +1849,7 @@ export const RestConsumerControllerApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1880,7 +1880,7 @@ export const RestConsumerControllerApiAxiosParamCreator = function (configuratio
         /**
          *
          * @param {string} [topicName]
-         * @param {number} [server]
+         * @param {number} [server] 
          * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
@@ -1936,7 +1936,7 @@ export const RestConsumerControllerApiAxiosParamCreator = function (configuratio
          * @param {number} [startId]
          * @param {number} [endId]
          * @param {number} [batchSize]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2006,7 +2006,7 @@ export const RestConsumerControllerApiFp = function (configuration?: Configurati
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2019,7 +2019,7 @@ export const RestConsumerControllerApiFp = function (configuration?: Configurati
         /**
          *
          * @param {string} [topicName]
-         * @param {number} [server]
+         * @param {number} [server] 
          * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
@@ -2038,7 +2038,7 @@ export const RestConsumerControllerApiFp = function (configuration?: Configurati
          * @param {number} [startId]
          * @param {number} [endId]
          * @param {number} [batchSize]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2067,7 +2067,7 @@ export const RestConsumerControllerApiFactory = function (configuration?: Config
             return localVarFp.cleanKafkaConnectionPool1(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2077,7 +2077,7 @@ export const RestConsumerControllerApiFactory = function (configuration?: Config
         /**
          *
          * @param {string} [topicName]
-         * @param {number} [server]
+         * @param {number} [server] 
          * @param {number} [batchSize] 
          * @param {number} [maxTries] 
          * @param {string} [dataClass] 
@@ -2093,7 +2093,7 @@ export const RestConsumerControllerApiFactory = function (configuration?: Config
          * @param {number} [startId]
          * @param {number} [endId]
          * @param {number} [batchSize]
-         * @param {string} [dataClass]
+         * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2121,7 +2121,7 @@ export class RestConsumerControllerApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RestConsumerControllerApi
@@ -2133,7 +2133,7 @@ export class RestConsumerControllerApi extends BaseAPI {
     /**
      *
      * @param {string} [topicName]
-     * @param {number} [server]
+     * @param {number} [server] 
      * @param {number} [batchSize] 
      * @param {number} [maxTries] 
      * @param {string} [dataClass] 
@@ -2151,7 +2151,7 @@ export class RestConsumerControllerApi extends BaseAPI {
      * @param {number} [startId]
      * @param {number} [endId]
      * @param {number} [batchSize]
-     * @param {string} [dataClass]
+     * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RestConsumerControllerApi
@@ -2484,7 +2484,7 @@ export const RestProducerControllerApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         *
+         * 
          * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
@@ -2530,7 +2530,7 @@ export const RestProducerControllerApiAxiosParamCreator = function (configuratio
          *
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
-         * @param {number} [replicas]
+         * @param {number} [replicas] 
          * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2609,7 +2609,7 @@ export const RestProducerControllerApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         *
+         * 
          * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2647,7 +2647,7 @@ export const RestProducerControllerApiAxiosParamCreator = function (configuratio
          * @param {string} [topicName]
          * @param {number} [server]
          * @param {number} [batchSize]
-         * @param {number} [startId]
+         * @param {number} [startId] 
          * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
@@ -2711,7 +2711,7 @@ export const RestProducerControllerApiAxiosParamCreator = function (configuratio
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2938,14 +2938,14 @@ export const RestProducerControllerApiFp = function (configuration?: Configurati
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createKafkaTopics(topics, partitions, replication, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.createKafkaTopics']?.[localVarOperationServerIndex]?.url;
@@ -2955,7 +2955,7 @@ export const RestProducerControllerApiFp = function (configuration?: Configurati
          *
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
-         * @param {number} [replicas]
+         * @param {number} [replicas] 
          * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2972,14 +2972,14 @@ export const RestProducerControllerApiFp = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteKafkaTopics(topics?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async deleteKafkaTopics(topics?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteKafkaTopics(topics, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RestProducerControllerApi.deleteKafkaTopics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         *
+         * 
          * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2995,7 +2995,7 @@ export const RestProducerControllerApiFp = function (configuration?: Configurati
          * @param {string} [topicName]
          * @param {number} [server]
          * @param {number} [batchSize]
-         * @param {number} [startId]
+         * @param {number} [startId] 
          * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
@@ -3014,7 +3014,7 @@ export const RestProducerControllerApiFp = function (configuration?: Configurati
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3107,21 +3107,21 @@ export const RestProducerControllerApiFactory = function (configuration?: Config
             return localVarFp.cleanOpenSearchConnection(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {Array<string>} [topics] 
          * @param {number} [partitions] 
          * @param {number} [replication] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: any): AxiosPromise<object> {
+        createKafkaTopics(topics?: Array<string>, partitions?: number, replication?: number, options?: any): AxiosPromise<boolean> {
             return localVarFp.createKafkaTopics(topics, partitions, replication, options).then((request) => request(axios, basePath));
         },
         /**
          *
          * @param {Array<string>} [indexes]
          * @param {number} [shards]
-         * @param {number} [replicas]
+         * @param {number} [replicas] 
          * @param {number} [refreshSeconds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3135,11 +3135,11 @@ export const RestProducerControllerApiFactory = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteKafkaTopics(topics?: Array<string>, options?: any): AxiosPromise<object> {
+        deleteKafkaTopics(topics?: Array<string>, options?: any): AxiosPromise<boolean> {
             return localVarFp.deleteKafkaTopics(topics, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {Array<string>} [indexes] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3152,7 +3152,7 @@ export const RestProducerControllerApiFactory = function (configuration?: Config
          * @param {string} [topicName]
          * @param {number} [server]
          * @param {number} [batchSize]
-         * @param {number} [startId]
+         * @param {number} [startId] 
          * @param {number} [correlatedStartIdInc] 
          * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
@@ -3168,7 +3168,7 @@ export const RestProducerControllerApiFactory = function (configuration?: Config
          * @param {number} [batchSize]
          * @param {number} [startId]
          * @param {number} [correlatedStartIdInc]
-         * @param {number} [correlatedEndIdInc]
+         * @param {number} [correlatedEndIdInc] 
          * @param {string} [dataClass] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3247,7 +3247,7 @@ export class RestProducerControllerApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {Array<string>} [topics] 
      * @param {number} [partitions] 
      * @param {number} [replication] 
@@ -3263,7 +3263,7 @@ export class RestProducerControllerApi extends BaseAPI {
      *
      * @param {Array<string>} [indexes]
      * @param {number} [shards]
-     * @param {number} [replicas]
+     * @param {number} [replicas] 
      * @param {number} [refreshSeconds] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3285,7 +3285,7 @@ export class RestProducerControllerApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {Array<string>} [indexes] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3300,7 +3300,7 @@ export class RestProducerControllerApi extends BaseAPI {
      * @param {string} [topicName]
      * @param {number} [server]
      * @param {number} [batchSize]
-     * @param {number} [startId]
+     * @param {number} [startId] 
      * @param {number} [correlatedStartIdInc] 
      * @param {number} [correlatedEndIdInc] 
      * @param {string} [dataClass] 
@@ -3318,7 +3318,7 @@ export class RestProducerControllerApi extends BaseAPI {
      * @param {number} [batchSize]
      * @param {number} [startId]
      * @param {number} [correlatedStartIdInc]
-     * @param {number} [correlatedEndIdInc]
+     * @param {number} [correlatedEndIdInc] 
      * @param {string} [dataClass] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

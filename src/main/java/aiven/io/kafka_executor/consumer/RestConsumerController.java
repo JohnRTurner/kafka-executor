@@ -20,6 +20,7 @@ public class RestConsumerController {
     private final KafkaConnectionConfig kafkaConnectionConfig;
     private final OpenSearchConnectionConfig openSearchConnectionConfig;
     private final Statistics statistics;
+    private final ConsumerStatus errorStatus = new ConsumerStatus();
 
     public RestConsumerController(KafkaConnectionConfig kafkaConnectionConfig,
                                   OpenSearchConnectionConfig openSearchConnectionConfig,
@@ -27,6 +28,10 @@ public class RestConsumerController {
         this.kafkaConnectionConfig = kafkaConnectionConfig;
         this.openSearchConnectionConfig = openSearchConnectionConfig;
         this.statistics = statistics;
+        errorStatus.setError(true);
+        errorStatus.setErrorMessage("Invalid Class");
+        errorStatus.setStatus("Error");
+        errorStatus.setCount(0);
     }
 
 
@@ -56,14 +61,9 @@ public class RestConsumerController {
         log.debug("Path: {}", request.getRequestURI());
         DataClass dataClass1;
         try {
-            dataClass1 = DataClass.valueOf(dataClass);
+            dataClass1 = getDataClass(dataClass);
         } catch (IllegalArgumentException e) {
-            ConsumerStatus status = new ConsumerStatus();
-            status.setError(true);
-            status.setErrorMessage(e.getMessage());
-            status.setStatus("Error");
-            status.setCount(0);
-            return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorStatus, HttpStatus.BAD_REQUEST);
         }
         ConsumerStatus consumerStatus = KafkaLoadConsumer.generateLoad(topicName, server, batchSize, maxTries,
                 dataClass1, kafkaConnectionConfig);
@@ -71,7 +71,7 @@ public class RestConsumerController {
         return new ResponseEntity<>(consumerStatus, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/generateOpenSearchLoad", method = RequestMethod.GET, params = {"topicName", "server"})
+    @RequestMapping(value = "/generateOpenSearchLoad", method = RequestMethod.GET)
     public ResponseEntity<ConsumerStatus> generateOpenSearchLoad(@RequestParam(value = "indexName", defaultValue = "CUSTOMER_JSON") String indexName,
                                                                  @RequestParam(value = "startId", defaultValue = "1") long startId,
                                                                  @RequestParam(value = "endId", defaultValue = "1000000") long endId,
@@ -81,14 +81,9 @@ public class RestConsumerController {
         log.debug("Path: {}", request.getRequestURI());
         DataClass dataClass1;
         try {
-            dataClass1 = DataClass.valueOf(dataClass);
+            dataClass1 = getDataClass(dataClass);
         } catch (IllegalArgumentException e) {
-            ConsumerStatus status = new ConsumerStatus();
-            status.setError(true);
-            status.setErrorMessage(e.getMessage());
-            status.setStatus("Error");
-            status.setCount(0);
-            return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorStatus, HttpStatus.BAD_REQUEST);
         }
 
         ConsumerStatus consumerStatus = OpenSearchLoadConsumer.generateLoadPrim(indexName, dataClass1, batchSize,
@@ -97,5 +92,8 @@ public class RestConsumerController {
         return new ResponseEntity<>(consumerStatus, HttpStatus.OK);
     }
 
+    private DataClass getDataClass(String dataClass) throws IllegalArgumentException {
+        return DataClass.valueOf(dataClass);
+    }
 
 }

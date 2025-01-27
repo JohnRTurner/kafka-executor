@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Col, Row} from "react-bootstrap";
 
-interface CreateProducerBatchModalProps {
+export interface CreateProducerBatchModalProps {
     isOpen: boolean;
     onRequestClose: () => void;
     onCreate: () => void;
@@ -25,28 +25,10 @@ interface CreateProducerBatchModalProps {
     setSleepMillis: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
-                                                                               isOpen,
-                                                                               onRequestClose,
-                                                                               onCreate,
-                                                                               topicTypes,
-                                                                               topicName,
-                                                                               setTopicName,
-                                                                               numThreads,
-                                                                               setNumThreads,
-                                                                               batchSize,
-                                                                               setBatchSize,
-                                                                               startId,
-                                                                               setStartID,
-                                                                               correlatedStartIdInc,
-                                                                               setCorrelatedStartIdInc,
-                                                                               correlatedEndIdInc,
-                                                                               setCorrelatedEndIdInc,
-                                                                               sleepMillis,
-                                                                               setSleepMillis,
-                                                                           }) => {
+const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = (createProducerBatchModalProps: CreateProducerBatchModalProps) => {
     return (
-        <Modal show={isOpen} onHide={onRequestClose} scrollable={true}>
+        <Modal show={createProducerBatchModalProps.isOpen} onHide={createProducerBatchModalProps.onRequestClose}
+               scrollable={true}>
             <Modal.Header closeButton>
                 <Modal.Title>Create New Producer Batch</Modal.Title>
             </Modal.Header>
@@ -57,10 +39,10 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 as="select"
-                                value={topicName}
-                                onChange={(e) => setTopicName(e.target.value)}
+                                value={createProducerBatchModalProps.topicName}
+                                onChange={(e) => createProducerBatchModalProps.setTopicName(e.target.value)}
                             >
-                                {topicTypes.map((topic, index) => (
+                                {createProducerBatchModalProps.topicTypes.map((topic, index) => (
                                     <option key={index} value={topic}>
                                         {topic}
                                     </option>
@@ -73,8 +55,8 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={numThreads}
-                                onChange={(e) => setNumThreads(Number(e.target.value))}
+                                value={createProducerBatchModalProps.numThreads}
+                                onChange={(e) => createProducerBatchModalProps.setNumThreads(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -83,8 +65,8 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={batchSize}
-                                onChange={(e) => setBatchSize(Number(e.target.value))}
+                                value={createProducerBatchModalProps.batchSize}
+                                onChange={(e) => createProducerBatchModalProps.setBatchSize(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -93,8 +75,8 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={startId}
-                                onChange={(e) => setStartID(Number(e.target.value))}
+                                value={createProducerBatchModalProps.startId}
+                                onChange={(e) => createProducerBatchModalProps.setStartID(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -103,8 +85,8 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={correlatedStartIdInc}
-                                onChange={(e) => setCorrelatedStartIdInc(Number(e.target.value))}
+                                value={createProducerBatchModalProps.correlatedStartIdInc}
+                                onChange={(e) => createProducerBatchModalProps.setCorrelatedStartIdInc(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -113,8 +95,8 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={correlatedEndIdInc}
-                                onChange={(e) => setCorrelatedEndIdInc(Number(e.target.value))}
+                                value={createProducerBatchModalProps.correlatedEndIdInc}
+                                onChange={(e) => createProducerBatchModalProps.setCorrelatedEndIdInc(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
@@ -123,18 +105,18 @@ const CreateProducerBatchModal: React.FC<CreateProducerBatchModalProps> = ({
                         <Col sm="6">
                             <Form.Control
                                 type="number"
-                                value={sleepMillis}
-                                onChange={(e) => setSleepMillis(Number(e.target.value))}
+                                value={createProducerBatchModalProps.sleepMillis}
+                                onChange={(e) => createProducerBatchModalProps.setSleepMillis(Number(e.target.value))}
                             />
                         </Col>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onRequestClose}>
+                <Button variant="secondary" onClick={createProducerBatchModalProps.onRequestClose}>
                     Cancel
                 </Button>
-                <Button variant="primary" onClick={onCreate}>
+                <Button variant="primary" onClick={createProducerBatchModalProps.onCreate}>
                     Create
                 </Button>
             </Modal.Footer>

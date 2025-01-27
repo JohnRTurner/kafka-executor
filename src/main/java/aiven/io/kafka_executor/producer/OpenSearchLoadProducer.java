@@ -5,6 +5,10 @@ import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.data.DataInterface;
 import aiven.io.kafka_executor.data.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.opensearch.action.admin.indices.alias.Alias;
 import org.opensearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.opensearch.action.bulk.BulkRequest;
 import org.opensearch.action.bulk.BulkResponse;
@@ -15,12 +19,14 @@ import org.opensearch.client.RestHighLevelClient;
 import org.opensearch.client.indices.CreateIndexRequest;
 import org.opensearch.client.indices.CreateIndexResponse;
 import org.opensearch.client.indices.GetIndexRequest;
+import org.opensearch.client.indices.PutIndexTemplateRequest;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.core.xcontent.XContentBuilder;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 
 @Slf4j
 public class OpenSearchLoadProducer {
@@ -41,6 +47,99 @@ public class OpenSearchLoadProducer {
             return new String[]{"Error Getting Index List"};
         }
     }
+
+    public static boolean createIndexGroup(Collection<String> indexes, int shards, int replicas, int refreshSeconds,
+                                           OpenSearchConnectionConfig connectionConfig) {
+        RestHighLevelClient client = connectionConfig.getClient();
+        for (String idx : indexes) {
+            // Create Template
+            String index = idx.toLowerCase();
+            PutIndexTemplateRequest logsTemplateRequest = new PutIndexTemplateRequest(index.concat("-template"));
+            logsTemplateRequest.patterns(Collections.singletonList(index.concat("_*")));
+
+            XContentBuilder xContentBuilder = null;
+            try {
+                DataInterface dataInterface = DataClass.valueOf(index).getDataInterface();
+                xContentBuilder = dataInterface.retOpenSearchSchema();
+                log.info("Creating index {} {}", dataInterface.getClass().getSimpleName(), xContentBuilder);
+            } catch (Exception e) {
+                log.error("Error getting Index Schema", e);
+            }
+
+            if (xContentBuilder != null) logsTemplateRequest.mapping(xContentBuilder);
+
+            logsTemplateRequest.settings(Settings.builder()
+                    .put("index.number_of_shards", shards)
+                    .put("index.number_of_replicas", replicas)
+                    .put("index.refresh_interval", Integer.toString(refreshSeconds).concat("s"))
+            );
+
+            Alias logsAlias = new Alias(index.concat("-all"));
+
+            try {
+                AcknowledgedResponse logsResponse = client.indices().putTemplate(logsTemplateRequest, RequestOptions.DEFAULT);
+                if (!logsResponse.isAcknowledged()) {
+                    log.error("Error creating index template {} returned unacknowledged.", index.concat("-template"));
+                    return false;
+                }
+            } catch (Exception e) {
+                log.error("Error creating index template {}", index.concat("-template"), e);
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private static boolean createIndex(String indexName, RestHighLevelClient client) {
+        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        CreateIndexResponse createIndexResponse = null;
+        try {
+            createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
+            if (!createIndexResponse.isAcknowledged()) {
+                log.error("Error creating index {}, returned unacknowledged.", indexName);
+                return false;
+            }
+        } catch (IOException e) {
+            log.error("Error creating index {}", indexName, e);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean createIndexesForIndexGroupDate(Collection<String> indexes, LocalDate startDate, int numDays,
+                                                         OpenSearchConnectionConfig connectionConfig) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+        RestHighLevelClient client = connectionConfig.getClient();
+        for (String idx : indexes) {
+            String index = idx.toLowerCase().concat("_");
+            for (int i = 0; i < numDays; i++) {
+                String indexName = index.concat(startDate.plusDays(i).toString(fmt));
+                String ind2 = String.format("%s_")
+                if (!createIndex(indexName, client)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean createIndexesForIndexGroupInt(Collection<String> indexes, int startNum, int numIndexes,
+                                                        OpenSearchConnectionConfig connectionConfig) {
+        RestHighLevelClient client = connectionConfig.getClient();
+        for (String idx : indexes) {
+            String index = idx.toLowerCase();
+            for (int i = 0; i < numIndexes; i++) {
+                String indexName = String.format("%s_%04d", index, startNum + i);
+                if (!createIndex(indexName, client)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
 
     public static boolean createIndexes(Collection<String> indexes, int shards, int replicas, int refreshSeconds,
                                         OpenSearchConnectionConfig connectionConfig) {

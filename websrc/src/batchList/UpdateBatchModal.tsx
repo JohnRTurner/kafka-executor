@@ -5,37 +5,32 @@ import {BatchStatus} from "../api";
 import Form from "react-bootstrap/Form";
 import {Col, Row} from "react-bootstrap";
 
-interface UpdateBatchModalProps {
+export interface UpdateBatchModalProps {
     isOpen: boolean;
     onRequestClose: () => void;
     selectedBatch: BatchStatus;
     onUpdate: (numThreads: number) => void;
 }
 
-const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
-                                                               isOpen,
-                                                               onRequestClose,
-                                                               selectedBatch,
-                                                               onUpdate,
-                                                           }) => {
+const UpdateBatchModal: React.FC<UpdateBatchModalProps> = (updateBatchModalProps: UpdateBatchModalProps) => {
     const [tempNumThreads, setTempNumThreads] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (isOpen && inputRef.current) {
+        if (updateBatchModalProps.isOpen && inputRef.current) {
             inputRef.current.focus();
         }
-        if (selectedBatch.RunningJobs !== undefined) {
-            setTempNumThreads(selectedBatch.RunningJobs);
+        if (updateBatchModalProps.selectedBatch.RunningJobs !== undefined) {
+            setTempNumThreads(updateBatchModalProps.selectedBatch.RunningJobs);
         }
-    }, [isOpen, selectedBatch.RunningJobs]);
+    }, [updateBatchModalProps.isOpen, updateBatchModalProps.selectedBatch.RunningJobs]);
 
     const handleConfirmUpdate = () => {
-        onUpdate(tempNumThreads);
+        updateBatchModalProps.onUpdate(tempNumThreads);
     };
 
     return (
-        <Modal show={isOpen} onHide={onRequestClose}>
+        <Modal show={updateBatchModalProps.isOpen} onHide={updateBatchModalProps.onRequestClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Update Batch</Modal.Title>
             </Modal.Header>
@@ -49,7 +44,7 @@ const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
                             <Form.Control
                                 plaintext
                                 readOnly
-                                defaultValue={selectedBatch.BatchName}
+                                defaultValue={updateBatchModalProps.selectedBatch.BatchName}
                             />
                         </Col>
                     </Form.Group>
@@ -62,7 +57,7 @@ const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
                             <Form.Control
                                 plaintext
                                 readOnly
-                                defaultValue={selectedBatch.RunningJobs}
+                                defaultValue={updateBatchModalProps.selectedBatch.RunningJobs}
                             />
                         </Col>
                     </Form.Group>
@@ -83,7 +78,7 @@ const UpdateBatchModal: React.FC<UpdateBatchModalProps> = ({
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onRequestClose}>
+                <Button variant="secondary" onClick={updateBatchModalProps.onRequestClose}>
                     Cancel
                 </Button>
                 <Button variant="primary" onClick={handleConfirmUpdate}>

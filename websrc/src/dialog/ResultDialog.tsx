@@ -1,23 +1,23 @@
 import React from 'react';
 import {Button, Modal} from 'react-bootstrap';
 
-type ResultDialogProps = {
+export type ResultDialogProps = {
     isOpen: boolean;
     message: string;
     onClose: () => void;
 };
 
-const ResultDialog: React.FC<ResultDialogProps> = ({isOpen, message, onClose}) => {
+const ResultDialog: React.FC<ResultDialogProps> = (resultDialogProps: ResultDialogProps) => {
     return (
-        <Modal show={isOpen} onHide={onClose} centered>
+        <Modal show={resultDialogProps.isOpen} onHide={resultDialogProps.onClose} centered>
             <Modal.Header closeButton>
                 <Modal.Title>Result</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>{message}</p>
+                <p>{resultDialogProps.message}</p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={onClose}>
+                <Button variant="primary" onClick={resultDialogProps.onClose}>
                     OK
                 </Button>
             </Modal.Footer>

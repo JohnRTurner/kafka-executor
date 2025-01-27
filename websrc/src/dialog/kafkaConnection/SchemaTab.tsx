@@ -1,13 +1,13 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import {KafkaConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO} from "../../api";
 
-interface SchemaTabProps {
+export interface SchemaTabProps {
     connectionConfig: KafkaConnectionConfigDTO;
     handleInputChange: (field: string, value: string | number | boolean) => void;
 }
 
-const SchemaTab: React.FC<SchemaTabProps> = ({connectionConfig, handleInputChange}) => {
+const SchemaTab: React.FC<SchemaTabProps> = (schemaTabProps: SchemaTabProps) => {
     return (
         <>
             <Form.Group as={Row}>
@@ -16,8 +16,8 @@ const SchemaTab: React.FC<SchemaTabProps> = ({connectionConfig, handleInputChang
                     <Form.Control
                         id="schemaRegistryHost"
                         type="text"
-                        value={connectionConfig.schemaRegistryHost || ''}
-                        onChange={(e) => handleInputChange('schemaRegistryHost', e.target.value)}
+                        value={schemaTabProps.connectionConfig.schemaRegistryHost || ''}
+                        onChange={(e) => schemaTabProps.handleInputChange('schemaRegistryHost', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -27,8 +27,8 @@ const SchemaTab: React.FC<SchemaTabProps> = ({connectionConfig, handleInputChang
                     <Form.Control
                         id="schemaRegistryPort"
                         type="text"
-                        value={connectionConfig.schemaRegistryPort || ''}
-                        onChange={(e) => handleInputChange('schemaRegistryPort', e.target.value)}
+                        value={schemaTabProps.connectionConfig.schemaRegistryPort || ''}
+                        onChange={(e) => schemaTabProps.handleInputChange('schemaRegistryPort', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -38,8 +38,8 @@ const SchemaTab: React.FC<SchemaTabProps> = ({connectionConfig, handleInputChang
                     <Form.Control
                         id="schemaRegistryUser"
                         type="text"
-                        value={connectionConfig.schemaRegistryUser || ''}
-                        onChange={(e) => handleInputChange('schemaRegistryUser', e.target.value)}
+                        value={schemaTabProps.connectionConfig.schemaRegistryUser || ''}
+                        onChange={(e) => schemaTabProps.handleInputChange('schemaRegistryUser', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -49,8 +49,8 @@ const SchemaTab: React.FC<SchemaTabProps> = ({connectionConfig, handleInputChang
                     <Form.Control
                         id="schemaRegistryPassword"
                         type="password"
-                        value={connectionConfig.schemaRegistryPassword || ''}
-                        onChange={(e) => handleInputChange('schemaRegistryPassword', e.target.value)}
+                        value={schemaTabProps.connectionConfig.schemaRegistryPassword || ''}
+                        onChange={(e) => schemaTabProps.handleInputChange('schemaRegistryPassword', e.target.value)}
                     />
                 </Col>
             </Form.Group>

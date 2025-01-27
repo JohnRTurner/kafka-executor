@@ -6,8 +6,6 @@ import aiven.io.kafka_executor.data.DataClass;
 import aiven.io.kafka_executor.log.Statistics;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.DeleteTopicsResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,7 +74,7 @@ public class RestProducerController {
     }
 
     @RequestMapping(value = "/createKafkaTopics", method = RequestMethod.PUT)
-    public ResponseEntity<CreateTopicsResult> createKafkaTopics(
+    public ResponseEntity<Boolean> createKafkaTopics(
             @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
             @RequestParam(value = "partitions", defaultValue = "6") int partitions,
             @RequestParam(value = "replication", defaultValue = "2") short replication,
@@ -89,13 +87,13 @@ public class RestProducerController {
             topicList.addAll(Arrays.asList(topics));
         }
         if (topicList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(KafkaLoadProducer.createTopics(topicList, partitions, replication, kafkaConnectionConfig), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteKafkaTopics", method = RequestMethod.DELETE)
-    public ResponseEntity<DeleteTopicsResult> deleteKafkaTopics(
+    public ResponseEntity<Boolean> deleteKafkaTopics(
             @RequestParam(value = "topics[]", defaultValue = "Default List") String[] topics,
             HttpServletRequest request) {
         log.debug("Path: {}", request.getRequestURI());
@@ -106,7 +104,7 @@ public class RestProducerController {
             topicList.addAll(Arrays.asList(topics));
         }
         if (topicList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(KafkaLoadProducer.deleteTopics(topicList, kafkaConnectionConfig), HttpStatus.OK);
@@ -183,7 +181,7 @@ public class RestProducerController {
             indexList = new ArrayList<>(Arrays.asList(indexes));
         }
         if (indexList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(OpenSearchLoadProducer.createIndexes(indexList, shards, replicas, refreshSeconds, openSearchConnectionConfig), HttpStatus.OK);
     }
@@ -203,7 +201,7 @@ public class RestProducerController {
             indexList = new ArrayList<>(Arrays.asList(indexes));
         }
         if (indexList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(OpenSearchLoadProducer.deleteIndexes(indexList, openSearchConnectionConfig), HttpStatus.OK);

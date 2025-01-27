@@ -12,7 +12,10 @@ import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
 import io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.admin.*;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.DescribeClusterResult;
+import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -46,26 +49,28 @@ public class KafkaLoadProducer {
         }
     }
 
-    public static CreateTopicsResult createTopics(Collection<String> topics, int partitions, short replication,
+    public static boolean createTopics(Collection<String> topics, int partitions, short replication,
                                                   KafkaConnectionConfig kafkaConnectionConfig) {
         try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
             Collection<NewTopic> newTopics = new ArrayList<>();
             for (String topic : topics) {
                 newTopics.add(new NewTopic(topic, partitions, replication));
             }
-            return adminClient.createTopics(newTopics);
+            adminClient.createTopics(newTopics);
+            return true;
         } catch (Exception e) {
             log.error("Error creating topics", e);
-            return null;
+            return false;
         }
     }
 
-    public static DeleteTopicsResult deleteTopics(Collection<String> topics, KafkaConnectionConfig kafkaConnectionConfig) {
+    public static boolean deleteTopics(Collection<String> topics, KafkaConnectionConfig kafkaConnectionConfig) {
         try (AdminClient adminClient = AdminClient.create(kafkaConnectionConfig.connectionProperties(KafkaConnectionConfig.KAFKA_TYPE.ADMIN))) {
-            return adminClient.deleteTopics(topics);
+            adminClient.deleteTopics(topics);
+            return true;
         } catch (Exception e) {
             log.error("Error creating topics", e);
-            return null;
+            return false;
         }
     }
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import {KafkaConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO} from "../../api";
 
-interface BasicTabProps {
+export interface BasicTabProps {
     connectionConfig: KafkaConnectionConfigDTO;
     handleInputChange: (field: string, value: string | number | boolean) => void;
 }
 
-const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}) => {
+const BasicTab: React.FC<BasicTabProps> = (basicTabProps: BasicTabProps) => {
     return (
         <>
             <Form.Group as={Row}>
@@ -16,8 +16,8 @@ const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}
                     <Form.Control
                         id="host"
                         type="text"
-                        value={connectionConfig.host || ''}
-                        onChange={(e) => handleInputChange('host', e.target.value)}
+                        value={basicTabProps.connectionConfig.host || ''}
+                        onChange={(e) => basicTabProps.handleInputChange('host', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -27,8 +27,8 @@ const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}
                     <Form.Control
                         id="port"
                         type="text"
-                        value={connectionConfig.port || ''}
-                        onChange={(e) => handleInputChange('port', e.target.value)}
+                        value={basicTabProps.connectionConfig.port || ''}
+                        onChange={(e) => basicTabProps.handleInputChange('port', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -38,8 +38,8 @@ const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}
                     <Form.Control
                         id="cert_password"
                         type="password"
-                        value={connectionConfig.cert_password || ''}
-                        onChange={(e) => handleInputChange('cert_password', e.target.value)}
+                        value={basicTabProps.connectionConfig.cert_password || ''}
+                        onChange={(e) => basicTabProps.handleInputChange('cert_password', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -49,8 +49,8 @@ const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}
                     <Form.Control
                         id="truststore_location"
                         type="text"
-                        value={connectionConfig.truststore_location || ''}
-                        onChange={(e) => handleInputChange('truststore_location', e.target.value)}
+                        value={basicTabProps.connectionConfig.truststore_location || ''}
+                        onChange={(e) => basicTabProps.handleInputChange('truststore_location', e.target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -60,8 +60,8 @@ const BasicTab: React.FC<BasicTabProps> = ({connectionConfig, handleInputChange}
                     <Form.Control
                         id="keystore_location"
                         type="text"
-                        value={connectionConfig.keystore_location || ''}
-                        onChange={(e) => handleInputChange('keystore_location', e.target.value)}
+                        value={basicTabProps.connectionConfig.keystore_location || ''}
+                        onChange={(e) => basicTabProps.handleInputChange('keystore_location', e.target.value)}
                     />
                 </Col>
             </Form.Group>

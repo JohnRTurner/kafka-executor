@@ -1,8 +1,8 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import {KafkaConnectionConfigDTO} from "../api";
+import {KafkaConnectionConfigDTO} from "../../api";
 
-interface ProducerTabProps {
+export interface ProducerTabProps {
     connectionConfig: KafkaConnectionConfigDTO;
     handleInputChange: (field: string, value: string | number | boolean) => void;
     compressionTypes: string[];
@@ -13,16 +13,7 @@ interface ProducerTabProps {
     setSelectedAckType: (value: string) => void;
 }
 
-const ProducerTab: React.FC<ProducerTabProps> = ({
-                                                     connectionConfig,
-                                                     handleInputChange,
-                                                     compressionTypes,
-                                                     selectedCompressionType,
-                                                     setSelectedCompressionType,
-                                                     ackTypes,
-                                                     selectedAckType,
-                                                     setSelectedAckType
-                                                 }) => {
+const ProducerTab: React.FC<ProducerTabProps> = (producerTabProps: ProducerTabProps) => {
     return (
         <>
             <Form.Group as={Row}>
@@ -31,8 +22,8 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Control
                         id="producerLingerMs"
                         type="number"
-                        value={connectionConfig.producerLingerMs || ''}
-                        onChange={(e) => handleInputChange('producerLingerMs', Number(e.target.value))}
+                        value={producerTabProps.connectionConfig.producerLingerMs || ''}
+                        onChange={(e) => producerTabProps.handleInputChange('producerLingerMs', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -42,8 +33,8 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Control
                         id="producerBatchSize"
                         type="number"
-                        value={connectionConfig.producerBatchSize || ''}
-                        onChange={(e) => handleInputChange('producerBatchSize', Number(e.target.value))}
+                        value={producerTabProps.connectionConfig.producerBatchSize || ''}
+                        onChange={(e) => producerTabProps.handleInputChange('producerBatchSize', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -53,13 +44,13 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Control
                         as="select"
                         id="compressionType"
-                        value={selectedCompressionType}
+                        value={producerTabProps.selectedCompressionType}
                         onChange={(e) => {
-                            handleInputChange('compressionType', e.target.value);
-                            setSelectedCompressionType(e.target.value);
+                            producerTabProps.handleInputChange('compressionType', e.target.value);
+                            producerTabProps.setSelectedCompressionType(e.target.value);
                         }}
                     >
-                        {compressionTypes.map((type, index) => (
+                        {producerTabProps.compressionTypes.map((type, index) => (
                             <option key={index} value={type}>
                                 {type}
                             </option>
@@ -73,8 +64,8 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Control
                         id="bufferMemory"
                         type="number"
-                        value={connectionConfig.bufferMemory || ''}
-                        onChange={(e) => handleInputChange('bufferMemory', Number(e.target.value))}
+                        value={producerTabProps.connectionConfig.bufferMemory || ''}
+                        onChange={(e) => producerTabProps.handleInputChange('bufferMemory', Number(e.target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -84,8 +75,8 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Check
                         type="checkbox"
                         id="idempotenceEnabled"
-                        checked={connectionConfig.idempotenceEnabled || false}
-                        onChange={(e) => handleInputChange('idempotenceEnabled', e.target.checked)}
+                        checked={producerTabProps.connectionConfig.idempotenceEnabled || false}
+                        onChange={(e) => producerTabProps.handleInputChange('idempotenceEnabled', e.target.checked)}
                     />
                 </Col>
             </Form.Group>
@@ -95,13 +86,13 @@ const ProducerTab: React.FC<ProducerTabProps> = ({
                     <Form.Control
                         as="select"
                         id="acks"
-                        value={selectedAckType}
+                        value={producerTabProps.selectedAckType}
                         onChange={(e) => {
-                            handleInputChange('acks', e.target.value);
-                            setSelectedAckType(e.target.value);
+                            producerTabProps.handleInputChange('acks', e.target.value);
+                            producerTabProps.setSelectedAckType(e.target.value);
                         }}
                     >
-                        {ackTypes.map((option) => (
+                        {producerTabProps.ackTypes.map((option) => (
                             <option key={option.key} value={option.key}>
                                 {option.key}
                             </option>

@@ -1,16 +1,9 @@
 import {useEffect, useState} from 'react';
 import {BatchList} from "./batchList";
-import {batchController, configController, consumerController, producerController} from './controllers';
+import {batchController, consumerController, producerController, configController} from './controllers';
 import {Container} from 'react-bootstrap';
 import {useGlobalContext} from './GlobalContext';
-import {
-    ConfirmationDialog,
-    ConnectionDialog,
-    IndexDialog,
-    OpenSearchConnectionDialog,
-    ResultDialog,
-    TopicDialog
-} from "./dialog";
+import {ConfirmationDialog, IndexDialog, ResultDialog, TopicDialog, ConnectionDialog, OpenSearchConnectionDialog} from "./dialog";
 import {MenuItem, NavbarComponent} from "./components";
 
 function App() {
@@ -69,7 +62,7 @@ function App() {
     };
 
     const menuItems: MenuItem[] = [
-        {label: 'Batch List', action: () => handleDisplayChange('BatchList')},
+        { label: 'Batch List', action: () => handleDisplayChange('BatchList') },
         {
             label: 'Application Links',
             subMenuItems: [
@@ -86,8 +79,8 @@ function App() {
         {
             label: 'External Links',
             subMenuItems: [
-                {label: 'Aiven Console', externalUrl: 'https://console.aiven.io/'},
-                {label: 'Grafana', externalUrl: grafanaUrl},
+                { label: 'Aiven Console', externalUrl: 'https://console.aiven.io/' },
+                { label: 'Grafana', externalUrl: grafanaUrl },
                 {
                     label: 'Grafana Password',
                     action: () => {
@@ -95,7 +88,7 @@ function App() {
                         setShowResultDialog(true);
                     },
                 },
-                {label: 'GitHub Project', externalUrl: repoUrl},
+                { label: 'GitHub Project', externalUrl: repoUrl },
             ],
         },
         {
@@ -284,9 +277,9 @@ function App() {
         const resetTopics = async () => {
             await producerController.deleteKafkaTopics()
                 .then(response1 => {
-                    if (response1.data === true) {
+                    if(response1.data === true) {
                         console.log('Deleted Topics Successfully.');
-                    } else {
+                    }else{
                         console.log('Delete Topics Failed.');
                     }
                 })
@@ -298,9 +291,9 @@ function App() {
                         producerController.createKafkaTopics(undefined, numberOfPartitions, replication)
                             .then(response2 => {
                                 console.log(response2);
-                                if (response2.data === true) {
+                                if(response2.data === true) {
                                     setApiResult('Created Kafka Topics Successfully.');
-                                } else {
+                                }else{
                                     setApiResult('Create Topics Failed.');
                                 }
                                 setShowResultDialog(true);
@@ -320,9 +313,9 @@ function App() {
         const resetIndexes = async () => {
             await producerController.deleteOpenSearchIndexes()
                 .then(response1 => {
-                    if (response1.data === true) {
+                    if(response1.data === true) {
                         console.log('Deleted Indexes Successfully.');
-                    } else {
+                    }else{
                         console.log('Delete Indexes Failed.');
                     }
                 })
@@ -333,9 +326,9 @@ function App() {
                         producerController.createOpenSearchIndexes(undefined, numberOfShards, replication, refreshSeconds)
                             .then(response2 => {
                                 console.log(response2);
-                                if (response2.data === true) {
+                                if(response2.data === true) {
                                     setApiResult('Created Indexes Successfully.');
-                                } else {
+                                }else{
                                     setApiResult('Create Indexes Failed.');
                                 }
                                 setShowResultDialog(true);

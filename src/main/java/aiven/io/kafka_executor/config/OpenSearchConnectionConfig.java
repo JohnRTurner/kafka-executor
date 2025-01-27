@@ -36,7 +36,7 @@ public class OpenSearchConnectionConfig {
     private RestHighLevelClient client;
 
     public RestHighLevelClient getClient() {
-        if (client == null || !enable) {
+        if (client == null) {
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
                     new UsernamePasswordCredentials(this.user, this.password));
@@ -51,13 +51,13 @@ public class OpenSearchConnectionConfig {
     }
 
     public void closeClient() {
-        if (client != null || !enable) {
+        if (client != null) {
             try {
-                if (client != null) { //avoids compiler warning, even though above if will resolve this...
-                    client.close();
-                }
+                client.close();
             } catch (IOException e) {
                 log.warn("Error closing OpenSearch rest client", e);
+            } finally {
+                client = null;
             }
         }
     }
